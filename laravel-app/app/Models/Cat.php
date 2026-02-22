@@ -22,6 +22,11 @@ class Cat extends Model
         'image',
         'gps_lat',
         'gps_lng',
+        'ai_match_score',
+        'location_name',
+        'vaccinated',
+        'health_status',
+        'personality',
     ];
 
     public function adoptions()

@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="py-12 bg-boho-bg min-h-screen">
+    <div class="py-12 bg-gray-50 min-h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!-- Header -->
             <div class="text-center mb-12">
@@ -8,129 +8,195 @@
                 </h2>
                 <div class="w-24 h-1 bg-boho-orange mx-auto rounded-full"></div>
                 <p class="mt-4 text-gray-600 max-w-2xl mx-auto">
-                    Browse our lovely cats waiting for a forever home. Filter by breed to find your perfect companion.
+                    Browse our lovely cats waiting for a forever home. Find your perfect match!
                 </p>
             </div>
 
             <!-- Filter -->
-            <div class="mb-10 flex justify-center">
-                <form method="GET" action="{{ route('cats.index') }}" class="flex flex-col sm:flex-row gap-4 bg-white p-2 rounded-2xl shadow-sm border border-boho-light">
-                    <div class="relative">
-                        <select name="breed" class="appearance-none bg-boho-light border-0 text-gray-700 py-3 px-6 pr-10 rounded-xl focus:ring-2 focus:ring-boho-brown focus:bg-white transition-colors cursor-pointer min-w-[200px]">
-                            <option value="">All Breeds</option>
-                            <option value="Siamese" {{ request('breed') == 'Siamese' ? 'selected' : '' }}>Siamese</option>
-                            <option value="Persian" {{ request('breed') == 'Persian' ? 'selected' : '' }}>Persian</option>
-                            <option value="Bengal" {{ request('breed') == 'Bengal' ? 'selected' : '' }}>Bengal</option>
-                            <option value="Maine Coon" {{ request('breed') == 'Maine Coon' ? 'selected' : '' }}>Maine Coon</option>
-                            <option value="Ragdoll" {{ request('breed') == 'Ragdoll' ? 'selected' : '' }}>Ragdoll</option>
-                            <option value="Sphynx" {{ request('breed') == 'Sphynx' ? 'selected' : '' }}>Sphynx</option>
-                            <option value="British Shorthair" {{ request('breed') == 'British Shorthair' ? 'selected' : '' }}>British Shorthair</option>
-                            <option value="Devon Rex" {{ request('breed') == 'Devon Rex' ? 'selected' : '' }}>Devon Rex</option>
-                            <option value="Siberian" {{ request('breed') == 'Siberian' ? 'selected' : '' }}>Siberian</option>
-                            <option value="Tonkinese" {{ request('breed') == 'Tonkinese' ? 'selected' : '' }}>Tonkinese</option>
-                            <option value="Balalaika" {{ request('breed') == 'Balalaika' ? 'selected' : '' }}>Balalaika</option>
-                            <option value="Burmese" {{ request('breed') == 'Burmese' ? 'selected' : '' }}>Burmese</option>
-                            <option value="Chartreux" {{ request('breed') == 'Chartreux' ? 'selected' : '' }}>Chartreux</option>
-                            <option value="Cornish Rex" {{ request('breed') == 'Cornish Rex' ? 'selected' : '' }}>Cornish Rex</option>
-                            <option value="Exotic Shorthair" {{ request('breed') == 'Exotic Shorthair' ? 'selected' : '' }}>Exotic Shorthair</option>
-                            <option value="Himalayan" {{ request('breed') == 'Himalayan' ? 'selected' : '' }}>Himalayan</option>
-                            <option value="Japanese Bobtail" {{ request('breed') == 'Japanese Bobtail' ? 'selected' : '' }}>Japanese Bobtail</option>
-                            <option value="Korat" {{ request('breed') == 'Korat' ? 'selected' : '' }}>Korat</option>
-                            <option value="LaPerm" {{ request('breed') == 'LaPerm' ? 'selected' : '' }}>LaPerm</option>
-                            <option value="Munchkin" {{ request('breed') == 'Munchkin' ? 'selected' : '' }}>Munchkin</option>
-                            <option value="Oriental" {{ request('breed') == 'Oriental' ? 'selected' : '' }}>Oriental</option>
-                            <option value="Russian Blue" {{ request('breed') == 'Russian Blue' ? 'selected' : '' }}>Russian Blue</option>
-                            <option value="Scottish Fold" {{ request('breed') == 'Scottish Fold' ? 'selected' : '' }}>Scottish Fold</option>
-                            <option value="Savannah" {{ request('breed') == 'Savannah' ? 'selected' : '' }}>Savannah</option>
-                            <option value="Somali" {{ request('breed') == 'Somali' ? 'selected' : '' }}>Somali</option>
-                            <option value="Tonkinese" {{ request('breed') == 'Tonkinese' ? 'selected' : '' }}>Tonkinese</option>
-                            <option value="Turkish Angora" {{ request('breed') == 'Turkish Angora' ? 'selected' : '' }}>Turkish Angora</option>
-                            <option value="Turkish Van" {{ request('breed') == 'Turkish Van' ? 'selected' : '' }}>Turkish Van</option>
-                            <option value="Yorkshire Terrier" {{ request('breed') == 'Yorkshire Terrier' ? 'selected' : '' }}>Yorkshire Terrier</option>
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-boho-brown">
-                            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+            <div class="mb-12 flex justify-center">
+                <form method="GET" action="{{ route('cats.index') }}" class="bg-white p-6 rounded-2xl shadow-md border border-gray-200 w-full max-w-6xl">
+                    <div class="flex flex-col sm:flex-row gap-3 items-end">
+                        <!-- Breed Filter -->
+                        <div class="relative flex-1">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Breed</label>
+                            <select name="breed" class="appearance-none w-full bg-gray-100 border-0 text-gray-700 py-2 px-4 pr-8 rounded-lg focus:ring-2 focus:ring-orange-500 focus:bg-white transition-colors cursor-pointer">
+                                <option value="">All Breeds</option>
+                                <option value="Siamese" {{ request('breed') == 'Siamese' ? 'selected' : '' }}>Siamese</option>
+                                <option value="Persian" {{ request('breed') == 'Persian' ? 'selected' : '' }}>Persian</option>
+                                <option value="Bengal" {{ request('breed') == 'Bengal' ? 'selected' : '' }}>Bengal</option>
+                                <option value="Maine Coon" {{ request('breed') == 'Maine Coon' ? 'selected' : '' }}>Maine Coon</option>
+                                <option value="Ragdoll" {{ request('breed') == 'Ragdoll' ? 'selected' : '' }}>Ragdoll</option>
+                                <option value="Sphynx" {{ request('breed') == 'Sphynx' ? 'selected' : '' }}>Sphynx</option>
+                                <option value="British Shorthair" {{ request('breed') == 'British Shorthair' ? 'selected' : '' }}>British Shorthair</option>
+                                <option value="Domestic Shorthair" {{ request('breed') == 'Domestic Shorthair' ? 'selected' : '' }}>Domestic Shorthair</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-3 top-6 flex items-center text-gray-600">
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+                            </div>
                         </div>
+
+                        <!-- Health Status Filter -->
+                        <div class="relative flex-1">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Health Status</label>
+                            <select name="health_status" class="appearance-none w-full bg-gray-100 border-0 text-gray-700 py-2 px-4 pr-8 rounded-lg focus:ring-2 focus:ring-orange-500 focus:bg-white transition-colors cursor-pointer">
+                                <option value="">All Status</option>
+                                <option value="Healthy" {{ request('health_status') == 'Healthy' ? 'selected' : '' }}>Healthy</option>
+                                <option value="Recovering" {{ request('health_status') == 'Recovering' ? 'selected' : '' }}>Recovering</option>
+                                <option value="Treated" {{ request('health_status') == 'Treated' ? 'selected' : '' }}>Treated</option>
+                                <option value="Under Observation" {{ request('health_status') == 'Under Observation' ? 'selected' : '' }}>Under Observation</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-3 top-6 flex items-center text-gray-600">
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+                            </div>
+                        </div>
+
+                        <!-- Vaccinated Filter -->
+                        <div class="relative flex-1">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Vaccinated</label>
+                            <select name="vaccinated" class="appearance-none w-full bg-gray-100 border-0 text-gray-700 py-2 px-4 pr-8 rounded-lg focus:ring-2 focus:ring-orange-500 focus:bg-white transition-colors cursor-pointer">
+                                <option value="">All Cats</option>
+                                <option value="1" {{ request('vaccinated') == '1' ? 'selected' : '' }}>Vaccinated</option>
+                                <option value="0" {{ request('vaccinated') == '0' ? 'selected' : '' }}>Not Vaccinated</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-3 top-6 flex items-center text-gray-600">
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+                            </div>
+                        </div>
+
+                        <!-- Location Filter -->
+                        <div class="relative flex-1">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Location</label>
+                            <select name="location" class="appearance-none w-full bg-gray-100 border-0 text-gray-700 py-2 px-4 pr-8 rounded-lg focus:ring-2 focus:ring-orange-500 focus:bg-white transition-colors cursor-pointer">
+                                <option value="">All Locations</option>
+                                <option value="Cafe Asiah" {{ request('location') == 'Cafe Asiah' ? 'selected' : '' }}>Cafe Asiah</option>
+                                <option value="AIKOL Building" {{ request('location') == 'AIKOL Building' ? 'selected' : '' }}>AIKOL Building</option>
+                                <option value="IRK Building" {{ request('location') == 'IRK Building' ? 'selected' : '' }}>IRK Building</option>
+                                <option value="Medical Center" {{ request('location') == 'Medical Center' ? 'selected' : '' }}>Medical Center</option>
+                                <option value="Library Dar Al-Hikmah" {{ request('location') == 'Library Dar Al-Hikmah' ? 'selected' : '' }}>Library Dar Al-Hikmah</option>
+                                <option value="Engineering Block" {{ request('location') == 'Engineering Block' ? 'selected' : '' }}>Engineering Block</option>
+                                <option value="Rectory Building" {{ request('location') == 'Rectory Building' ? 'selected' : '' }}>Rectory Building</option>
+                                <option value="Mahallah Ali" {{ request('location') == 'Mahallah Ali' ? 'selected' : '' }}>Mahallah Ali</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-3 top-6 flex items-center text-gray-600">
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+                            </div>
+                        </div>
+
+                        <!-- Filter Button -->
+                        <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-8 rounded-lg transition-all shadow-md whitespace-nowrap h-10">
+                            🔍 Filter
+                        </button>
+
+                        <!-- Clear Button -->
+                        @if(request('breed') || request('health_status') || request('vaccinated') || request('location'))
+                            <a href="{{ route('cats.index') }}" class="flex items-center justify-center px-6 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors font-semibold h-10 whitespace-nowrap">
+                                ✕ Clear
+                            </a>
+                        @endif
                     </div>
-                    <button type="submit" class="bg-boho-brown text-white px-8 py-3 rounded-xl hover:bg-opacity-90 transition-all shadow-md font-semibold tracking-wide">
-                        Filter
-                    </button>
-                    @if(request('breed'))
-                        <a href="{{ route('cats.index') }}" class="flex items-center justify-center px-4 text-boho-brown hover:text-boho-orange transition-colors">
-                            Clear
-                        </a>
-                    @endif
                 </form>
             </div>
 
             <!-- Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 @forelse($cats as $cat)
-                    <div class="bg-white group rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-boho-light flex flex-col h-full">
-                        <div class="relative h-64 overflow-hidden">
+                    <div class="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-200 flex flex-col h-full">
+                        <!-- Image Section -->
+                        <div class="relative h-72 overflow-hidden bg-gradient-to-b from-teal-400 to-teal-500">
                             <img src="{{ $cat->image }}" alt="{{ $cat->name }}"
-                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
                             
-                            <div class="absolute top-4 right-4 bg-white/95 backdrop-blur-md p-2 rounded-full shadow-lg text-boho-brown transform translate-y-[-10px] opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                                <svg class="w-5 h-5 fill-current text-boho-orange" viewBox="0 0 24 24">
-                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                                </svg>
-                            </div>
+                            <!-- AI Match Badge - Top Left -->
+                            @if($cat->ai_match_score > 0)
+                                <div class="absolute top-4 left-4 bg-orange-500 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 shadow-lg">
+                                    <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                    </svg>
+                                    AI Match: {{ $cat->ai_match_score }}%
+                                </div>
+                            @endif
                             
-                            <span class="absolute top-4 left-4 bg-boho-brown/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider shadow-sm">
+                            <!-- Available Badge - Top Right -->
+                            <div class="absolute top-4 right-4 bg-emerald-500 text-white px-4 py-2 rounded-full text-xs font-bold uppercase shadow-lg">
                                 {{ $cat->status }}
-                            </span>
+                            </div>
                         </div>
                         
-                        <div class="p-6 flex flex-col flex-grow relative">
-                            <!-- Decorative bg pattern could go here -->
-                            
-                            <div class="flex justify-between items-start mb-3">
-                                <h3 class="text-2xl font-serif font-bold text-boho-brown group-hover:text-boho-orange transition-colors">
+                        <!-- Content Section -->
+                        <div class="p-8 flex flex-col flex-grow">
+                            <!-- Name & Vaccinated -->
+                            <div class="flex justify-between items-start mb-6">
+                                <h3 class="text-3xl font-serif font-bold text-gray-800">
                                     {{ $cat->name }}
                                 </h3>
-                                <span class="bg-boho-bg text-boho-brown text-sm font-bold px-3 py-1 rounded-lg border border-boho-cream">
-                                    {{ $cat->age }}
-                                </span>
+                                @if($cat->vaccinated)
+                                    <span class="bg-gray-200 text-gray-700 text-sm font-semibold px-4 py-2 rounded-full border border-gray-300">
+                                        Vaccinated
+                                    </span>
+                                @endif
                             </div>
                             
-                            <div class="flex-grow">
-                                <div class="flex flex-wrap gap-2 mb-4 text-xs font-medium text-gray-500 uppercase tracking-wide">
-                                    <span class="flex items-center gap-1">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-boho-orange"></span>
-                                        {{ $cat->breed }}
-                                    </span>
-                                    <span class="flex items-center gap-1 ml-2">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span>
-                                        {{ $cat->gender }}
-                                    </span>
-                                </div>
-                                
-                                <p class="text-gray-600 text-sm line-clamp-3 leading-relaxed mb-6">
-                                    {{ $cat->description }}
+                            <div class="space-y-4 flex-grow">
+                                <!-- Age -->
+                                <p class="text-gray-600 font-medium text-base">
+                                    Age: <span class="font-semibold">{{ $cat->age }}</span>
                                 </p>
+                                
+                                <!-- Location -->
+                                <p class="text-gray-600 flex items-center gap-2 font-medium">
+                                    <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    {{ $cat->location_name ?? 'Campus Location' }}
+                                </p>
+                                
+                                <!-- Health Status -->
+                                <p class="text-gray-600 font-medium text-base">
+                                    Health: <span class="font-semibold text-green-600">{{ $cat->health_status ?? 'Healthy' }}</span>
+                                </p>
+                                
+                                <!-- Personality -->
+                                @if($cat->personality)
+                                    <p class="text-gray-600 font-medium text-base">
+                                        Personality: <span class="font-semibold text-blue-600">{{ $cat->personality }}</span>
+                                    </p>
+                                @endif
                             </div>
-
-                            <a href="{{ route('cats.show', $cat) }}"
-                                class="w-full text-center border border-boho-brown text-boho-brown font-bold py-3 rounded-xl transition-all hover:bg-boho-brown hover:text-white hover:shadow-lg focus:ring-2 focus:ring-boho-brown focus:ring-offset-2">
-                                Meet {{ $cat->name }}
-                            </a>
+                            
+                            <!-- Action Buttons -->
+                            <div class="flex gap-4 mt-8 pt-6 border-t border-gray-200">
+                                <button onclick="adoptCat({{ $cat->id }})" class="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-2xl transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                                    </svg>
+                                    Adopt
+                                </button>
+                                <a href="{{ route('cats.show', $cat) }}" class="flex-1 border-2 border-gray-400 text-gray-700 hover:border-gray-600 hover:bg-gray-50 font-bold py-3 px-6 rounded-2xl transition-all text-center">
+                                    Details
+                                </a>
+                            </div>
                         </div>
                     </div>
                 @empty
-                    <div class="col-span-full text-center py-12">
-                        <div class="inline-block p-6 rounded-full bg-boho-light mb-4 text-boho-brown">
-                            <svg class="w-12 h-12 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <div class="lg:col-span-2 text-center py-16">
+                        <div class="inline-block p-6 rounded-full bg-gray-200 mb-4 text-gray-500">
+                            <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         </div>
-                        <h3 class="text-xl font-serif font-bold text-gray-600 mb-2">No cats found</h3>
-                        <p class="text-gray-500">Try adjusting your filter or check back later.</p>
+                        <h3 class="text-2xl font-serif font-bold text-gray-700 mb-2">No cats found</h3>
+                        <p class="text-gray-600 mb-6">Try adjusting your filter or check back later.</p>
                         @if(request('breed'))
-                             <a href="{{ route('cats.index') }}" class="inline-block mt-4 text-boho-orange font-bold hover:underline">View all cats</a>
+                             <a href="{{ route('cats.index') }}" class="inline-block text-blue-600 font-bold hover:text-blue-700 text-lg">View all cats</a>
                         @endif
                     </div>
                 @endforelse
             </div>
         </div>
     </div>
+
+    <script>
+        function adoptCat(catId) {
+            // Redirect to adoption page or show modal
+            window.location.href = '/cats/' + catId + '/adopt';
+        }
+    </script>
 </x-app-layout>

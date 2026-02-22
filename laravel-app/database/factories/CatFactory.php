@@ -10,6 +10,30 @@ class CatFactory extends Factory
     {
         $breeds = ['Siamese', 'Persian', 'Maine Coon', 'Bengal', 'British Shorthair', 'Sphynx', 'Ragdoll', 'Domestic Shorthair'];
         $colors = ['White', 'Black', 'Orange', 'Calico', 'Tabby', 'Gray', 'Tuxedo'];
+        $locations = ['Cafe Asiah', 'AIKOL Building', 'IRK Building', 'Medical Center', 'Library Dar Al-Hikmah'];
+        $healthStatus = ['Healthy', 'Recovering', 'Treated', 'Under Observation'];
+        $personalities = [
+            'Friendly, Playful',
+            'Calm, Affectionate',
+            'Active, Energetic',
+            'Shy, Gentle',
+            'Loving, Loyal',
+            'Curious, Intelligent',
+            'Playful, Cuddly',
+            'Independent, Sweet',
+        ];
+
+        // Collection of guaranteed cat images from Unsplash
+        $catImages = [
+            'https://images.unsplash.com/photo-1574158622682-e40e69881006?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=70', // Orange cat face
+            'https://images.unsplash.com/photo-1519052537078-e6302a4968d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=70', // Gray tabby cat
+            'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=70', // Calico cat
+            'https://cdn.omlet.com/images/originals/breed_abyssinian_cat.jpg', // Black cat
+            'https://i.pinimg.com/736x/2c/a6/e8/2ca6e8d16ed23f066332aba3ec0c99e6.jpg', // White cat
+            'https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=70', // Tuxedo cat
+            'https://media.newyorker.com/photos/5e49bf473399bf0008132231/master/pass/Kenseth-CatProfile.jpg', // Siamese cat
+            'https://i0.wp.com/sassykoonz.com/wp-content/uploads/2021/06/maine-coon-adult-orange-male-i-am-legned-4-years-old-683x1024.jpg?resize=683%2C1024&ssl=1', // Maine Coon 
+            ];
 
         // IIUM Gombak Approximate Bounding Box
         // Lat: 3.2450 to 3.2580
@@ -38,9 +62,14 @@ class CatFactory extends Factory
             'description' => $this->faker->randomElement($descriptions),
             'medical_history' => 'Vaccinated and Dewormed by AHC Vet Team.',
             'status' => $this->faker->randomElement(['Available', 'Available', 'Available', 'Adopted']),
-            'image' => 'https://images.unsplash.com/photo-' . $this->faker->randomElement(['1514888286974-6c03e2ca1dba', '1573865526339-1200dbae5e5a', '1495360019614-da048b831f51', '1533738363-b7f9aef128ce', '1529778873929-fa87327c11ad']) . '?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80',
+            'image' => $this->faker->randomElement($catImages),
             'gps_lat' => $lat,
             'gps_lng' => $lng,
+            'ai_match_score' => $this->faker->numberBetween(60, 100),
+            'location_name' => $this->faker->randomElement($locations),
+            'vaccinated' => $this->faker->boolean(70),
+            'health_status' => $this->faker->randomElement($healthStatus),
+            'personality' => $this->faker->randomElement($personalities),
         ];
     }
 }

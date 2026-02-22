@@ -14,10 +14,15 @@
                 <div class="w-full lg:w-1/3">
                     <div class="bg-white rounded-3xl shadow-sm p-8 text-center border border-gray-100">
                         <!-- Avatar -->
-                        <div
-                            class="w-24 h-24 mx-auto bg-gradient-to-br from-blue-400 to-boho-brown rounded-full flex items-center justify-center text-white text-2xl font-bold mb-4 shadow-lg">
-                            {{ substr(Auth::user()->name, 0, 2) }}
-                        </div>
+                        @if (Auth::user()->avatar)
+                            <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}"
+                                class="w-24 h-24 mx-auto rounded-full object-cover shadow-lg ring-4 ring-boho-orange/30 mb-4">
+                        @else
+                            <div
+                                class="w-24 h-24 mx-auto bg-gradient-to-br from-blue-400 to-boho-brown rounded-full flex items-center justify-center text-white text-2xl font-bold mb-4 shadow-lg">
+                                {{ substr(Auth::user()->name, 0, 2) }}
+                            </div>
+                        @endif
 
                         <h3 class="text-xl font-bold text-gray-800">{{ Auth::user()->name }}</h3>
                         <p class="text-gray-500 text-sm mb-6">{{ Auth::user()->email }}</p>
@@ -139,9 +144,40 @@
                             <div x-show="tab === 'profile'" class="space-y-6">
                                 <h4 class="text-xl font-bold text-gray-800 mb-6">Edit Profile</h4>
 
-                                <form method="post" action="{{ route('profile.update') }}" class="space-y-6">
+                                <form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="space-y-6">
                                     @csrf
                                     @method('patch')
+
+                                    <!-- Avatar Upload -->
+                                    <div>
+                                        <x-input-label for="avatar" :value="__('Profile Picture')"
+                                            class="text-gray-600 font-bold" />
+                                        <div class="mt-4 flex items-end gap-6">
+                                            <div class="flex-shrink-0">
+                                                @if ($user->avatar)
+                                                    <img src="{{ Storage::url($user->avatar) }}" alt="{{ $user->name }}"
+                                                        class="w-24 h-24 rounded-full object-cover ring-4 ring-boho-orange/30 shadow-lg">
+                                                @else
+                                                    <div
+                                                        class="w-24 h-24 rounded-full bg-gradient-to-br from-blue-400 to-boho-brown flex items-center justify-center text-white text-2xl font-bold ring-4 ring-gray-200">
+                                                        {{ substr($user->name, 0, 1) }}
+                                                    </div>
+                                                @endif
+                                            </div>
+                                            <div class="flex-1">
+                                                <input id="avatar" name="avatar" type="file" accept="image/*"
+                                                    class="block w-full text-sm text-gray-500
+                                                    file:mr-4 file:py-2 file:px-4
+                                                    file:rounded-lg file:border-0
+                                                    file:text-sm file:font-bold
+                                                    file:bg-boho-orange file:text-white
+                                                    hover:file:bg-orange-500
+                                                    cursor-pointer" />
+                                                <p class="text-xs text-gray-500 mt-2">PNG, JPG, GIF up to 5MB</p>
+                                            </div>
+                                        </div>
+                                        <x-input-error class="mt-2" :messages="$errors->get('avatar')" />
+                                    </div>
 
                                     <div>
                                         <x-input-label for="name" :value="__('Full Name')"

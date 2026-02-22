@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100 relative z-50">
+<nav x-data="{ open: false }" class="sticky top-0 bg-white border-b border-gray-100 relative z-50">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -15,17 +15,14 @@
                     <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
                         {{ __('Home') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('about')" :active="request()->routeIs('about')">
+                        {{ __('About') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('cats.index')" :active="request()->routeIs('cats.*')">
                         {{ __('View Cats') }}
                     </x-nav-link>
                     <x-nav-link :href="route('tracker')" :active="request()->routeIs('tracker')">
                         {{ __('Map Tracker') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('about')" :active="request()->routeIs('about')">
-                        {{ __('About') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('scanner')" :active="request()->routeIs('scanner')">
-                        {{ __('Scan QR') }}
                     </x-nav-link>
                     <x-nav-link :href="route('events.index')" :active="request()->routeIs('events.*')">
                         {{ __('Events') }}
@@ -47,8 +44,17 @@
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             <button
-                                class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm leading-4 font-medium rounded-md text-gray-500 bg-boho-light hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                <div>{{ Auth::user()->name }}</div>
+                                class="inline-flex items-center px-3 py-2 text-sm leading-4 font-medium rounded-lg hover:bg-gray-100 focus:outline-none transition ease-in-out duration-150 gap-3 group">
+                                @if (Auth::user()->avatar)
+                                    <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}"
+                                        class="w-8 h-8 rounded-full object-cover ring-2 ring-boho-orange/30 shadow-sm group-hover:ring-boho-orange">
+                                @else
+                                    <div
+                                        class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-boho-brown flex items-center justify-center text-white text-xs font-bold">
+                                        {{ substr(Auth::user()->name, 0, 1) }}
+                                    </div>
+                                @endif
+                                <div class="text-gray-600 group-hover:text-gray-900">{{ Auth::user()->name }}</div>
 
                                 <div class="ms-1">
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
@@ -109,6 +115,9 @@
             <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')">
                 {{ __('Home') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('about')" :active="request()->routeIs('about')">
+                {{ __('About') }}
+            </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('cats.index')" :active="request()->routeIs('cats.*')">
                 {{ __('Cats') }}
             </x-responsive-nav-link>
@@ -117,9 +126,20 @@
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
             @auth
-                <div class="px-4">
-                    <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                    <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                <div class="px-4 flex items-center gap-3 mb-4">
+                    @if (Auth::user()->avatar)
+                        <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}"
+                            class="w-10 h-10 rounded-full object-cover ring-2 ring-boho-orange/30 shadow-sm">
+                    @else
+                        <div
+                            class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-boho-brown flex items-center justify-center text-white text-sm font-bold">
+                            {{ substr(Auth::user()->name, 0, 1) }}
+                        </div>
+                    @endif
+                    <div>
+                        <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
+                        <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                    </div>
                 </div>
 
                 <div class="mt-3 space-y-1">

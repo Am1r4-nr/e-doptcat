@@ -67,76 +67,100 @@
 
                 <!-- Sidebar List Section -->
                 <div class="lg:col-span-1 space-y-6">
-                    <!-- Filters -->
-                    <div class="bg-white rounded-3xl shadow-sm border border-boho-light p-6">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-serif font-bold text-lg text-boho-brown">Filter Cats</h3>
-                            <button @click="resetFilters"
-                                class="text-xs text-boho-orange font-bold hover:underline">Reset</button>
+                    <!-- Tab Toggle -->
+                    <div class="bg-white rounded-3xl shadow-sm border border-boho-light p-4">
+                        <div class="flex gap-2">
+                            <button @click="viewMode = 'list'" :class="viewMode === 'list' ? 'bg-orange-500 text-white' : 'bg-gray-100 text-gray-700'" class="flex-1 py-2 rounded-lg font-bold transition-all text-sm">
+                                📋 List
+                            </button>
+                            <button @click="viewMode = 'scanner'" :class="viewMode === 'scanner' ? 'bg-orange-500 text-white' : 'bg-gray-100 text-gray-700'" class="flex-1 py-2 rounded-lg font-bold transition-all text-sm">
+                                📸 Scanner
+                            </button>
                         </div>
-                        <div class="space-y-3">
-                            <select x-model="filterStatus"
-                                class="w-full px-4 py-3 bg-boho-light border-transparent rounded-xl text-sm font-bold text-gray-700 focus:border-boho-brown focus:ring-0 cursor-pointer">
-                                <option value="all">All Statuses</option>
-                                <option value="Available">Available (Healthy)</option>
-                                <option value="Adopted">Adopted</option>
-                                <option value="Pending">Pending (Recovering)</option>
-                            </select>
-                            <div class="text-xs text-center text-gray-400 font-medium">
-                                Showing <span x-text="filteredCats.length"></span> cats
+                    </div>
+
+                    <!-- List View -->
+                    <div x-show="viewMode === 'list'" class="space-y-6">
+                        <!-- Filters -->
+                        <div class="bg-white rounded-3xl shadow-sm border border-boho-light p-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="font-serif font-bold text-lg text-boho-brown">Filter Cats</h3>
+                                <button @click="resetFilters"
+                                    class="text-xs text-boho-orange font-bold hover:underline">Reset</button>
+                            </div>
+                            <div class="space-y-3">
+                                <select x-model="filterStatus"
+                                    class="w-full px-4 py-3 bg-boho-light border-transparent rounded-xl text-sm font-bold text-gray-700 focus:border-boho-brown focus:ring-0 cursor-pointer">
+                                    <option value="all">All Statuses</option>
+                                    <option value="Available">Available (Healthy)</option>
+                                    <option value="Adopted">Adopted</option>
+                                    <option value="Pending">Pending (Recovering)</option>
+                                </select>
+                                <div class="text-xs text-center text-gray-400 font-medium">
+                                    Showing <span x-text="filteredCats.length"></span> cats
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- List -->
+                        <div class="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+                            <template x-for="cat in filteredCats" :key="cat.id">
+                                <div @click="focusCat(cat)"
+                                    class="bg-white group rounded-2xl shadow-sm border border-boho-light p-4 flex gap-4 cursor-pointer hover:border-boho-orange hover:shadow-md transition-all transform hover:-translate-x-1">
+
+                                    <div class="relative w-16 h-16 flex-shrink-0">
+                                        <img :src="cat.image || 'https://via.placeholder.com/150'"
+                                            class="w-full h-full object-cover rounded-xl shadow-sm">
+                                        <div class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white"
+                                            :class="{
+                                                'bg-green-500': cat.status === 'Available',
+                                                'bg-orange-500': cat.status === 'Pending',
+                                                'bg-blue-500': cat.status === 'Adopted',
+                                                'bg-red-500': !['Available', 'Pending', 'Adopted'].includes(cat.status)
+                                             }"></div>
+                                    </div>
+
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex justify-between items-start">
+                                            <h4 class="text-lg font-serif font-bold text-gray-800 truncate group-hover:text-boho-orange transition-colors"
+                                                x-text="cat.name"></h4>
+                                            <button class="text-gray-300 hover:text-boho-brown transition-colors">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <p class="text-xs text-gray-500 mb-2 truncate" x-text="cat.breed"></p>
+
+                                        <div class="flex items-center justify-between mt-2">
+                                            <div
+                                                class="flex items-center gap-1 text-[10px] text-gray-400 font-bold uppercase tracking-wide">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                <span x-text="formatDate(cat.updated_at)"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <div x-show="filteredCats.length === 0" class="text-center py-8 text-gray-500">
+                                <p>No cats found matching filtering.</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- List -->
-                    <div class="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
-                        <template x-for="cat in filteredCats" :key="cat.id">
-                            <div @click="focusCat(cat)"
-                                class="bg-white group rounded-2xl shadow-sm border border-boho-light p-4 flex gap-4 cursor-pointer hover:border-boho-orange hover:shadow-md transition-all transform hover:-translate-x-1">
-
-                                <div class="relative w-16 h-16 flex-shrink-0">
-                                    <img :src="cat.image || 'https://via.placeholder.com/150'"
-                                        class="w-full h-full object-cover rounded-xl shadow-sm">
-                                    <div class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white"
-                                        :class="{
-                                            'bg-green-500': cat.status === 'Available',
-                                            'bg-orange-500': cat.status === 'Pending',
-                                            'bg-blue-500': cat.status === 'Adopted',
-                                            'bg-red-500': !['Available', 'Pending', 'Adopted'].includes(cat.status)
-                                         }"></div>
-                                </div>
-
-                                <div class="flex-1 min-w-0">
-                                    <div class="flex justify-between items-start">
-                                        <h4 class="text-lg font-serif font-bold text-gray-800 truncate group-hover:text-boho-orange transition-colors"
-                                            x-text="cat.name"></h4>
-                                        <button class="text-gray-300 hover:text-boho-brown transition-colors">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    <p class="text-xs text-gray-500 mb-2 truncate" x-text="cat.breed"></p>
-
-                                    <div class="flex items-center justify-between mt-2">
-                                        <div
-                                            class="flex items-center gap-1 text-[10px] text-gray-400 font-bold uppercase tracking-wide">
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                            <span x-text="formatDate(cat.updated_at)"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </template>
-
-                        <div x-show="filteredCats.length === 0" class="text-center py-8 text-gray-500">
-                            <p>No cats found matching filtering.</p>
+                    <!-- QR Scanner View -->
+                    <div x-show="viewMode === 'scanner'" class="space-y-6">
+                        <div class="bg-white rounded-3xl shadow-sm border border-boho-light p-6 flex flex-col items-center">
+                            <div id="reader" style="width: 100%; max-width: 400px; margin-bottom: 1.5rem;"></div>
+                            <div id="result" class="mt-2 font-bold text-lg text-boho-brown text-center min-h-6"></div>
+                            <p class="mt-3 text-sm text-gray-500 text-center">Ensure good lighting and hold the camera steady.</p>
                         </div>
                     </div>
                 </div>
@@ -171,9 +195,18 @@
                 cats: @json($cats),
                 filterStatus: 'all',
                 markers: [],
+                viewMode: 'list',
+                scannerInitialized: false,
 
                 init() {
                     this.initMap();
+                    this.$watch('viewMode', () => {
+                        if (this.viewMode === 'scanner' && !this.scannerInitialized) {
+                            this.$nextTick(() => {
+                                this.initScanner();
+                            });
+                        }
+                    });
                 },
 
                 get filteredCats() {
@@ -200,6 +233,34 @@
                     this.$watch('filterStatus', () => {
                         this.updateMarkers();
                     });
+                },
+
+                initScanner() {
+                    if (typeof Html5QrcodeScanner === 'undefined') {
+                        console.error('Html5QrcodeScanner library not loaded');
+                        return;
+                    }
+
+                    function onScanSuccess(decodedText, decodedResult) {
+                        document.getElementById('result').innerText = "✓ Found: " + decodedText;
+
+                        // If it's a URL to our cats, redirect
+                        if (decodedText.includes('/cats/')) {
+                            window.location.href = decodedText;
+                        }
+                    }
+
+                    function onScanFailure(error) {
+                        // Silently fail - keep scanning
+                    }
+
+                    let html5QrcodeScanner = new Html5QrcodeScanner(
+                        "reader",
+                        { fps: 10, qrbox: { width: 250, height: 250 } },
+                        false
+                    );
+                    html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+                    this.scannerInitialized = true;
                 },
 
                 updateMarkers() {

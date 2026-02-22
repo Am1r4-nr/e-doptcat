@@ -4,6 +4,35 @@
         style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23d4a373\' fill-opacity=\'0.1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');">
     </div>
 
+    <!-- User Greeting Section -->
+    @auth
+    <div class="relative bg-gradient-to-r from-boho-orange/10 to-boho-brown/5 pt-6 pb-6 z-10">
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    @if (Auth::user()->avatar)
+                        <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}"
+                            class="w-12 h-12 rounded-full object-cover ring-2 ring-boho-orange/50 shadow-md">
+                    @else
+                        <div
+                            class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-boho-brown flex items-center justify-center text-white text-sm font-bold">
+                            {{ substr(Auth::user()->name, 0, 1) }}
+                        </div>
+                    @endif
+                    <div>
+                        <p class="text-sm text-gray-600">Welcome back 👋</p>
+                        <p class="text-lg sm:text-xl font-bold text-boho-brown">{{ Auth::user()->name }}</p>
+                    </div>
+                </div>
+                <a href="{{ route('profile.edit') }}"
+                    class="text-sm font-bold text-boho-orange hover:text-orange-600 transition-colors">
+                    Edit Profile
+                </a>
+            </div>
+        </div>
+    </div>
+    @endauth
+
     <!-- Hero Section -->
     <div class="relative bg-boho-bg overflow-hidden pt-12 pb-24 sm:pt-24 sm:pb-32 z-10">
         <!-- Organic Blobs Background -->

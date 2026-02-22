@@ -74,8 +74,10 @@
                     Password</label>
                 <input id="password_confirmation"
                     class="w-full px-4 py-3 rounded-xl bg-boho-bg border-transparent focus:border-boho-brown focus:bg-white focus:ring-0 transition-colors"
-                    type="password" name="password_confirmation" required placeholder="Confirm your password" />
+                    type="password" name="password_confirmation" required placeholder="Confirm your password" 
+                    oninput="checkPasswordMatch()" />
                 <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+                <div id="password-match-status" class="mt-2 text-sm font-medium hidden"></div>
             </div>
 
             <!-- Agreements -->
@@ -110,3 +112,28 @@
         </form>
     </div>
 </x-guest-layout>
+
+<script>
+function checkPasswordMatch() {
+    const password = document.getElementById('password').value;
+    const passwordConfirm = document.getElementById('password_confirmation').value;
+    const statusDiv = document.getElementById('password-match-status');
+    
+    if (!passwordConfirm) {
+        statusDiv.classList.add('hidden');
+        return;
+    }
+    
+    if (password === passwordConfirm) {
+        statusDiv.classList.remove('hidden');
+        statusDiv.classList.remove('text-red-500');
+        statusDiv.classList.add('text-green-500');
+        statusDiv.textContent = '✓ Passwords match';
+    } else {
+        statusDiv.classList.remove('hidden');
+        statusDiv.classList.remove('text-green-500');
+        statusDiv.classList.add('text-red-500');
+        statusDiv.textContent = '✗ Passwords do not match';
+    }
+}
+</script>

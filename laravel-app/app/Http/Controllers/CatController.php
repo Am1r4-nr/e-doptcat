@@ -11,11 +11,24 @@ class CatController extends Controller
     {
         $query = Cat::query();
 
-        if ($request->has('breed')) {
+        // Filter by breed
+        if ($request->has('breed') && $request->breed != '') {
             $query->where('breed', $request->breed);
         }
-        if ($request->has('age')) {
-            $query->where('age', $request->age);
+
+        // Filter by health status
+        if ($request->has('health_status') && $request->health_status != '') {
+            $query->where('health_status', $request->health_status);
+        }
+
+        // Filter by vaccinated status
+        if ($request->has('vaccinated') && $request->vaccinated != '') {
+            $query->where('vaccinated', $request->vaccinated);
+        }
+
+        // Filter by location
+        if ($request->has('location') && $request->location != '') {
+            $query->where('location_name', $request->location);
         }
 
         $cats = $query->where('status', 'Available')->get();
