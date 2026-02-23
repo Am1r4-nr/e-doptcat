@@ -33,4 +33,20 @@ class Cat extends Model
     {
         return $this->hasMany(Adoption::class);
     }
+
+    /**
+     * Get all GPS devices for this cat
+     */
+    public function gpsDevices()
+    {
+        return $this->hasMany(GpsDevice::class);
+    }
+
+    /**
+     * Get the primary GPS device for this cat
+     */
+    public function gpsDevice()
+    {
+        return $this->hasOne(GpsDevice::class);
+    }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\GpsController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', App\Http\Controllers\HomeController::class)->name('home');
@@ -36,5 +37,14 @@ Route::middleware('auth')->group(function () {
         // Add more admin management routes here
     });
 });
+
+// GPS API Test Routes (No Auth Required - Development Only)
+if (app()->environment('local')) {
+    Route::get('/api/gps/location', [GpsController::class, 'getLocation'])->name('api.gps.location');
+    Route::get('/api/gps/location/save', [GpsController::class, 'getLocationAndSave'])->name('api.gps.location.save');
+    Route::post('/api/gps/location/save', [GpsController::class, 'getLocationAndSave'])->name('api.gps.location.save.post');
+    Route::get('/api/gps/test', [GpsController::class, 'testConnection'])->name('api.gps.test');
+    Route::get('/api/gps/update', [GpsController::class, 'updateLocation'])->name('api.gps.update');
+}
 
 require __DIR__ . '/auth.php';
