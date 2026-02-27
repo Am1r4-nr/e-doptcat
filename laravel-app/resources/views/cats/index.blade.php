@@ -12,6 +12,136 @@
                 </p>
             </div>
 
+            <!-- AI-Powered Recommendations Section -->
+            <div class="mb-12 flex justify-center" id="aiRecommendationSection">
+                <div class="bg-gradient-to-r from-orange-50 to-amber-50 p-8 rounded-2xl shadow-md border-2 border-orange-200 w-full max-w-6xl">
+                    <div class="flex items-center justify-between mb-8">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-8 h-8 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                            </svg>
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-800">AI-Powered Recommendations</h3>
+                                <p class="text-gray-600 text-sm">Based on your preferences and home environment</p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="toggleQuestionnaire()" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-xl transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                            Show Recommended
+                        </button>
+                    </div>
+
+                    <!-- Questionnaire Form (Initially Hidden) -->
+                    <form id="aiQuestionnaireForm" class="space-y-6 hidden" method="POST" action="{{ route('cats.ai-preferences') }}">
+                        @csrf
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Lifestyle Question -->
+                            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                                <label class="block text-sm font-bold text-gray-700 mb-4">🏃 How active is your lifestyle?</label>
+                                <div class="space-y-3">
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="radio" name="lifestyle" value="sedentary" class="form-radio h-4 w-4 text-orange-500" required>
+                                        <span class="ml-3 text-gray-700">Sedentary (Prefer quiet time)</span>
+                                    </label>
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="radio" name="lifestyle" value="moderate" class="form-radio h-4 w-4 text-orange-500">
+                                        <span class="ml-3 text-gray-700">Moderate (Balanced lifestyle)</span>
+                                    </label>
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="radio" name="lifestyle" value="active" class="form-radio h-4 w-4 text-orange-500">
+                                        <span class="ml-3 text-gray-700">Very Active (Always on the go)</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Budget Question -->
+                            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                                <label class="block text-sm font-bold text-gray-700 mb-4">💰 What's your monthly budget for cat care?</label>
+                                <div class="space-y-3">
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="radio" name="budget" value="limited" class="form-radio h-4 w-4 text-orange-500" required>
+                                        <span class="ml-3 text-gray-700">Limited ($50 or less)</span>
+                                    </label>
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="radio" name="budget" value="moderate" class="form-radio h-4 w-4 text-orange-500">
+                                        <span class="ml-3 text-gray-700">Moderate ($50-150)</span>
+                                    </label>
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="radio" name="budget" value="generous" class="form-radio h-4 w-4 text-orange-500">
+                                        <span class="ml-3 text-gray-700">No Limit (Best care possible)</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Home Environment Question -->
+                            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                                <label class="block text-sm font-bold text-gray-700 mb-4">🏠 What type of home do you have?</label>
+                                <div class="space-y-3">
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="radio" name="home_env" value="apartment" class="form-radio h-4 w-4 text-orange-500" required>
+                                        <span class="ml-3 text-gray-700">Apartment (Limited space)</span>
+                                    </label>
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="radio" name="home_env" value="house" class="form-radio h-4 w-4 text-orange-500">
+                                        <span class="ml-3 text-gray-700">House (Medium space)</span>
+                                    </label>
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="radio" name="home_env" value="large_house" class="form-radio h-4 w-4 text-orange-500">
+                                        <span class="ml-3 text-gray-700">Large House (Spacious)</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Activity/Playtime Question -->
+                            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                                <label class="block text-sm font-bold text-gray-700 mb-4">🎾 How much time for playtime daily?</label>
+                                <div class="space-y-3">
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="radio" name="activity" value="little" class="form-radio h-4 w-4 text-orange-500" required>
+                                        <span class="ml-3 text-gray-700">Little (Less than 1 hour)</span>
+                                    </label>
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="radio" name="activity" value="moderate" class="form-radio h-4 w-4 text-orange-500">
+                                        <span class="ml-3 text-gray-700">Moderate (1-3 hours)</span>
+                                    </label>
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="radio" name="activity" value="lots" class="form-radio h-4 w-4 text-orange-500">
+                                        <span class="ml-3 text-gray-700">Lots (3+ hours)</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Experience Question -->
+                            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm md:col-span-2">
+                                <label class="block text-sm font-bold text-gray-700 mb-4">🐱 How experienced are you with cats?</label>
+                                <div class="space-y-3">
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="radio" name="experience" value="first_time" class="form-radio h-4 w-4 text-orange-500" required>
+                                        <span class="ml-3 text-gray-700">First time (Never had a cat before)</span>
+                                    </label>
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="radio" name="experience" value="some" class="form-radio h-4 w-4 text-orange-500">
+                                        <span class="ml-3 text-gray-700">Some experience (Had cats in the past)</span>
+                                    </label>
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="radio" name="experience" value="experienced" class="form-radio h-4 w-4 text-orange-500">
+                                        <span class="ml-3 text-gray-700">Very experienced (Cat expert)</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4 justify-end mt-8">
+                            <button type="button" onclick="toggleQuestionnaire()" class="px-6 py-3 border-2 border-gray-400 text-gray-700 hover:border-gray-600 hover:bg-gray-50 font-bold rounded-xl transition-all">
+                                Cancel
+                            </button>
+                            <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                                Get AI Recommendations
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <!-- Filter -->
             <div class="mb-12 flex justify-center">
                 <form method="GET" action="{{ route('cats.index') }}" class="bg-white p-6 rounded-2xl shadow-md border border-gray-200 w-full max-w-6xl">
@@ -99,6 +229,11 @@
 
             <!-- Grid -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                @if(request('recommended') == 'true')
+                    <div class="lg:col-span-2 mb-4 bg-blue-50 border border-blue-200 p-4 rounded-lg">
+                        <p class="text-blue-800 font-semibold">✨ Showing {{ count($cats) }} of your top AI-recommended matches</p>
+                    </div>
+                @endif
                 @forelse($cats as $cat)
                     <div class="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-200 flex flex-col h-full">
                         <!-- Image Section -->
@@ -198,5 +333,37 @@
             // Redirect to adoption page or show modal
             window.location.href = '/cats/' + catId + '/adopt';
         }
+
+        function toggleQuestionnaire() {
+            const form = document.getElementById('aiQuestionnaireForm');
+            const section = document.getElementById('aiRecommendationSection');
+            
+            if (form.classList.contains('hidden')) {
+                // Show form
+                form.classList.remove('hidden');
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                // Hide form
+                form.classList.add('hidden');
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('aiQuestionnaireForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            // Store preferences in session storage
+            sessionStorage.setItem('aiPreferences', JSON.stringify(data));
+            
+            // Hide form and show recommendations
+            document.getElementById('aiQuestionnaireForm').classList.add('hidden');
+            
+            // Reload page or filter to show recommended cats
+            window.location.href = window.location.pathname + '?recommended=true';
+        });
     </script>
 </x-app-layout>

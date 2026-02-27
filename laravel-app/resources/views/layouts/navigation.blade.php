@@ -30,11 +30,6 @@
                     <x-nav-link :href="route('donations.index')" :active="request()->routeIs('donations.*')">
                         {{ __('Donate') }}
                     </x-nav-link>
-                    @if(auth()->user() && auth()->user()->role === 'admin')
-                        <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
-                            {{ __('Admin') }}
-                        </x-nav-link>
-                    @endif
                 </div>
             </div>
 
@@ -120,6 +115,15 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('cats.index')" :active="request()->routeIs('cats.*')">
                 {{ __('Cats') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('tracker')" :active="request()->routeIs('tracker')">
+                {{ __('Map Tracker') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('events.index')" :active="request()->routeIs('events.*')">
+                {{ __('Events') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('donations.index')" :active="request()->routeIs('donations.*')">
+                {{ __('Donate') }}
             </x-responsive-nav-link>
         </div>
 

@@ -13,20 +13,28 @@ class AdminDashboardController extends Controller
 {
     public function index()
     {
-        $stats = [
-            'total_cats' => Cat::count(),
-            'available_cats' => Cat::where('status', 'Available')->count(),
-            'total_adoptions' => Adoption::count(),
-            'pending_adoptions' => Adoption::where('status', 'Pending')->count(),
-            'total_donations' => Donation::sum('amount'),
-            'recent_reports' => Report::with('user')->latest()->take(5)->get(),
-            'monthly_donations' => Donation::whereYear('created_at', date('Y'))
-                ->selectRaw('strftime("%m", created_at) as month, sum(amount) as total')
-                ->groupBy('month')
-                ->pluck('total', 'month')
-                ->toArray(),
-        ];
+        try {
+            $stats = [
+                'total_cats' => Cat::count(),
+                'total_adoptions' => Adoption::count(),
+                'total_users' => User::where('role', 'user')->count(),
+                'total_donations' => Donation::sum('amount') ?? 0,
+                'adoptions_this_month' => Adoption::whereMonth('created_at', now()->month)->count(),
+                'recent_reports' => Report::with('user')->latest()->take(5)->get(),
+            ];
 
-        return view('admin.dashboard', compact('stats'));
+            return view('admin.dashboard', compact('stats'));
+        } catch (\Exception $e) {
+            \Log::error('Admin Dashboard Error: ' . $e->getMessage());
+            return view('admin.dashboard', ['stats' => [
+                'total_cats' => 0,
+                'total_adoptions' => 0,
+                'total_users' => 0,
+                'total_donations' => 0,
+                'adoptions_this_month' => 0,
+                'recent_reports' => collect([]),
+            ]]);
+        }
     }
 }
+

@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'ai_matcher' => [
+        'url' => env('AI_MATCHER_URL', 'http://localhost:5000'),
+    ],
+
 ];

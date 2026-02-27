@@ -7,6 +7,11 @@ use App\Http\Controllers\DonationController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\GpsController;
+use App\Http\Controllers\Admin\CatManagementController;
+use App\Http\Controllers\Admin\AdoptionManagementController;
+use App\Http\Controllers\Admin\ReportManagementController;
+use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\Admin\DonationManagementController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', App\Http\Controllers\HomeController::class)->name('home');
@@ -19,6 +24,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::resource('cats', CatController::class)->only(['index', 'show']);
+Route::post('cats/ai-preferences', [CatController::class, 'storeAiPreferences'])->name('cats.ai-preferences');
 Route::resource('events', EventController::class)->only(['index', 'show']);
 Route::get('donations', [DonationController::class, 'index'])->name('donations.index');
 
@@ -34,7 +40,25 @@ Route::middleware('auth')->group(function () {
     // Admin Routes
     Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
-        // Add more admin management routes here
+        
+        // Cat Management
+        Route::resource('cats', CatManagementController::class);
+        
+        // Adoption Management
+        Route::resource('adoptions', AdoptionManagementController::class)->only(['index', 'show', 'destroy']);
+        Route::patch('adoptions/{adoption}/approve', [AdoptionManagementController::class, 'approve'])->name('adoptions.approve');
+        Route::patch('adoptions/{adoption}/reject', [AdoptionManagementController::class, 'reject'])->name('adoptions.reject');
+        
+        // Report Management
+        Route::resource('reports', ReportManagementController::class)->only(['index', 'show', 'destroy']);
+        Route::patch('reports/{report}/status', [ReportManagementController::class, 'updateStatus'])->name('reports.status');
+        
+        // User Management
+        Route::resource('users', UserManagementController::class)->only(['index', 'show', 'destroy']);
+        Route::patch('users/{user}/role', [UserManagementController::class, 'updateRole'])->name('users.role');
+        
+        // Donation Management
+        Route::resource('donations', DonationManagementController::class)->only(['index', 'show', 'destroy']);
     });
 });
 
@@ -45,6 +69,43 @@ if (app()->environment('local')) {
     Route::post('/api/gps/location/save', [GpsController::class, 'getLocationAndSave'])->name('api.gps.location.save.post');
     Route::get('/api/gps/test', [GpsController::class, 'testConnection'])->name('api.gps.test');
     Route::get('/api/gps/update', [GpsController::class, 'updateLocation'])->name('api.gps.update');
+    
+    // Admin Dashboard Test Routes (No Auth Required for Testing)
+    Route::get('/admin/dashboard-test', [AdminDashboardController::class, 'index'])->name('admin.dashboard.test');
+    Route::get('/admin/plain-test', function () {
+        return response()->html('<!DOCTYPE html><html><head><title>Plain Test</title></head><body style="font-family: Arial; padding: 20px;"><h1>Admin Dashboard - Plain HTML Test</h1><p>If you see this, the server is working fine.</p><div style="background: #f0f0f0; padding: 15px; margin-top: 20px;"><strong>Database Status:</strong><br>Total Cats: ' . \App\Models\Cat::count() . '<br>Admin User: ' . (\App\Models\User::where('role', 'admin')->count() > 0 ? 'Yes' : 'No') . '</div></body></html>');
+    })->name('plain.test');
+    
+    Route::get('/test', function () {
+        return '<html><body><h1>HELLO WORLD</h1><p>Server is working!</p></body></html>';
+    })->name('test');
+    Route::get('/admin/dashboard-minimal', function () {
+        $stats = [];
+        try {
+            $stats['total_cats'] = \App\Models\Cat::count();
+            $stats['available_cats'] = \App\Models\Cat::where('status', 'Available')->count();
+            $stats['total_adoptions'] = \App\Models\Adoption::count();
+            $stats['pending_adoptions'] = \App\Models\Adoption::where('status', 'Pending')->count();
+            $stats['total_donations'] = \App\Models\Donation::sum('amount') ?? 0;
+            $stats['recent_reports'] = \App\Models\Report::with('user')->latest()->take(5)->get();
+            $stats['monthly_donations'] = [];
+        } catch (Exception $e) {
+            \Log::error('Dashboard Error: ' . $e->getMessage());
+        }
+        return view('admin.dashboard', compact('stats'));
+    })->name('admin.dashboard.minimal');
+    Route::get('/admin/dashboard-debug', function () {
+        $stats = [
+            'total_cats' => 0,
+            'available_cats' => 0,
+            'total_adoptions' => 0,
+            'pending_adoptions' => 0,
+            'total_donations' => 0,
+            'recent_reports' => collect([]),
+            'monthly_donations' => [],
+        ];
+        return view('admin.dashboard-debug', compact('stats'));
+    })->name('admin.dashboard.debug');
 }
 
 require __DIR__ . '/auth.php';
