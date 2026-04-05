@@ -3,9 +3,10 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vite build",
-        "dev": "vite"
-    },
+    "dev": "vite",
+    "build": "npm install && vite build",
+    "vercel-build": "npm install && vite build"
+},
     "dependencies": {
         "vite": "^7.0.7",
         "laravel-vite-plugin": "^2.0.0",
