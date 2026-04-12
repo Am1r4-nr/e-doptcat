@@ -1,8 +1,8 @@
 <x-app-layout>
-    <div class="py-12 bg-boho-bg min-h-screen" x-data="trackerApp()">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="bg-boho-bg h-screen overflow-hidden flex flex-col" x-data="trackerApp()">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full overflow-hidden flex flex-col">
             <!-- Header -->
-            <div class="text-center mb-10">
+            <div class="text-center py-6 flex-shrink-0">
                 <h2 class="font-serif font-bold text-4xl text-boho-brown mb-4">
                     {{ __('Cat Tracker') }}
                 </h2>
@@ -12,11 +12,11 @@
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 flex-1 overflow-hidden">
                 <!-- Map Section (Takes up 2 cols on large screens) -->
-                <div class="lg:col-span-2 space-y-6">
+                <div class="lg:col-span-2 space-y-6 flex flex-col overflow-hidden">
                     <!-- Interactive Map Card -->
-                    <div class="bg-white rounded-3xl shadow-sm border border-boho-light p-6 relative">
+                    <div class="bg-white rounded-3xl shadow-sm border border-boho-light p-6 relative flex-1 flex flex-col overflow-hidden">
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="font-serif font-bold text-xl text-boho-brown flex items-center gap-2">
                                 <svg class="w-6 h-6 text-boho-orange" fill="none" stroke="currentColor"
@@ -38,7 +38,7 @@
 
                         <!-- Map Container -->
                         <div
-                            class="relative h-[500px] w-full rounded-2xl overflow-hidden shadow-inner border border-gray-100">
+                            class="relative flex-1 w-full rounded-2xl overflow-hidden shadow-inner border border-gray-100">
                             <div id="tracker-map" class="w-full h-full z-0"></div>
 
                             <!-- Floating Legend -->
@@ -66,9 +66,9 @@
                 </div>
 
                 <!-- Sidebar List Section -->
-                <div class="lg:col-span-1 space-y-6">
+                <div class="lg:col-span-1 space-y-6 flex flex-col overflow-hidden">
                     <!-- Tab Toggle -->
-                    <div class="bg-white rounded-3xl shadow-sm border border-boho-light p-4">
+                    <div class="bg-white rounded-3xl shadow-sm border border-boho-light p-4 flex-shrink-0">
                         <div class="flex gap-2">
                             <button @click="viewMode = 'list'" :class="viewMode === 'list' ? 'bg-orange-500 text-white' : 'bg-gray-100 text-gray-700'" class="flex-1 py-2 rounded-lg font-bold transition-all text-sm">
                                 📋 List
@@ -80,9 +80,9 @@
                     </div>
 
                     <!-- List View -->
-                    <div x-show="viewMode === 'list'" class="space-y-6">
+                    <div x-show="viewMode === 'list'" class="space-y-6 flex-1 flex flex-col overflow-hidden">
                         <!-- Filters -->
-                        <div class="bg-white rounded-3xl shadow-sm border border-boho-light p-6">
+                        <div class="bg-white rounded-3xl shadow-sm border border-boho-light p-6 flex-shrink-0">
                             <div class="flex justify-between items-center mb-4">
                                 <h3 class="font-serif font-bold text-lg text-boho-brown">Filter Cats</h3>
                                 <button @click="resetFilters"
@@ -103,7 +103,7 @@
                         </div>
 
                         <!-- List -->
-                        <div class="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+                        <div class="space-y-4 flex-1 overflow-y-auto pr-2 custom-scrollbar">
                             <template x-for="cat in filteredCats" :key="cat.id">
                                 <div @click="focusCat(cat)"
                                     class="bg-white group rounded-2xl shadow-sm border border-boho-light p-4 flex gap-4 cursor-pointer hover:border-boho-orange hover:shadow-md transition-all transform hover:-translate-x-1">
@@ -161,8 +161,8 @@
                     </div>
 
                     <!-- QR Scanner View -->
-                    <div x-show="viewMode === 'scanner'" class="space-y-6">
-                        <div class="bg-white rounded-3xl shadow-sm border border-boho-light p-6 flex flex-col items-center">
+                    <div x-show="viewMode === 'scanner'" class="space-y-6 flex-1 flex flex-col overflow-hidden">
+                        <div class="bg-white rounded-3xl shadow-sm border border-boho-light p-6 flex flex-col items-center flex-1 overflow-y-auto">
                             <div id="reader" style="width: 100%; max-width: 400px; margin-bottom: 1.5rem;"></div>
                             <div id="result" class="mt-2 font-bold text-lg text-boho-brown text-center min-h-6"></div>
                             <p class="mt-3 text-sm text-gray-500 text-center">Ensure good lighting and hold the camera steady.</p>

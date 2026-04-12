@@ -233,17 +233,64 @@
 
                             <!-- Adoptions Tab -->
                             <div x-show="tab === 'adoptions'">
-                                <div class="text-center py-12">
-                                    <div
-                                        class="w-16 h-16 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                                        </svg>
+                                <h4 class="text-xl font-bold text-gray-800 mb-6">Your Adoptions</h4>
+                                
+                                @if($adoptions->count() > 0)
+                                    <div class="overflow-x-auto">
+                                        <table class="w-full">
+                                            <thead class="bg-gray-50 border-b">
+                                                <tr>
+                                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700">Cat</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700">Status</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700">Application Date</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="divide-y">
+                                                @foreach($adoptions as $adoption)
+                                                    <tr class="hover:bg-gray-50">
+                                                        <td class="px-6 py-4">
+                                                            <div class="flex items-center gap-3">
+                                                                @if($adoption->cat->image)
+                                                                    <img src="{{ Storage::url($adoption->cat->image) }}" alt="{{ $adoption->cat->name }}" class="w-12 h-12 rounded-lg object-cover">
+                                                                @else
+                                                                    <img src="https://via.placeholder.com/50" alt="{{ $adoption->cat->name }}" class="w-12 h-12 rounded-lg object-cover">
+                                                                @endif
+                                                                <span class="font-medium">{{ $adoption->cat->name }}</span>
+                                                            </div>
+                                                        </td>
+                                                        <td class="px-6 py-4">
+                                                            <span class="px-3 py-1 rounded-full text-sm font-medium
+                                                                {{ $adoption->status === 'Approved' ? 'bg-green-100 text-green-800' : 
+                                                                   ($adoption->status === 'Rejected' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800') }}">
+                                                                {{ $adoption->status }}
+                                                            </span>
+                                                        </td>
+                                                        <td class="px-6 py-4 text-sm text-gray-600">
+                                                            {{ $adoption->created_at->format('d M Y') }}
+                                                        </td>
+                                                        <td class="px-6 py-4">
+                                                            <a href="{{ route('cats.show', $adoption->cat) }}" class="text-blue-600 hover:text-blue-900 text-sm font-medium">
+                                                                View Cat
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
                                     </div>
-                                    <h3 class="text-lg font-bold text-gray-800">Your Adoptions</h3>
-                                    <p class="text-gray-500">You have adopted {{ $adoptionsCount }} cats.</p>
-                                </div>
+                                @else
+                                    <div class="text-center py-12">
+                                        <div class="w-16 h-16 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                            </svg>
+                                        </div>
+                                        <h3 class="text-lg font-bold text-gray-800">No Adoptions Yet</h3>
+                                        <p class="text-gray-500">You haven't applied for any adoptions yet.</p>
+                                    </div>
+                                @endif
                             </div>
 
                             <!-- Donations Tab -->

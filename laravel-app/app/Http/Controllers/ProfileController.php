@@ -22,6 +22,7 @@ class ProfileController extends Controller
         return view('profile.edit', [
             'user' => $user,
             'adoptionsCount' => $user->adoptions()->count(),
+            'adoptions' => $user->adoptions()->with('cat')->latest()->get(),
             'donationsSum' => $user->donations()->sum('amount'),
             'eventsCount' => $user->eventRegistrations()->count(),
         ]);

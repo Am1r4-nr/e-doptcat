@@ -4,55 +4,55 @@
         style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23d4a373\' fill-opacity=\'0.1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');">
     </div>
 
-    <!-- User Greeting Section -->
-    @auth
-    <div class="relative bg-gradient-to-r from-boho-orange/10 to-boho-brown/5 pt-6 pb-6 z-10">
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-4">
-                    @if (Auth::user()->avatar)
-                        <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}"
-                            class="w-12 h-12 rounded-full object-cover ring-2 ring-boho-orange/50 shadow-md">
-                    @else
-                        <div
-                            class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-boho-brown flex items-center justify-center text-white text-sm font-bold">
-                            {{ substr(Auth::user()->name, 0, 1) }}
+    <div class="relative w-full z-10">
+        <!-- User Greeting Section -->
+        @auth
+        <div class="relative bg-gradient-to-r from-boho-orange/10 to-boho-brown/5 pt-6 pb-6">
+            <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        @if (Auth::user()->avatar)
+                            <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}"
+                                class="w-12 h-12 rounded-full object-cover ring-2 ring-boho-orange/50 shadow-md">
+                        @else
+                            <div
+                                class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-boho-brown flex items-center justify-center text-white text-sm font-bold">
+                                {{ substr(Auth::user()->name, 0, 1) }}
+                            </div>
+                        @endif
+                        <div>
+                            <p class="text-sm text-gray-600">Welcome back 👋</p>
+                            <p class="text-lg sm:text-xl font-bold text-boho-brown">{{ Auth::user()->name }}</p>
                         </div>
-                    @endif
-                    <div>
-                        <p class="text-sm text-gray-600">Welcome back 👋</p>
-                        <p class="text-lg sm:text-xl font-bold text-boho-brown">{{ Auth::user()->name }}</p>
                     </div>
+                    <a href="{{ route('profile.edit') }}"
+                        class="text-sm font-bold text-boho-orange hover:text-orange-600 transition-colors">
+                        Edit Profile
+                    </a>
                 </div>
-                <a href="{{ route('profile.edit') }}"
-                    class="text-sm font-bold text-boho-orange hover:text-orange-600 transition-colors">
-                    Edit Profile
-                </a>
             </div>
         </div>
-    </div>
-    @endauth
+        @endauth
 
-    <!-- Hero Section -->
-    <div class="relative bg-boho-bg overflow-hidden pt-12 pb-24 sm:pt-24 sm:pb-32 z-10">
-        <!-- Organic Blobs Background -->
-        <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
-            <svg class="absolute -top-24 -left-24 w-96 h-96 text-boho-brown/5 opacity-50 blur-3xl animate-blob"
-                fill="currentColor" viewBox="0 0 200 200">
-                <path
-                    d="M44.7,-76.4C58.9,-69.2,71.8,-59.1,79.6,-46.9C87.4,-34.7,90.1,-20.4,85.8,-7.1C81.5,6.2,70.2,18.5,59.6,29.1C49,39.7,39.1,48.6,27.9,56.6C16.7,64.7,4.2,71.9,-7.4,70.6C-19,69.3,-29.7,59.5,-39.5,49.8C-49.3,40.1,-58.2,30.5,-64.3,19.2C-70.4,7.9,-73.7,-5.1,-70.5,-16.6C-67.3,-28.1,-57.6,-38.1,-46.6,-46.3C-35.6,-54.5,-23.3,-60.9,-10.8,-62.7C1.7,-64.5,14.2,-61.7,26.7,-58.9"
-                    transform="translate(100 100)" />
-            </svg>
-            <svg class="absolute top-1/2 right-0 w-[500px] h-[500px] text-boho-orange/5 opacity-40 blur-3xl animate-blob animation-delay-2000"
-                fill="currentColor" viewBox="0 0 200 200">
-                <path
-                    d="M41.7,-72.1C53.6,-66.2,62.8,-55.3,69.5,-43.6C76.2,-31.9,80.4,-19.4,79.8,-7.2C79.2,5,73.8,16.8,66,27.1C58.2,37.4,48,46.2,37.1,52.8C26.2,59.4,14.6,63.8,2.7,59.1C-9.2,54.4,-21.4,40.6,-32.1,28.8C-42.8,17,-52,7.2,-55.1,-4.5C-58.2,-16.2,-55.2,-29.8,-46.7,-40.3C-38.2,-50.8,-24.2,-58.2,-10.7,-60.4C2.8,-62.6,16.3,-59.6,29.8,-56.6"
-                    transform="translate(100 100)" />
-            </svg>
-        </div>
+        <!-- Hero Section -->
+        <div class="relative bg-boho-bg overflow-hidden pt-12 pb-24 sm:pt-24 sm:pb-32">
+            <!-- Organic Blobs Background -->
+            <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+                <svg class="absolute -top-24 -left-24 w-96 h-96 text-boho-brown/5 opacity-50 blur-3xl animate-blob"
+                    fill="currentColor" viewBox="0 0 200 200">
+                    <path
+                        d="M44.7,-76.4C58.9,-69.2,71.8,-59.1,79.6,-46.9C87.4,-34.7,90.1,-20.4,85.8,-7.1C81.5,6.2,70.2,18.5,59.6,29.1C49,39.7,39.1,48.6,27.9,56.6C16.7,64.7,4.2,71.9,-7.4,70.6C-19,69.3,-29.7,59.5,-39.5,49.8C-49.3,40.1,-58.2,30.5,-64.3,19.2C-70.4,7.9,-73.7,-5.1,-70.5,-16.6C-67.3,-28.1,-57.6,-38.1,-46.6,-46.3C-35.6,-54.5,-23.3,-60.9,-10.8,-62.7C1.7,-64.5,14.2,-61.7,26.7,-58.9"
+                        transform="translate(100 100)" />
+                </svg>
+                <svg class="absolute top-1/2 right-0 w-[500px] h-[500px] text-boho-orange/5 opacity-40 blur-3xl animate-blob animation-delay-2000"
+                    fill="currentColor" viewBox="0 0 200 200">
+                    <path
+                        d="M41.7,-72.1C53.6,-66.2,62.8,-55.3,69.5,-43.6C76.2,-31.9,80.4,-19.4,79.8,-7.2C79.2,5,73.8,16.8,66,27.1C58.2,37.4,48,46.2,37.1,52.8C26.2,59.4,14.6,63.8,2.7,59.1C-9.2,54.4,-21.4,40.6,-32.1,28.8C-42.8,17,-52,7.2,-55.1,-4.5C-58.2,-16.2,-55.2,-29.8,-46.7,-40.3C-38.2,-50.8,-24.2,-58.2,-10.7,-60.4C2.8,-62.6,16.3,-59.6,29.8,-56.6"
+                        transform="translate(100 100)" />
+                </svg>
+            </div>
 
-        <div
-            class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col pt-10 md:flex-row items-center gap-12 z-10">
+            <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col pt-10 md:flex-row items-center gap-12 relative z-10">
             <!-- Text Content -->
             <div
                 class="md:w-1/2 text-left z-10 scroll-animate opacity-0 translate-y-10 transition-all duration-1000 ease-out">
@@ -122,63 +122,6 @@
         </div>
     </div>
 
-    <!-- Featured Cats Section -->
-    <div class="py-20 bg-white relative z-10">
-        <div class="absolute top-0 left-0 w-full overflow-hidden leading-none z-10">
-            <svg class="relative block w-full h-[60px]" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 1200 120" preserveAspectRatio="none">
-                <path
-                    d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
-                    class="fill-boho-bg"></path>
-            </svg>
-        </div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
-            <div
-                class="text-center mb-16 scroll-animate opacity-0 translate-y-10 transition-all duration-1000 ease-out">
-                <h2 class="text-4xl font-serif font-bold text-boho-brown mb-4">Featured Felines</h2>
-                <div class="w-24 h-1.5 bg-boho-orange mx-auto rounded-full mb-4"></div>
-                <p class="text-lg text-gray-500">Looking for a forever home right now</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                @foreach($featuredCats as $index => $cat)
-                    <div class="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-100 flex flex-col h-full transform hover:-translate-y-2 scroll-animate opacity-0 translate-y-10 ease-out"
-                        style="transition-duration: 1000ms; transition-delay: {{ $index * 150 }}ms;">
-                        <div class="relative h-64 overflow-hidden">
-                            <img src="{{ $cat->image }}" alt="{{ $cat->name }}"
-                                class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
-                            <div
-                                class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-boho-brown uppercase tracking-wide shadow-sm">
-                                {{ $cat->gender }}
-                            </div>
-                        </div>
-                        <div class="p-6 flex flex-col flex-grow">
-                            <h3 class="text-2xl font-serif font-bold text-gray-800 mb-2">{{ $cat->name }}</h3>
-                            <p class="text-gray-500 text-sm mb-4 line-clamp-2">{{ $cat->description }}</p>
-
-                            <div class="mt-auto flex items-center justify-between pt-4 border-t border-gray-100">
-                                <span class="text-sm font-semibold text-boho-orange">{{ $cat->breed }}</span>
-                                <a href="{{ route('cats.show', $cat) }}"
-                                    class="text-boho-brown font-bold hover:text-boho-orange transition-colors flex items-center text-sm uppercase tracking-wider">
-                                    Meet Me <span class="ml-1">&toea;</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-
-            <div
-                class="text-center mt-12 scroll-animate opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-300">
-                <a href="{{ route('cats.index') }}"
-                    class="inline-block border-b-2 border-boho-brown text-boho-brown font-bold pb-1 hover:text-boho-orange hover:border-boho-orange transition-colors">
-                    View All Cats
-                </a>
-            </div>
-        </div>
-    </div>
-
     <!-- SDG 15 & About Section -->
     <div class="bg-boho-light/30 py-24 relative z-10">
         <!-- Wave Divider Top -->
@@ -189,7 +132,7 @@
             </svg>
         </div>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
                 <!-- SDG 15 Info -->
                 <div
@@ -284,7 +227,7 @@
 
     <!-- Our Impact -->
     <div class="py-24 bg-white z-10 relative">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div
                 class="text-center mb-16 scroll-animate opacity-0 translate-y-10 transition-all duration-1000 ease-out">
                 <h2 class="text-4xl font-serif font-bold text-boho-brown mb-4">Our Impact</h2>
@@ -362,7 +305,7 @@
             </svg>
         </div>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
+        <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
             <div
                 class="text-center mb-16 scroll-animate opacity-0 translate-y-10 transition-all duration-1000 ease-out">
                 <span class="text-boho-orange font-bold tracking-widest uppercase text-sm mb-2 block">Happy Tails</span>
@@ -446,7 +389,7 @@
             style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 20px 20px;"></div>
 
         <div
-            class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center scroll-animate opacity-0 translate-y-10 transition-all duration-1000 ease-out">
+            class="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center scroll-animate opacity-0 translate-y-10 transition-all duration-1000 ease-out">
             <h2 class="text-4xl font-serif font-bold mb-4">Stay Updated</h2>
             <p class="text-boho-bg/80 text-lg mb-8 max-w-2xl mx-auto">Get the latest updates on rescues, adoption
                 events, and happy endings delivered straight to your inbox.</p>
