@@ -60,15 +60,25 @@
                 Dashboard
             </a>
 
-            {{-- Applications (with dropdown for Adopter) --}}
-            <div x-data="{ open: {{ request()->routeIs('admin.adoptions.*') ? 'true' : 'false' }} }">
+            {{-- Cat Directory --}}
+            <a href="{{ route('admin.cats.index') }}"
+               class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition
+                      {{ request()->routeIs('admin.cats.*') ? 'bg-amber-50 text-amber-700 font-semibold' : 'text-gray-400 hover:bg-amber-50 hover:text-amber-700' }}">
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+                    <path d="M6 4c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm8 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zM4 10c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm12 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zM12 21c-3.87 0-7-1.57-7-4.5 0-1.5 1-2.8 2.5-3.6.6-.3 1.3-.5 2-.6.8-.1 1.6-.3 2.5-.3s1.7.2 2.5.3c.7.1 1.4.3 2 .6 1.5.8 2.5 2.1 2.5 3.6 0 2.93-3.13 4.5-7 4.5z"/>
+                </svg>
+                Cat Directory
+            </a>
+
+            {{-- Staff Management folder --}}
+            <div x-data="{ open: {{ request()->routeIs('admin.adoptions.*') || request()->routeIs('admin.volunteers.*') ? 'true' : 'false' }} }">
                 <button @click="open = !open"
                         class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition
-                               {{ request()->routeIs('admin.adoptions.*') ? 'bg-amber-50 text-amber-700 font-semibold' : 'text-gray-400 hover:bg-amber-50 hover:text-amber-700' }}">
+                               {{ request()->routeIs('admin.adoptions.*') || request()->routeIs('admin.volunteers.*') ? 'bg-amber-50 text-amber-700 font-semibold' : 'text-gray-400 hover:bg-amber-50 hover:text-amber-700' }}">
                     <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                     </svg>
-                    <span class="flex-1 text-left">Applications</span>
+                    <span class="flex-1 text-left">Staff Management</span>
                     <svg class="w-3 h-3 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
                     </svg>
@@ -80,35 +90,47 @@
                      x-transition:enter-end="opacity-100 translate-y-0"
                      class="mt-0.5 ml-4 pl-3 border-l border-amber-100 space-y-0.5">
 
-                    <a href="{{ route('admin.adoptions.index') }}"
-                       class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition
-                              {{ request()->routeIs('admin.adoptions.*') ? 'bg-amber-50 text-amber-700 font-semibold' : 'text-gray-400 hover:bg-amber-50 hover:text-amber-700' }}">
-                        <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                        </svg>
-                        Adopter
-                    </a>
+                    {{-- Applications (Nested dropdown for Adopter & Volunteers) --}}
+                    <div x-data="{ appOpen: {{ request()->routeIs('admin.adoptions.*') || request()->routeIs('admin.volunteers.*') ? 'true' : 'false' }} }">
+                        <button @click="appOpen = !appOpen"
+                                class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition
+                                       {{ request()->routeIs('admin.adoptions.*') || request()->routeIs('admin.volunteers.*') ? 'bg-amber-50 text-amber-700 font-semibold' : 'text-gray-400 hover:bg-amber-50 hover:text-amber-700' }}">
+                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/>
+                            </svg>
+                            <span class="flex-1 text-left">Applications</span>
+                            <svg class="w-3 h-3 transition-transform duration-200" :class="appOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+
+                        <div x-show="appOpen"
+                             x-transition:enter="transition ease-out duration-150"
+                             x-transition:enter-start="opacity-0 -translate-y-1"
+                             x-transition:enter-end="opacity-100 translate-y-0"
+                             class="mt-0.5 ml-4 pl-3 border-l border-amber-100 space-y-0.5">
+
+                            <a href="{{ route('admin.adoptions.index') }}"
+                               class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition
+                                      {{ request()->routeIs('admin.adoptions.*') ? 'bg-amber-50 text-amber-700 font-semibold' : 'text-gray-400 hover:bg-amber-50 hover:text-amber-700' }}">
+                                <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                </svg>
+                                Adopter
+                            </a>
+
+                            <a href="{{ route('admin.volunteers.index') }}"
+                               class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition
+                                      {{ request()->routeIs('admin.volunteers.*') ? 'bg-amber-50 text-amber-700 font-semibold' : 'text-gray-400 hover:bg-amber-50 hover:text-amber-700' }}">
+                                <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                                </svg>
+                                Volunteers
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            {{-- Cat Directory --}}
-            <a href="{{ route('admin.cats.index') }}"
-               class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition
-                      {{ request()->routeIs('admin.cats.*') ? 'bg-amber-50 text-amber-700 font-semibold' : 'text-gray-400 hover:bg-amber-50 hover:text-amber-700' }}">
-                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
-                    <path d="M6 4c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm8 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zM4 10c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm12 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zM12 21c-3.87 0-7-1.57-7-4.5 0-1.5 1-2.8 2.5-3.6.6-.3 1.3-.5 2-.6.8-.1 1.6-.3 2.5-.3s1.7.2 2.5.3c.7.1 1.4.3 2 .6 1.5.8 2.5 2.1 2.5 3.6 0 2.93-3.13 4.5-7 4.5z"/>
-                </svg>
-                Cat Directory
-            </a>
-
-            {{-- Staff Management --}}
-            <a href="#"
-               class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition text-gray-400 hover:bg-amber-50 hover:text-amber-700">
-                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                </svg>
-                Staff Management
-            </a>
 
             {{-- Reports / Analytics --}}
             <a href="{{ route('admin.reports.index') }}"

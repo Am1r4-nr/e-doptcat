@@ -49,6 +49,9 @@ Route::middleware('auth')->group(function () {
         Route::patch('adoptions/{adoption}/approve', [AdoptionManagementController::class, 'approve'])->name('adoptions.approve');
         Route::patch('adoptions/{adoption}/reject', [AdoptionManagementController::class, 'reject'])->name('adoptions.reject');
 
+        // Volunteer Management
+        Route::get('volunteers', function() { return view('admin.volunteers.index'); })->name('volunteers.index');
+
         // Report Management
         Route::resource('reports', ReportManagementController::class)->only(['index', 'show', 'destroy']);
         Route::patch('reports/{report}/status', [ReportManagementController::class, 'updateStatus'])->name('reports.status');

@@ -52,7 +52,7 @@
                 </span>
                 <input type="text" class="w-full pl-12 pr-4 py-2.5 bg-transparent border-transparent focus:border-transparent focus:ring-0 text-[14px] font-medium text-gray-700 placeholder-gray-400" placeholder="Search applicant names...">
             </div>
-            
+
             <div class="ml-auto flex items-center gap-3">
                 <button class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border-transparent text-[13px] font-bold text-gray-600 hover:bg-gray-50 shadow-sm">
                     All Statuses
@@ -95,10 +95,10 @@
                                 $initials = collect(explode(' ', $adoption->user->name))->map(function($segment) { return strtoupper(substr($segment, 0, 1)); })->take(2)->implode('');
                                 $colorClasses = ['bg-orange-100 text-orange-700', 'bg-cyan-100 text-cyan-700', 'bg-purple-100 text-purple-700', 'bg-amber-100 text-amber-700'];
                                 $initialBadgeColor = $colorClasses[$loop->index % count($colorClasses)];
-                                
+
                                 $catBreeds = ['Ragdoll', 'Sphynx', 'Ginger', 'Calico', 'Persian', 'Mixed'];
                                 $mockBreed = $catBreeds[$adoption->cat_id % count($catBreeds)] ?? 'Mixed';
-                                
+
                                 $environments = ['2BR Apt', 'Single Home', 'Studio', '3BR House'];
                                 $mockEnv = $environments[$adoption->id % count($environments)];
 
@@ -146,7 +146,7 @@
                                     </div>
                                 </td>
                                 <td class="py-5 px-6 text-right">
-                                    <a href="{{ route('admin.adoptions.show', $adoption) }}" 
+                                    <a href="{{ route('admin.adoptions.show', $adoption) }}"
                                        class="inline-flex flex-col items-end group">
                                         <span class="text-[12px] font-bold text-amber-700 group-hover:text-amber-900 transition flex items-center gap-1">
                                             View Full
