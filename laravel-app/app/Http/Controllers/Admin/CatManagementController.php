@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Cat;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CatManagementController extends Controller
 {
@@ -39,6 +40,11 @@ class CatManagementController extends Controller
         return redirect()->route('admin.cats.index')->with('success', 'Cat created successfully.');
     }
 
+    public function show(Cat $cat)
+    {
+        return view('admin.cats.show', compact('cat'));
+    }
+
     public function edit(Cat $cat)
     {
         return view('admin.cats.edit', compact('cat'));
@@ -56,6 +62,9 @@ class CatManagementController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
+            if ($cat->image) {
+                Storage::disk('public')->delete($cat->image);
+            }
             $validated['image'] = $request->file('image')->store('cats', 'public');
         }
 

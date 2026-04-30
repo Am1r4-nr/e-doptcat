@@ -43,39 +43,26 @@ Route::middleware('auth')->group(function () {
     // Admin Routes
     Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
-        
+
         // Cat Management
         Route::resource('cats', CatManagementController::class);
-        
+
         // Adoption Management
         Route::resource('adoptions', AdoptionManagementController::class)->only(['index', 'show', 'destroy']);
         Route::patch('adoptions/{adoption}/approve', [AdoptionManagementController::class, 'approve'])->name('adoptions.approve');
         Route::patch('adoptions/{adoption}/reject', [AdoptionManagementController::class, 'reject'])->name('adoptions.reject');
-        
-        // Incident Management
-        Route::resource('incidents', IncidentManagementController::class);
-        Route::patch('incidents/{incident}/status', [IncidentManagementController::class, 'updateStatus'])->name('incidents.status');
-        
-        // Message Management
-        Route::resource('messages', MessageManagementController::class)->only(['index', 'show', 'destroy']);
-        Route::post('messages/{message}/mark-as-read', [MessageManagementController::class, 'markAsRead'])->name('messages.markAsRead');
-        Route::post('messages/{message}/mark-as-unread', [MessageManagementController::class, 'markAsUnread'])->name('messages.markAsUnread');
-        
+
         // Report Management
         Route::resource('reports', ReportManagementController::class)->only(['index', 'show', 'destroy']);
         Route::patch('reports/{report}/status', [ReportManagementController::class, 'updateStatus'])->name('reports.status');
-        
+
         // User Management
         Route::resource('users', UserManagementController::class)->only(['index', 'show', 'destroy']);
         Route::patch('users/{user}/role', [UserManagementController::class, 'updateRole'])->name('users.role');
-        
+
         // Donation Management
         Route::resource('donations', DonationManagementController::class)->only(['index', 'show', 'destroy']);
-        
-        // Calendar Management
-        Route::resource('calendar', CalendarManagementController::class, ['parameters' => ['calendar' => 'event']]);
-        Route::patch('calendar/{event}/status', [CalendarManagementController::class, 'updateStatus'])->name('calendar.updateStatus');
-        Route::get('api/calendar/events', [CalendarManagementController::class, 'getEventsApi'])->name('api.calendar.events');
+        Route::get('expenses', function() { return view('admin.expenses.index'); })->name('expenses.index');
     });
 });
 
@@ -86,13 +73,13 @@ if (app()->environment('local')) {
     Route::post('/api/gps/location/save', [GpsController::class, 'getLocationAndSave'])->name('api.gps.location.save.post');
     Route::get('/api/gps/test', [GpsController::class, 'testConnection'])->name('api.gps.test');
     Route::get('/api/gps/update', [GpsController::class, 'updateLocation'])->name('api.gps.update');
-    
+
     // Admin Dashboard Test Routes (No Auth Required for Testing)
     Route::get('/admin/dashboard-test', [AdminDashboardController::class, 'index'])->name('admin.dashboard.test');
     Route::get('/admin/plain-test', function () {
         return response()->html('<!DOCTYPE html><html><head><title>Plain Test</title></head><body style="font-family: Arial; padding: 20px;"><h1>Admin Dashboard - Plain HTML Test</h1><p>If you see this, the server is working fine.</p><div style="background: #f0f0f0; padding: 15px; margin-top: 20px;"><strong>Database Status:</strong><br>Total Cats: ' . \App\Models\Cat::count() . '<br>Admin User: ' . (\App\Models\User::where('role', 'admin')->count() > 0 ? 'Yes' : 'No') . '</div></body></html>');
     })->name('plain.test');
-    
+
     Route::get('/test', function () {
         return '<html><body><h1>HELLO WORLD</h1><p>Server is working!</p></body></html>';
     })->name('test');
