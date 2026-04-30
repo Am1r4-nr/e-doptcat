@@ -46,7 +46,7 @@
                     <span class="text-xl">❤️</span>
                     <span>Adoptions</span>
                 </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition">
+                <a href="{{ route('admin.incidents.index') }}" class="flex items-center gap-3 px-4 py-3 text-gray-700 @if(request()->routeIs('admin.incidents.*')) bg-yellow-100 @else hover:bg-gray-100 @endif rounded-lg transition">
                     <span class="text-xl">⚠️</span>
                     <span>Incidents</span>
                 </a>
@@ -58,7 +58,7 @@
                     <span class="text-xl">📋</span>
                     <span>Reports</span>
                 </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition">
+                <a href="{{ route('admin.messages.index') }}" class="flex items-center gap-3 px-4 py-3 text-gray-700 @if(request()->routeIs('admin.messages.*')) bg-yellow-100 @else hover:bg-gray-100 @endif rounded-lg transition">
                     <span class="text-xl">💬</span>
                     <span>Messages</span>
                 </a>

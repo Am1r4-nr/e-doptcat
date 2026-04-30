@@ -31,8 +31,9 @@ class DatabaseSeeder extends Seeder
             'role' => 'user',
         ]);
 
-        // Generate Data
-        Cat::factory(50)->create();
+        // Seed cats from AHC Cats Database
+        $this->call(CatsSeeder::class);
+
         Event::factory(10)->create();
 
         // Create reports tied to random users

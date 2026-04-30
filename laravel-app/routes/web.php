@@ -12,6 +12,9 @@ use App\Http\Controllers\Admin\AdoptionManagementController;
 use App\Http\Controllers\Admin\ReportManagementController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Admin\DonationManagementController;
+use App\Http\Controllers\Admin\IncidentManagementController;
+use App\Http\Controllers\Admin\MessageManagementController;
+use App\Http\Controllers\Admin\CalendarManagementController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', App\Http\Controllers\HomeController::class)->name('home');
@@ -49,6 +52,15 @@ Route::middleware('auth')->group(function () {
         Route::patch('adoptions/{adoption}/approve', [AdoptionManagementController::class, 'approve'])->name('adoptions.approve');
         Route::patch('adoptions/{adoption}/reject', [AdoptionManagementController::class, 'reject'])->name('adoptions.reject');
         
+        // Incident Management
+        Route::resource('incidents', IncidentManagementController::class);
+        Route::patch('incidents/{incident}/status', [IncidentManagementController::class, 'updateStatus'])->name('incidents.status');
+        
+        // Message Management
+        Route::resource('messages', MessageManagementController::class)->only(['index', 'show', 'destroy']);
+        Route::post('messages/{message}/mark-as-read', [MessageManagementController::class, 'markAsRead'])->name('messages.markAsRead');
+        Route::post('messages/{message}/mark-as-unread', [MessageManagementController::class, 'markAsUnread'])->name('messages.markAsUnread');
+        
         // Report Management
         Route::resource('reports', ReportManagementController::class)->only(['index', 'show', 'destroy']);
         Route::patch('reports/{report}/status', [ReportManagementController::class, 'updateStatus'])->name('reports.status');
@@ -59,6 +71,11 @@ Route::middleware('auth')->group(function () {
         
         // Donation Management
         Route::resource('donations', DonationManagementController::class)->only(['index', 'show', 'destroy']);
+        
+        // Calendar Management
+        Route::resource('calendar', CalendarManagementController::class, ['parameters' => ['calendar' => 'event']]);
+        Route::patch('calendar/{event}/status', [CalendarManagementController::class, 'updateStatus'])->name('calendar.updateStatus');
+        Route::get('api/calendar/events', [CalendarManagementController::class, 'getEventsApi'])->name('api.calendar.events');
     });
 });
 
