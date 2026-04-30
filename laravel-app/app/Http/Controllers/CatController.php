@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Cat;
 use App\Models\UserAiPreference;
-use App\Models\AdoptionFeedback;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -15,30 +14,23 @@ class CatController extends Controller
     {
         $query = Cat::query();
 
-        // Filter by breed
-        if ($request->has('breed') && $request->breed != '') {
-            $query->where('breed', $request->breed);
+        if ($request->filled('breed')) {
+            $query->where('breed', $request->input('breed'));
         }
-
-        // Filter by health status
-        if ($request->has('health_status') && $request->health_status != '') {
-            $query->where('health_status', $request->health_status);
+        if ($request->filled('health_status')) {
+            $query->where('health_status', $request->input('health_status'));
         }
-
-        // Filter by vaccinated status
-        if ($request->has('vaccinated') && $request->vaccinated != '') {
-            $query->where('vaccinated', $request->vaccinated);
+        if ($request->filled('vaccinated')) {
+            $query->where('vaccinated', $request->input('vaccinated'));
         }
-
-        // Filter by location
-        if ($request->has('location') && $request->location != '') {
-            $query->where('location_name', $request->location);
+        if ($request->filled('location')) {
+            $query->where('location_name', $request->input('location'));
         }
 
         $cats = $query->where('status', 'Available')->get();
 
         // Get AI match scores via ML API if preferences exist
-        if ($request->has('recommended') && $request->recommended == 'true' && session()->has('aiPreferences')) {
+        if ($request->input('recommended') === 'true' && session()->has('aiPreferences')) {
             $preferences = session()->get('aiPreferences');
             
             // Call Python ML API for predictions
@@ -46,11 +38,6 @@ class CatController extends Controller
             
             // Sort by match score descending
             $cats = $cats->sortByDesc('ai_match_score');
-        } else {
-            // Set default AI match scores if not calculated
-            foreach ($cats as $cat) {
-                $cat->ai_match_score = rand(70, 99);
-            }
         }
 
         return view('cats.index', compact('cats'));

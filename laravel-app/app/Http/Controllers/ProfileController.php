@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Cat;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,12 +21,22 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
+        if ($user->role === 'admin') {
+            return view('profile.admin', [
+                'user' => $user,
+                'stats' => [
+                    'cats'  => Cat::count(),
+                    'users' => User::count(),
+                ],
+            ]);
+        }
+
         return view('profile.edit', [
-            'user' => $user,
+            'user'           => $user,
             'adoptionsCount' => $user->adoptions()->count(),
-            'adoptions' => $user->adoptions()->with('cat')->latest()->get(),
-            'donationsSum' => $user->donations()->sum('amount'),
-            'eventsCount' => $user->eventRegistrations()->count(),
+            'adoptions'      => $user->adoptions()->with('cat')->latest()->get(),
+            'donationsSum'   => $user->donations()->sum('amount'),
+            'eventsCount'    => $user->eventRegistrations()->count(),
         ]);
     }
 

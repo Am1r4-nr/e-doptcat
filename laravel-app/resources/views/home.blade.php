@@ -25,10 +25,17 @@
                             <p class="text-lg sm:text-xl font-bold text-boho-brown">{{ Auth::user()->name }}</p>
                         </div>
                     </div>
-                    <a href="{{ route('profile.edit') }}"
-                        class="text-sm font-bold text-boho-orange hover:text-orange-600 transition-colors">
-                        Edit Profile
-                    </a>
+                    @if(Auth::user()->role === 'admin')
+                        <a href="{{ route('admin.dashboard') }}"
+                            class="text-sm font-bold text-boho-orange hover:text-orange-600 transition-colors">
+                            Admin Panel
+                        </a>
+                    @else
+                        <a href="{{ route('profile.edit') }}"
+                            class="text-sm font-bold text-boho-orange hover:text-orange-600 transition-colors">
+                            Edit Profile
+                        </a>
+                    @endif
                 </div>
             </div>
         </div>

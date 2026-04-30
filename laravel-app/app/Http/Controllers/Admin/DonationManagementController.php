@@ -4,17 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Donation;
-use Illuminate\Http\Request;
 
 class DonationManagementController extends Controller
 {
     public function index()
     {
         $donations = Donation::with('user')->paginate(15);
+        $aggregate = Donation::selectRaw('SUM(amount) as total, AVG(amount) as average, COUNT(*) as count')->first();
         $stats = [
-            'total_donations' => Donation::sum('amount'),
-            'average_donation' => Donation::avg('amount'),
-            'donation_count' => Donation::count(),
+            'total_donations' => $aggregate->total ?? 0,
+            'average_donation' => $aggregate->average ?? 0,
+            'donation_count' => $aggregate->count ?? 0,
         ];
         return view('admin.donations.index', compact('donations', 'stats'));
     }
