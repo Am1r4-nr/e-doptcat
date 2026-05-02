@@ -8,9 +8,14 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\GpsController;
 use App\Http\Controllers\Admin\CatManagementController;
+use App\Http\Controllers\Admin\AdopterController;
+use App\Http\Controllers\Admin\CalendarController;
+use App\Http\Controllers\Admin\EventManagementController;
 use App\Http\Controllers\Admin\AdoptionManagementController;
 use App\Http\Controllers\Admin\ReportManagementController;
 use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\Admin\AnalyticsController;
+use App\Http\Controllers\Admin\ReportingController;
 use App\Http\Controllers\Admin\DonationManagementController;
 use Illuminate\Support\Facades\Route;
 
@@ -40,9 +45,14 @@ Route::middleware('auth')->group(function () {
     // Admin Routes
     Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
+        Route::get('/reporting', [ReportingController::class, 'index'])->name('reporting.index');
 
         // Cat Management
         Route::resource('cats', CatManagementController::class);
+
+        // Adopter Management
+        Route::get('adopters', [AdopterController::class, 'index'])->name('adopters.index');
 
         // Adoption Management
         Route::resource('adoptions', AdoptionManagementController::class)->only(['index', 'show', 'destroy']);
@@ -63,6 +73,11 @@ Route::middleware('auth')->group(function () {
         // Donation Management
         Route::resource('donations', DonationManagementController::class)->only(['index', 'show', 'destroy']);
         Route::get('expenses', function() { return view('admin.expenses.index'); })->name('expenses.index');
+
+        // Web Management
+        Route::resource('events', EventManagementController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+        Route::get('calendar', [CalendarController::class, 'index'])->name('calendar.index');
+        Route::get('calendar/events', [CalendarController::class, 'events'])->name('calendar.events');
     });
 });
 
