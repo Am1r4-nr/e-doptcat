@@ -88,7 +88,7 @@
                         <!-- Age & Status -->
                         <td class="px-6 py-4">
                             <p class="text-sm text-gray-700 mb-1">
-                                {{ $cat->age ? $cat->age . ' ' . Str::plural('Year', $cat->age) : '—' }}
+                                {{ $cat->age ? $cat->age . ' ' . Str::plural('Year', (int)$cat->age) : '—' }}
                             </p>
                             <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase {{ $statusStyle }}">
                                 {{ $cat->status }}
