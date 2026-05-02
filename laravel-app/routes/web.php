@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\ReportingController;
 use App\Http\Controllers\Admin\DonationManagementController;
+use App\Http\Controllers\Admin\MessageController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', App\Http\Controllers\HomeController::class)->name('home');
@@ -69,6 +70,9 @@ Route::middleware('auth')->group(function () {
         // User Management
         Route::resource('users', UserManagementController::class)->only(['index', 'show', 'destroy']);
         Route::patch('users/{user}/role', [UserManagementController::class, 'updateRole'])->name('users.role');
+
+        // Messages
+        Route::get('messages', [MessageController::class, 'index'])->name('messages.index');
 
         // Donation Management
         Route::resource('donations', DonationManagementController::class)->only(['index', 'show', 'destroy']);
