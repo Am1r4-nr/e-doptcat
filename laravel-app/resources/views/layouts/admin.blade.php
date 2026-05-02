@@ -18,6 +18,8 @@
                     colors: {
                         cream: '#FAF6F0',
                         'cream-dark': '#F0E8DC',
+                        'sidebar': '#1B2D2D',
+                        'sidebar-hover': '#253838',
                         amber: {
                             850: '#92400e',
                         }
@@ -36,16 +38,16 @@
         .font-serif { font-family: 'Playfair Display', serif; }
     </style>
 </head>
-<body class="antialiased bg-[#FAF6F0]">
+<body class="antialiased bg-[#F4F6F5]">
 <div class="flex h-screen overflow-hidden">
 
     <!-- Sidebar -->
-    <aside class="w-60 bg-white flex flex-col flex-shrink-0 border-r border-amber-100">
+    <aside class="w-60 bg-[#1B2D2D] flex flex-col flex-shrink-0 border-r border-[#253838]">
 
         <!-- Logo -->
-        <div class="px-6 h-[72px] flex flex-col justify-center border-b border-amber-100">
-            <p class="text-[11px] font-semibold tracking-widest text-amber-500 uppercase mb-0.5">e-Doptcat Admin</p>
-            <p class="font-serif italic text-gray-400 text-sm">Nurturing Atelier</p>
+        <div class="px-6 h-[72px] flex flex-col justify-center border-b border-[#253838]">
+            <p class="text-[11px] font-semibold tracking-widest text-amber-400 uppercase mb-0.5">e-Doptcat Admin</p>
+            <p class="font-serif italic text-[#7A9E9E] text-sm">Nurturing Atelier</p>
         </div>
 
         <!-- Nav -->
@@ -53,7 +55,7 @@
             {{-- Dashboard (Now points to Analytics) --}}
             <a href="{{ route('admin.dashboard') }}"
                class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition
-                      {{ request()->routeIs('admin.dashboard') || request()->routeIs('admin.analytics.*') ? 'bg-amber-50 text-amber-700 font-semibold' : 'text-gray-400 hover:bg-amber-50 hover:text-amber-700' }}">
+                      {{ request()->routeIs('admin.dashboard') || request()->routeIs('admin.analytics.*') ? 'bg-[#253838] text-amber-400 font-semibold' : 'text-[#7A9E9E] hover:bg-[#253838] hover:text-white' }}">
                 <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/>
                 </svg>
@@ -63,7 +65,7 @@
             {{-- Cat Directory --}}
             <a href="{{ route('admin.cats.index') }}"
                class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition
-                      {{ request()->routeIs('admin.cats.*') ? 'bg-amber-50 text-amber-700 font-semibold' : 'text-gray-400 hover:bg-amber-50 hover:text-amber-700' }}">
+                      {{ request()->routeIs('admin.cats.*') ? 'bg-[#253838] text-amber-400 font-semibold' : 'text-[#7A9E9E] hover:bg-[#253838] hover:text-white' }}">
                 <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
                     <path d="M6 4c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm8 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zM4 10c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm12 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zM12 21c-3.87 0-7-1.57-7-4.5 0-1.5 1-2.8 2.5-3.6.6-.3 1.3-.5 2-.6.8-.1 1.6-.3 2.5-.3s1.7.2 2.5.3c.7.1 1.4.3 2 .6 1.5.8 2.5 2.1 2.5 3.6 0 2.93-3.13 4.5-7 4.5z"/>
                 </svg>
@@ -74,7 +76,7 @@
             <div x-data="{ open: {{ request()->routeIs('admin.adoptions.*') || request()->routeIs('admin.adopters.*') ? 'true' : 'false' }} }">
                 <button @click="open = !open"
                         class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition
-                               {{ request()->routeIs('admin.adoptions.*') || request()->routeIs('admin.adopters.*') ? 'bg-amber-50 text-amber-700 font-semibold' : 'text-gray-400 hover:bg-amber-50 hover:text-amber-700' }}">
+                               {{ request()->routeIs('admin.adoptions.*') || request()->routeIs('admin.adopters.*') ? 'bg-[#253838] text-amber-400 font-semibold' : 'text-[#7A9E9E] hover:bg-[#253838] hover:text-white' }}">
                     <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
                     </svg>
@@ -88,11 +90,11 @@
                      x-transition:enter="transition ease-out duration-150"
                      x-transition:enter-start="opacity-0 -translate-y-1"
                      x-transition:enter-end="opacity-100 translate-y-0"
-                     class="mt-0.5 ml-4 pl-3 border-l border-amber-100 space-y-0.5">
+                     class="mt-0.5 ml-4 pl-3 border-l border-[#3A5050] space-y-0.5">
 
                     <a href="{{ route('admin.adoptions.index') }}"
                        class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition
-                              {{ request()->routeIs('admin.adoptions.index') ? 'bg-amber-50 text-amber-700 font-semibold' : 'text-gray-400 hover:bg-amber-50 hover:text-amber-700' }}">
+                              {{ request()->routeIs('admin.adoptions.index') ? 'bg-[#253838] text-amber-400 font-semibold' : 'text-[#7A9E9E] hover:bg-[#253838] hover:text-white' }}">
                         <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/>
                         </svg>
@@ -101,7 +103,7 @@
 
                     <a href="{{ route('admin.adopters.index') }}"
                        class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition
-                              {{ request()->routeIs('admin.adopters.*') ? 'bg-amber-50 text-amber-700 font-semibold' : 'text-gray-400 hover:bg-amber-50 hover:text-amber-700' }}">
+                              {{ request()->routeIs('admin.adopters.*') ? 'bg-[#253838] text-amber-400 font-semibold' : 'text-[#7A9E9E] hover:bg-[#253838] hover:text-white' }}">
                         <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                         </svg>
@@ -113,7 +115,7 @@
             {{-- Reports --}}
             <a href="{{ route('admin.reporting.index') }}"
                class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition
-                      {{ request()->routeIs('admin.reporting.*') ? 'bg-amber-50 text-amber-700 font-semibold' : 'text-gray-400 hover:bg-amber-50 hover:text-amber-700' }}">
+                      {{ request()->routeIs('admin.reporting.*') ? 'bg-[#253838] text-amber-400 font-semibold' : 'text-[#7A9E9E] hover:bg-[#253838] hover:text-white' }}">
                 <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
                 </svg>
@@ -124,7 +126,7 @@
             <div x-data="{ open: {{ request()->routeIs('admin.donations.*') ? 'true' : 'false' }} }">
                 <button @click="open = !open"
                         class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition
-                               {{ request()->routeIs('admin.donations.*') ? 'bg-amber-50 text-amber-700 font-semibold' : 'text-gray-400 hover:bg-amber-50 hover:text-amber-700' }}">
+                               {{ request()->routeIs('admin.donations.*') ? 'bg-[#253838] text-amber-400 font-semibold' : 'text-[#7A9E9E] hover:bg-[#253838] hover:text-white' }}">
                     <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
@@ -138,11 +140,11 @@
                      x-transition:enter="transition ease-out duration-150"
                      x-transition:enter-start="opacity-0 -translate-y-1"
                      x-transition:enter-end="opacity-100 translate-y-0"
-                     class="mt-0.5 ml-4 pl-3 border-l border-amber-100 space-y-0.5">
+                     class="mt-0.5 ml-4 pl-3 border-l border-[#3A5050] space-y-0.5">
 
                     <a href="{{ route('admin.donations.index') }}"
                        class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition
-                              {{ request()->routeIs('admin.donations.*') ? 'bg-amber-50 text-amber-700 font-semibold' : 'text-gray-400 hover:bg-amber-50 hover:text-amber-700' }}">
+                              {{ request()->routeIs('admin.donations.*') ? 'bg-[#253838] text-amber-400 font-semibold' : 'text-[#7A9E9E] hover:bg-[#253838] hover:text-white' }}">
                         <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/>
                         </svg>
@@ -151,7 +153,7 @@
 
                     <a href="{{ route('admin.expenses.index') }}"
                        class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition
-                              {{ request()->routeIs('admin.expenses.*') ? 'bg-amber-50 text-amber-700 font-semibold' : 'text-gray-400 hover:bg-amber-50 hover:text-amber-700' }}">
+                              {{ request()->routeIs('admin.expenses.*') ? 'bg-[#253838] text-amber-400 font-semibold' : 'text-[#7A9E9E] hover:bg-[#253838] hover:text-white' }}">
                         <svg class="w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
@@ -164,12 +166,12 @@
         </nav>
 
         <!-- Bottom: Preview + Settings + User -->
-        <div class="px-3 pb-5 space-y-0.5 border-t border-amber-100 pt-4">
+        <div class="px-3 pb-5 space-y-0.5 border-t border-[#253838] pt-4">
             {{-- Communication --}}
             <div class="space-y-0.5">
                 <a href="{{ route('admin.messages.index') }}"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition
-                          {{ request()->routeIs('admin.messages.*') ? 'bg-amber-50 text-amber-700' : 'text-gray-400 hover:bg-amber-50 hover:text-amber-700' }}">
+                          {{ request()->routeIs('admin.messages.*') ? 'bg-[#253838] text-amber-400' : 'text-[#7A9E9E] hover:bg-[#253838] hover:text-white' }}">
                     <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
                     </svg>
@@ -177,18 +179,18 @@
                 </a>
                 <a href="{{ route('admin.calendar.index') }}"
                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition
-                          {{ request()->routeIs('admin.calendar.*') ? 'bg-amber-50 text-amber-700 font-semibold' : 'text-gray-400 hover:bg-amber-50 hover:text-amber-700' }}">
+                          {{ request()->routeIs('admin.calendar.*') ? 'bg-[#253838] text-amber-400 font-semibold' : 'text-[#7A9E9E] hover:bg-[#253838] hover:text-white' }}">
                     <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z"/>
                     </svg>
                     Calendar
                 </a>
-                <div class="border-b border-amber-100" role="presentation"></div>
+                <div class="border-b border-[#253838]" role="presentation"></div>
                 {{-- Web Management --}}
                 <div x-data="{ open: {{ request()->routeIs('admin.events.*') ? 'true' : 'false' }} }">
                     <button @click="open = !open"
                             class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition
-                                   {{ request()->routeIs('admin.events.*') ? 'bg-amber-50 text-amber-700 font-semibold' : 'text-gray-400 hover:bg-amber-50 hover:text-amber-700' }}">
+                                   {{ request()->routeIs('admin.events.*') ? 'bg-[#253838] text-amber-400 font-semibold' : 'text-[#7A9E9E] hover:bg-[#253838] hover:text-white' }}">
                         <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253M3 12c0 .778.099 1.533.284 2.253"/>
                         </svg>
@@ -202,11 +204,11 @@
                          x-transition:enter="transition ease-out duration-150"
                          x-transition:enter-start="opacity-0 -translate-y-1"
                          x-transition:enter-end="opacity-100 translate-y-0"
-                         class="mt-0.5 ml-4 pl-3 border-l border-amber-100 space-y-0.5">
+                         class="mt-0.5 ml-4 pl-3 border-l border-[#3A5050] space-y-0.5">
 
                         <a href="{{ route('admin.events.index') }}"
                            class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition
-                                  {{ request()->routeIs('admin.events.*') ? 'bg-amber-50 text-amber-700 font-semibold' : 'text-gray-400 hover:bg-amber-50 hover:text-amber-700' }}">
+                                  {{ request()->routeIs('admin.events.*') ? 'bg-[#253838] text-amber-400 font-semibold' : 'text-[#7A9E9E] hover:bg-[#253838] hover:text-white' }}">
                             <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/>
                             </svg>
@@ -221,7 +223,7 @@
             <div x-data="{ open: {{ request()->routeIs('admin.volunteers.*') || request()->routeIs('admin.users.*') ? 'true' : 'false' }} }">
                 <button @click="open = !open"
                         class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition
-                               {{ request()->routeIs('admin.volunteers.*') || request()->routeIs('admin.users.*') ? 'bg-amber-50 text-amber-700 font-semibold' : 'text-gray-400 hover:bg-amber-50 hover:text-amber-700' }}">
+                               {{ request()->routeIs('admin.volunteers.*') || request()->routeIs('admin.users.*') ? 'bg-[#253838] text-amber-400 font-semibold' : 'text-[#7A9E9E] hover:bg-[#253838] hover:text-white' }}">
                     <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                     </svg>
@@ -235,11 +237,11 @@
                      x-transition:enter="transition ease-out duration-150"
                      x-transition:enter-start="opacity-0 -translate-y-1"
                      x-transition:enter-end="opacity-100 translate-y-0"
-                     class="mt-0.5 ml-4 pl-3 border-l border-amber-100 space-y-0.5">
+                     class="mt-0.5 ml-4 pl-3 border-l border-[#3A5050] space-y-0.5">
 
                     <a href="{{ route('admin.volunteers.index') }}"
                        class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition
-                              {{ request()->routeIs('admin.volunteers.*') ? 'bg-amber-50 text-amber-700 font-semibold' : 'text-gray-400 hover:bg-amber-50 hover:text-amber-700' }}">
+                              {{ request()->routeIs('admin.volunteers.*') ? 'bg-[#253838] text-amber-400 font-semibold' : 'text-[#7A9E9E] hover:bg-[#253838] hover:text-white' }}">
                         <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                         </svg>
@@ -248,7 +250,7 @@
 
                     <a href="{{ route('admin.users.index') }}"
                        class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition
-                              {{ request()->routeIs('admin.users.*') ? 'bg-amber-50 text-amber-700 font-semibold' : 'text-gray-400 hover:bg-amber-50 hover:text-amber-700' }}">
+                              {{ request()->routeIs('admin.users.*') ? 'bg-[#253838] text-amber-400 font-semibold' : 'text-[#7A9E9E] hover:bg-[#253838] hover:text-white' }}">
                         <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/>
                         </svg>
@@ -257,10 +259,10 @@
                 </div>
             </div>
 
-            <div class="border-b border-amber-100" role="presentation"></div>
+            <div class="border-b border-[#253838]" role="presentation"></div>
 
             <a href="{{ route('profile.edit') }}"
-               class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-400 hover:bg-amber-50 hover:text-amber-700 transition">
+               class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-[#7A9E9E] hover:bg-[#253838] hover:text-white transition">
                 <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/>
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -270,22 +272,22 @@
 
             <!-- User row -->
             @php $sidebarUser = auth()->user(); @endphp
-            <div class="flex items-center gap-3 px-3 pt-3 mt-2 border-t border-amber-50">
+            <div class="flex items-center gap-3 px-3 pt-3 mt-2 border-t border-[#253838]">
                 @if($sidebarUser?->getAttribute('avatar'))
                     <img src="{{ Storage::url($sidebarUser->getAttribute('avatar')) }}" alt="{{ $sidebarUser->getAttribute('name') }}"
                          class="w-8 h-8 rounded-full object-cover flex-shrink-0">
                 @else
-                    <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-xs font-bold flex-shrink-0">
+                    <div class="w-8 h-8 rounded-full bg-[#253838] text-amber-400 flex items-center justify-center text-xs font-bold flex-shrink-0">
                         {{ strtoupper(substr($sidebarUser?->getAttribute('name') ?? 'A', 0, 2)) }}
                     </div>
                 @endif
                 <div class="flex-1 min-w-0">
-                    <p class="text-xs font-semibold text-gray-800 truncate">{{ $sidebarUser?->getAttribute('name') }}</p>
-                    <p class="text-[10px] text-gray-400 truncate">{{ $sidebarUser?->getAttribute('email') }}</p>
+                    <p class="text-xs font-semibold text-white truncate">{{ $sidebarUser?->getAttribute('name') }}</p>
+                    <p class="text-[10px] text-[#7A9E9E] truncate">{{ $sidebarUser?->getAttribute('email') }}</p>
                 </div>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" title="Log out" class="text-gray-400 hover:text-amber-600 text-sm transition">→</button>
+                    <button type="submit" title="Log out" class="text-[#7A9E9E] hover:text-amber-400 text-sm transition">→</button>
                 </form>
             </div>
         </div>
@@ -295,19 +297,19 @@
     <div class="flex-1 flex flex-col overflow-hidden">
 
         <!-- Top Bar -->
-        <header class="bg-white border-b border-amber-100 px-8 h-[72px] flex items-center justify-between flex-shrink-0">
+        <header class="bg-white border-b border-gray-200 px-8 h-[72px] flex items-center justify-between flex-shrink-0">
             <div>
                 <p class="text-[10px] tracking-widest text-amber-400 uppercase font-semibold">Feline Management Console</p>
             </div>
             <div class="flex items-center gap-4">
-                <button class="relative text-gray-400 hover:text-amber-600 transition">
+                <button class="relative text-gray-400 hover:text-amber-500 transition">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
                 </button>
                 @if($sidebarUser?->getAttribute('avatar'))
                     <img src="{{ Storage::url($sidebarUser->getAttribute('avatar')) }}" alt="{{ $sidebarUser->getAttribute('name') }}"
-                         class="w-8 h-8 rounded-full object-cover ring-2 ring-amber-200">
+                         class="w-8 h-8 rounded-full object-cover ring-2 ring-gray-200">
                 @else
-                    <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-xs font-bold ring-2 ring-amber-200">
+                    <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-xs font-bold ring-2 ring-gray-200">
                         {{ strtoupper(substr($sidebarUser?->getAttribute('name') ?? 'A', 0, 2)) }}
                     </div>
                 @endif
@@ -330,7 +332,7 @@
         </main>
 
         <!-- Footer -->
-        <footer class="px-8 py-3 border-t border-amber-100 bg-white">
+        <footer class="px-8 py-3 border-t border-gray-200 bg-white">
             <p class="text-[10px] text-gray-400 text-center">© {{ date('Y') }} e-Doptcat Administrative Atelier. All systems operational.</p>
         </footer>
     </div>
