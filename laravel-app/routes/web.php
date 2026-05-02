@@ -8,13 +8,16 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\GpsController;
 use App\Http\Controllers\Admin\CatManagementController;
+use App\Http\Controllers\Admin\AdopterController;
+use App\Http\Controllers\Admin\CalendarController;
+use App\Http\Controllers\Admin\EventManagementController;
 use App\Http\Controllers\Admin\AdoptionManagementController;
 use App\Http\Controllers\Admin\ReportManagementController;
 use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\Admin\AnalyticsController;
+use App\Http\Controllers\Admin\ReportingController;
 use App\Http\Controllers\Admin\DonationManagementController;
-use App\Http\Controllers\Admin\IncidentManagementController;
-use App\Http\Controllers\Admin\MessageManagementController;
-use App\Http\Controllers\Admin\CalendarManagementController;
+use App\Http\Controllers\Admin\MessageController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', App\Http\Controllers\HomeController::class)->name('home');
@@ -42,15 +45,23 @@ Route::middleware('auth')->group(function () {
 
     // Admin Routes
     Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
-        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard', [AnalyticsController::class, 'index'])->name('dashboard');
+        Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index'); // Kept for alias compatibility
+        Route::get('/reporting', [ReportingController::class, 'index'])->name('reporting.index');
 
         // Cat Management
         Route::resource('cats', CatManagementController::class);
+
+        // Adopter Management
+        Route::get('adopters', [AdopterController::class, 'index'])->name('adopters.index');
 
         // Adoption Management
         Route::resource('adoptions', AdoptionManagementController::class)->only(['index', 'show', 'destroy']);
         Route::patch('adoptions/{adoption}/approve', [AdoptionManagementController::class, 'approve'])->name('adoptions.approve');
         Route::patch('adoptions/{adoption}/reject', [AdoptionManagementController::class, 'reject'])->name('adoptions.reject');
+
+        // Volunteer Management
+        Route::get('volunteers', function() { return view('admin.volunteers.index'); })->name('volunteers.index');
 
         // Report Management
         Route::resource('reports', ReportManagementController::class)->only(['index', 'show', 'destroy']);
@@ -60,9 +71,17 @@ Route::middleware('auth')->group(function () {
         Route::resource('users', UserManagementController::class)->only(['index', 'show', 'destroy']);
         Route::patch('users/{user}/role', [UserManagementController::class, 'updateRole'])->name('users.role');
 
+        // Messages
+        Route::get('messages', [MessageController::class, 'index'])->name('messages.index');
+
         // Donation Management
         Route::resource('donations', DonationManagementController::class)->only(['index', 'show', 'destroy']);
         Route::get('expenses', function() { return view('admin.expenses.index'); })->name('expenses.index');
+
+        // Web Management
+        Route::resource('events', EventManagementController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+        Route::get('calendar', [CalendarController::class, 'index'])->name('calendar.index');
+        Route::get('calendar/events', [CalendarController::class, 'events'])->name('calendar.events');
     });
 });
 

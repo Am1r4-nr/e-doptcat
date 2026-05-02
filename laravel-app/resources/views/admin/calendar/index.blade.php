@@ -1,157 +1,240 @@
 <x-admin-layout>
-<div class="mb-8">
-    <div class="flex justify-between items-center">
-        <div>
-            <h2 class="text-3xl font-bold text-gray-900">📅 Calendar Management</h2>
-            <p class="text-gray-600 mt-1">Manage events and schedule activities</p>
-        </div>
-        <a href="{{ route('admin.calendar.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 shadow-lg hover:shadow-xl transition">
-            <span>➕</span> New Event
-        </a>
-    </div>
-</div>
 
-<!-- Quick Stats -->
-<div class="grid grid-cols-4 gap-4 mb-8">
-    <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
-        <div class="text-2xl font-bold text-blue-700">{{ DB::table('events')->where('status', 'Scheduled')->count() }}</div>
-        <p class="text-sm text-blue-600">Scheduled</p>
-    </div>
-    <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 border border-green-200">
-        <div class="text-2xl font-bold text-green-700">{{ DB::table('events')->where('status', 'Ongoing')->count() }}</div>
-        <p class="text-sm text-green-600">Ongoing</p>
-    </div>
-    <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200">
-        <div class="text-2xl font-bold text-purple-700">{{ DB::table('events')->where('status', 'Completed')->count() }}</div>
-        <p class="text-sm text-purple-600">Completed</p>
-    </div>
-    <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-lg p-4 border border-red-200">
-        <div class="text-2xl font-bold text-red-700">{{ DB::table('events')->count() }}</div>
-        <p class="text-sm text-red-600">Total Events</p>
-    </div>
-</div>
+<!-- FullCalendar CSS -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
 
-<!-- Tabs for View Mode -->
-<div class="mb-6 flex gap-2 border-b border-gray-200">
-    <button class="px-4 py-2 border-b-2 border-blue-500 text-blue-600 font-medium" onclick="showView('list')">📋 List View</button>
-    <button class="px-4 py-2 text-gray-600 font-medium hover:text-blue-600" onclick="showView('upcoming')">🕐 Upcoming Events</button>
-</div>
+<style>
+    /* ---- FullCalendar theme overrides to match admin design ---- */
+    .fc { font-family: 'Lato', sans-serif; }
 
-<!-- Filters Section -->
-<div class="bg-white rounded-lg shadow-sm p-6 mb-8 border border-gray-100">
-    <form method="GET" action="{{ route('admin.calendar.index') }}" class="flex gap-4 items-end flex-wrap">
-        <!-- Search -->
-        <div class="flex-1 min-w-xs">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Search</label>
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search events..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-
-        <!-- Status Filter -->
-        <div class="w-48">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-            <select name="status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="">All Statuses</option>
-                <option value="Scheduled" {{ request('status') === 'Scheduled' ? 'selected' : '' }}>Scheduled</option>
-                <option value="Ongoing" {{ request('status') === 'Ongoing' ? 'selected' : '' }}>Ongoing</option>
-                <option value="Completed" {{ request('status') === 'Completed' ? 'selected' : '' }}>Completed</option>
-                <option value="Cancelled" {{ request('status') === 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
-            </select>
-        </div>
-
-        <!-- Buttons -->
-        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow hover:shadow-lg transition">
-            Filter
-        </button>
-        <a href="{{ route('admin.calendar.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-900 font-bold py-2 px-6 rounded-lg">
-            Reset
-        </a>
-    </form>
-</div>
-
-<!-- List View -->
-<div id="list-view" class="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100">
-    <table class="min-w-full">
-        <thead class="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
-            <tr>
-                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">📌 Title</th>
-                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">📅 Date & Time</th>
-                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">📍 Location</th>
-                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">🏷️ Status</th>
-                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">👥 Registrations</th>
-                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">⚙️ Actions</th>
-            </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-100">
-            @forelse ($events as $event)
-            <tr class="hover:bg-blue-50 transition">
-                <td class="px-6 py-4">
-                    <div class="font-medium text-gray-900">{{ $event->title }}</div>
-                    <div class="text-sm text-gray-500 line-clamp-1">{{ Str::limit($event->description, 50) }}</div>
-                </td>
-                <td class="px-6 py-4 text-sm text-gray-600">
-                    <span class="font-medium">{{ $event->event_date->format('M d, Y') }}</span><br>
-                    <span class="text-xs text-gray-500">{{ $event->event_date->format('H:i A') }}</span>
-                </td>
-                <td class="px-6 py-4 text-sm text-gray-600">
-                    {{ $event->location ?? '—' }}
-                </td>
-                <td class="px-6 py-4">
-                    <form action="{{ route('admin.calendar.updateStatus', $event) }}" method="POST" class="inline">
-                        @csrf
-                        @method('PATCH')
-                        <select name="status" onchange="this.form.submit()" class="text-xs rounded-lg border-0 px-3 py-2 font-semibold cursor-pointer {{ $event->status === 'Scheduled' ? 'bg-blue-100 text-blue-800' : ($event->status === 'Ongoing' ? 'bg-green-100 text-green-800' : ($event->status === 'Completed' ? 'bg-purple-100 text-purple-800' : 'bg-red-100 text-red-800')) }}">
-                            <option value="Scheduled" {{ $event->status === 'Scheduled' ? 'selected' : '' }}>Scheduled</option>
-                            <option value="Ongoing" {{ $event->status === 'Ongoing' ? 'selected' : '' }}>Ongoing</option>
-                            <option value="Completed" {{ $event->status === 'Completed' ? 'selected' : '' }}>Completed</option>
-                            <option value="Cancelled" {{ $event->status === 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
-                        </select>
-                    </form>
-                </td>
-                <td class="px-6 py-4 text-center">
-                    <span class="inline-block bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">
-                        {{ $event->registrations_count ?? 0 }}
-                    </span>
-                </td>
-                <td class="px-6 py-4 flex gap-3">
-                    <a href="{{ route('admin.calendar.show', $event) }}" class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-900 hover:bg-blue-50 px-2 py-1 rounded transition font-medium text-sm">👁️ View</a>
-                    <a href="{{ route('admin.calendar.edit', $event) }}" class="inline-flex items-center gap-1 text-green-600 hover:text-green-900 hover:bg-green-50 px-2 py-1 rounded transition font-medium text-sm">✏️ Edit</a>
-                    <form action="{{ route('admin.calendar.destroy', $event) }}" method="POST" onsubmit="return confirm('Delete this event?')" class="inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="inline-flex items-center gap-1 text-red-600 hover:text-red-900 hover:bg-red-50 px-2 py-1 rounded transition font-medium text-sm">🗑️ Delete</button>
-                    </form>
-                </td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="6" class="px-6 py-16 text-center">
-                    <div class="text-4xl mb-3">📭</div>
-                    <div class="text-lg font-semibold text-gray-700">No events found</div>
-                    <p class="text-gray-500 mt-2">Create your first event to get started!</p>
-                    <a href="{{ route('admin.calendar.create') }}" class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg">Create Event</a>
-                </td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
-</div>
-
-<!-- Pagination -->
-<div class="mt-8">
-    {{ $events->links() }}
-</div>
-
-<script>
-function showView(view) {
-    const listView = document.getElementById('list-view');
-    const buttons = document.querySelectorAll('button[onclick^="showView"]');
-    
-    buttons.forEach(btn => btn.classList.remove('border-b-2', 'border-blue-500', 'text-blue-600'));
-    
-    if (view === 'list') {
-        listView.style.display = 'block';
-        event.target.classList.add('border-b-2', 'border-blue-500', 'text-blue-600');
+    .fc .fc-toolbar-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1f2937;
     }
+
+    .fc .fc-button {
+        background-color: #ffffff !important;
+        border: 1px solid #fde68a !important;
+        color: #92400e !important;
+        font-size: 0.75rem !important;
+        font-weight: 600 !important;
+        border-radius: 9999px !important;
+        padding: 0.35rem 0.85rem !important;
+        box-shadow: none !important;
+        text-transform: capitalize !important;
+    }
+    .fc .fc-button:hover {
+        background-color: #fffbeb !important;
+        border-color: #f59e0b !important;
+    }
+    .fc .fc-button-active,
+    .fc .fc-button-primary:not(:disabled).fc-button-active {
+        background-color: #d97706 !important;
+        border-color: #b45309 !important;
+        color: #ffffff !important;
+    }
+    .fc .fc-button-group .fc-button { border-radius: 9999px !important; }
+
+    .fc-theme-standard td, .fc-theme-standard th { border-color: #fef3c7; }
+    .fc-theme-standard .fc-scrollgrid { border-color: #fef3c7; }
+
+    .fc .fc-col-header-cell-cushion {
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #9ca3af;
+        padding: 10px 4px;
+        text-decoration: none;
+    }
+
+    .fc .fc-daygrid-day-number {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #6b7280;
+        text-decoration: none;
+        padding: 6px 8px;
+    }
+    .fc .fc-day-today { background-color: #fffbeb !important; }
+    .fc .fc-day-today .fc-daygrid-day-number { color: #d97706; font-weight: 700; }
+
+    .fc .fc-daygrid-event {
+        border-radius: 6px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        padding: 2px 6px;
+        margin: 1px 2px;
+        cursor: pointer;
+    }
+
+    .fc .fc-timegrid-event {
+        border-radius: 6px;
+        font-size: 0.72rem;
+        font-weight: 600;
+    }
+
+    .fc .fc-list-event-title a { text-decoration: none; color: inherit; }
+    .fc .fc-list-empty { color: #9ca3af; font-style: italic; }
+
+    /* Event detail popover */
+    #eventPopover {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        background: white;
+        border: 1px solid #fde68a;
+        border-radius: 16px;
+        padding: 16px;
+        width: 240px;
+        box-shadow: 0 10px 30px -5px rgba(0,0,0,0.15);
+        pointer-events: auto;
+    }
+</style>
+
+<!-- Page Header -->
+<div class="mb-6 flex items-start justify-between">
+    <div>
+        <h1 class="text-3xl font-serif font-semibold text-gray-800">Calendar</h1>
+        <p class="text-sm text-gray-400 mt-1">All sanctuary events on one view</p>
+    </div>
+    <a href="{{ route('admin.events.create') }}"
+       class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-amber-600 text-white text-sm font-semibold hover:bg-amber-700 transition">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+        </svg>
+        New Event
+    </a>
+</div>
+
+<!-- Legend -->
+<div class="flex items-center gap-5 mb-4">
+    <span class="flex items-center gap-1.5 text-xs font-semibold text-gray-500">
+        <span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span> Upcoming
+    </span>
+    <span class="flex items-center gap-1.5 text-xs font-semibold text-gray-500">
+        <span class="w-3 h-3 rounded-full bg-teal-500 inline-block"></span> Completed
+    </span>
+    <span class="flex items-center gap-1.5 text-xs font-semibold text-gray-500">
+        <span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span> Cancelled
+    </span>
+</div>
+
+<!-- Calendar card -->
+<div class="bg-white rounded-2xl shadow-sm border border-amber-100 p-6">
+    <div id="calendar"></div>
+</div>
+
+<!-- Event detail popover -->
+<div id="eventPopover">
+    <div class="flex items-start justify-between mb-2">
+        <p id="popTitle" class="text-sm font-bold text-gray-800 leading-snug pr-2"></p>
+        <button onclick="closePopover()" class="text-gray-400 hover:text-gray-600 flex-shrink-0">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+    <p id="popDate"     class="text-xs text-amber-600 font-semibold mb-1"></p>
+    <p id="popLocation" class="text-xs text-gray-500 mb-1"></p>
+    <p id="popDesc"     class="text-xs text-gray-400 mb-3 line-clamp-2"></p>
+    <div class="flex gap-2">
+        <a id="popEdit" href="#"
+           class="flex-1 text-center text-xs font-semibold px-3 py-1.5 rounded-full bg-amber-600 text-white hover:bg-amber-700 transition">
+            Edit
+        </a>
+        <span id="popStatus" class="flex-1 text-center text-xs font-semibold px-3 py-1.5 rounded-full bg-amber-50 text-amber-700"></span>
+    </div>
+</div>
+
+<!-- FullCalendar JS -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const calEl   = document.getElementById('calendar');
+    const popover = document.getElementById('eventPopover');
+
+    const calendar = new FullCalendar.Calendar(calEl, {
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+            left:   'prev,next today',
+            center: 'title',
+            right:  'dayGridMonth,timeGridWeek,timeGridDay,listMonth',
+        },
+        buttonText: {
+            today:     'Today',
+            month:     'Month',
+            week:      'Week',
+            day:       'Day',
+            list:      'List',
+        },
+        height:      'auto',
+        firstDay:    1,
+        nowIndicator: true,
+        selectable:  true,
+        events:      '{{ route("admin.calendar.events") }}',
+
+        // Click empty date → open create form with pre-filled date
+        dateClick: function (info) {
+            const d = info.dateStr.slice(0, 16) || info.dateStr + 'T00:00';
+            window.location.href = '{{ route("admin.events.create") }}?date=' + encodeURIComponent(d);
+        },
+
+        // Click event → show popover
+        eventClick: function (info) {
+            info.jsEvent.preventDefault();
+            const p = info.event.extendedProps;
+            const s = info.event.start;
+
+            document.getElementById('popTitle').textContent    = info.event.title;
+            document.getElementById('popDate').textContent     = s ? s.toLocaleDateString('en-MY', { weekday:'short', year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }) : '';
+            document.getElementById('popLocation').textContent = p.location ? '📍 ' + p.location : '';
+            document.getElementById('popDesc').textContent     = p.description || '';
+            document.getElementById('popStatus').textContent   = p.status;
+            document.getElementById('popEdit').href            = info.event.url;
+
+            // Position near click
+            const x = info.jsEvent.clientX;
+            const y = info.jsEvent.clientY;
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+            popover.style.left = (x + 250 > vw ? x - 255 : x + 10) + 'px';
+            popover.style.top  = (y + 200 > vh ? y - 210 : y + 10) + 'px';
+            popover.style.display = 'block';
+        },
+
+        eventMouseEnter: function (info) {
+            info.el.style.opacity = '0.85';
+        },
+        eventMouseLeave: function (info) {
+            info.el.style.opacity = '1';
+        },
+    });
+
+    calendar.render();
+
+    // Close popover on outside click
+    document.addEventListener('click', function (e) {
+        if (!popover.contains(e.target) && !e.target.closest('.fc-event')) {
+            popover.style.display = 'none';
+        }
+    });
+});
+
+function closePopover() {
+    document.getElementById('eventPopover').style.display = 'none';
 }
 </script>
+
+@if(request('date'))
+<script>
+    // Pre-fill date on create form if redirected from calendar click
+    document.addEventListener('DOMContentLoaded', function () {
+        const input = document.querySelector('input[name="event_date"]');
+        if (input) input.value = '{{ request("date") }}';
+    });
+</script>
+@endif
+
 </x-admin-layout>
