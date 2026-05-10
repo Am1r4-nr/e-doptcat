@@ -116,7 +116,9 @@ class CatManagementController extends Controller
             'status'        => 'nullable|in:Available,Adopted,Lost',
             'gps_lat'       => 'nullable|numeric|between:-90,90',
             'gps_lng'       => 'nullable|numeric|between:-180,180',
-            'location_name' => 'nullable|string|max:255',
+            'location_name'   => 'nullable|string|max:255',
+            'description'     => 'nullable|string',
+            'medical_history' => 'nullable|string',
         ]);
 
         $cat->update(array_filter($validated, fn($v) => $v !== null && $v !== ''));

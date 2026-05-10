@@ -1,5 +1,76 @@
 <x-admin-layout>
 <script>
+function healthRecordsData() {
+    return {
+        open: null,
+        editing: null,
+        todos: [],
+        vaccines: {
+            'Vaccinated': [
+                { title: 'FVRCP (Combo Shot)',   note: 'Herpesvirus, Calicivirus, Panleukopenia', tag: 'Core' },
+                { title: 'Rabies',               note: 'Fatal if untreated, transmissible to humans', tag: 'Core' },
+                { title: 'FeLV',                 note: 'Feline Leukemia Virus, recommended under 1yr', tag: 'Recommended' },
+                { title: 'Bordetella',           note: 'Shelter or multi-cat households', tag: 'Optional' },
+                { title: 'Chlamydia',            note: 'Crowded or rescue environments', tag: 'Optional' },
+                { title: 'FIV',                  note: 'Outdoor or fighting-risk cats', tag: 'Optional' },
+            ],
+            'Booster': [
+                { title: 'FVRCP Booster',  note: 'Every 1-3 years after initial series', tag: 'Core' },
+                { title: 'Rabies Booster', note: 'Annual or every 3 years by law', tag: 'Core' },
+                { title: 'FeLV Booster',   note: 'Annual for at-risk cats', tag: 'Recommended' },
+            ],
+            'Neutered': [
+                { title: 'Neuter / Spay', note: 'Ideal at 4-6 months, after first vaccines', tag: 'Procedure' },
+            ],
+            'Additional Treatment': [
+                { title: 'Deworming',          note: 'Every 3 months, especially for outdoor cats', tag: 'Recommended' },
+                { title: 'Flea Treatment',     note: 'Monthly topical or oral preventative', tag: 'Recommended' },
+                { title: 'Dental Cleaning',    note: 'Annual professional scaling under anaesthesia', tag: 'Optional' },
+                { title: 'Microchipping',      note: 'Permanent ID implant, one-time procedure', tag: 'Procedure' },
+                { title: 'Ear Mite Treatment', note: 'Topical or systemic if infestation detected', tag: 'Optional' },
+                { title: 'Eye / Ear Drops',    note: 'For recurring infection or discharge', tag: 'Optional' },
+            ],
+            'Accident / Injury': [
+                { title: 'Wound Care',            note: 'Cleaning, suturing, or bandaging of injuries', tag: 'Emergency' },
+                { title: 'Fracture Treatment',    note: 'Splinting, casting, or surgical repair', tag: 'Emergency' },
+                { title: 'Trauma Stabilisation',  note: 'IV fluids, pain relief, oxygen support', tag: 'Emergency' },
+                { title: 'Post-Surgery Care',     note: 'Follow-up and recovery monitoring after procedure', tag: 'Optional' },
+            ],
+        },
+        add(title) {
+            if (!this.todos.find(t => t.title === title)) {
+                this.todos.push({ title, clinic: '', volunteer: '', date: '', notes: '', status: 'Pending', files: [] });
+            }
+            this.open = null;
+        },
+        remove(title) {
+            this.todos = this.todos.filter(t => t.title !== title);
+            if (this.editing && this.editing.title === title) this.editing = null;
+        },
+        openEdit(item) {
+            this.editing = { ...item, files: [...(item.files || [])] };
+        },
+        saveEdit() {
+            const idx = this.todos.findIndex(t => t.title === this.editing.title);
+            if (idx !== -1) this.todos[idx] = { ...this.editing };
+            this.editing = null;
+        },
+        handleFiles(event) {
+            Array.from(event.target.files).forEach(f => {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    this.editing.files.push({ name: f.name, url: e.target.result, type: f.type });
+                };
+                reader.readAsDataURL(f);
+            });
+            event.target.value = '';
+        },
+        removeFile(idx) {
+            this.editing.files.splice(idx, 1);
+        },
+    };
+}
+
 function catShowPage() {
     return {
         gallery: false,
@@ -14,6 +85,10 @@ function catShowPage() {
             color:  {!! json_encode($cat->color) !!},
             weight: {!! json_encode($cat->weight) !!},
             status: {!! json_encode($cat->status) !!},
+        },
+        notesFields: {
+            description:     {!! json_encode($cat->description) !!},
+            medical_history: {!! json_encode($cat->medical_history) !!},
         },
         async saveSection(fields) {
             this.sectionSaving = true;
@@ -252,7 +327,13 @@ function catShowPage() {
 
             <!-- Profile Notes -->
             <div class="bg-white rounded-2xl border border-[#E8E2D8] shadow-sm p-6">
-                <p class="text-[10px] tracking-widest text-[#C9A84C] uppercase font-semibold mb-3">Profile Notes</p>
+                <div class="flex items-center justify-between mb-3">
+                    <p class="text-[10px] tracking-widest text-[#C9A84C] uppercase font-semibold">Profile Notes</p>
+                    <button @click="sectionEdit = 'notes'"
+                            class="w-6 h-6 rounded-full bg-[#F5EDD8] hover:bg-[#C9A84C] text-[#C9A84C] hover:text-white flex items-center justify-center transition">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
+                    </button>
+                </div>
                 @if($cat->description)
                     <p class="text-sm text-gray-600 leading-relaxed">{{ $cat->description }}</p>
                 @else
@@ -266,69 +347,18 @@ function catShowPage() {
 
             <!-- Health Records -->
             <div class="bg-white rounded-2xl border border-[#E8E2D8] shadow-sm p-6"
-                 x-data="{
-                     open: null,
-                     editing: null,
-                     todos: [],
-                     vaccines: {
-                         'Vaccinated': [
-                             { title: 'FVRCP (Combo Shot)', note: 'Herpesvirus · Calicivirus · Panleukopenia', tag: 'Core' },
-                             { title: 'Rabies',             note: 'Fatal if untreated, transmissible to humans', tag: 'Core' },
-                             { title: 'FeLV',               note: 'Feline Leukemia Virus, recommended under 1yr', tag: 'Recommended' },
-                             { title: 'Bordetella',         note: 'Shelter or multi-cat households', tag: 'Optional' },
-                             { title: 'Chlamydia',          note: 'Crowded or rescue environments', tag: 'Optional' },
-                             { title: 'FIV',                note: 'Outdoor or fighting-risk cats', tag: 'Optional' },
-                         ],
-                         'Booster': [
-                             { title: 'FVRCP Booster',  note: 'Every 1-3 years after initial series', tag: 'Core' },
-                             { title: 'Rabies Booster', note: 'Annual or every 3 years by law', tag: 'Core' },
-                             { title: 'FeLV Booster',   note: 'Annual for at-risk cats', tag: 'Recommended' },
-                         ],
-                         'Neutered': [
-                             { title: 'Neuter / Spay', note: 'Ideal at 4-6 months, after first vaccines', tag: 'Procedure' },
-                         ]
-                     },
-                     add(title) {
-                         if (!this.todos.find(t => t.title === title)) {
-                             this.todos.push({ title, clinic: '', volunteer: '', date: '', notes: '', status: 'Pending', files: [] });
-                         }
-                         this.open = null;
-                     },
-                     remove(title) {
-                         this.todos = this.todos.filter(t => t.title !== title);
-                         if (this.editing && this.editing.title === title) this.editing = null;
-                     },
-                     openEdit(item) {
-                         this.editing = { ...item, files: [...(item.files || [])] };
-                     },
-                     saveEdit() {
-                         const idx = this.todos.findIndex(t => t.title === this.editing.title);
-                         if (idx !== -1) this.todos[idx] = { ...this.editing };
-                         this.editing = null;
-                     },
-                     handleFiles(event) {
-                         Array.from(event.target.files).forEach(f => {
-                             const reader = new FileReader();
-                             reader.onload = e => {
-                                 this.editing.files.push({ name: f.name, url: e.target.result, type: f.type });
-                             };
-                             reader.readAsDataURL(f);
-                         });
-                         event.target.value = '';
-                     },
-                     removeFile(idx) {
-                         this.editing.files.splice(idx, 1);
-                     }
-                 }">
+                 x-data="healthRecordsData()">
                 <div class="flex items-center justify-between mb-5">
                     <h2 class="text-base font-bold text-gray-800">Health Records</h2>
                 </div>
 
                 @php
                     $medStatuses = [
-                        ['key' => 'Vaccinated', 'done' => (bool) $cat->vaccinated],
-                        ['key' => 'Booster',    'done' => false],
-                        ['key' => 'Neutered',   'done' => false],
+                        ['key' => 'Vaccinated',            'done' => (bool) $cat->vaccinated],
+                        ['key' => 'Booster',               'done' => false],
+                        ['key' => 'Neutered',              'done' => false],
+                        ['key' => 'Additional Treatment',  'done' => false],
+                        ['key' => 'Accident / Injury',     'done' => false],
                     ];
                 @endphp
 
@@ -620,6 +650,47 @@ function catShowPage() {
                     Cancel
                 </button>
                 <button @click="saveSection(catFields)" :disabled="sectionSaving"
+                        class="px-4 py-2 text-xs font-semibold text-white bg-[#C9A84C] hover:bg-[#b8963e] rounded-xl transition disabled:opacity-60">
+                    <span x-text="sectionSaving ? 'Saving…' : 'Save'"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Notes Edit Modal -->
+    <div x-show="sectionEdit === 'notes'" x-transition
+         class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+        <div @click.outside="sectionEdit = null"
+             class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 flex flex-col max-h-[90vh]">
+            <div class="flex items-center justify-between mb-5 flex-shrink-0">
+                <div>
+                    <p class="text-sm font-bold text-gray-800">Edit Profile Notes</p>
+                    <p class="text-[10px] text-gray-400 mt-0.5">Profile Notes & Additional Note</p>
+                </div>
+                <button @click="sectionEdit = null" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="space-y-4 overflow-y-auto flex-1 pr-0.5">
+                <div>
+                    <label class="text-[10px] tracking-widest text-[#C9A84C] uppercase font-semibold block mb-1.5">Profile Notes</label>
+                    <textarea x-model="notesFields.description" rows="5"
+                              placeholder="Describe the cat's background, behaviour, how it was found..."
+                              class="w-full px-3 py-2 text-sm border border-[#E8E2D8] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#C9A84C] placeholder-gray-300 resize-none leading-relaxed"></textarea>
+                </div>
+                <div class="border-t border-[#F0EBE3] pt-4">
+                    <label class="text-[10px] tracking-widest text-[#C9A84C] uppercase font-semibold block mb-1.5">Additional Note</label>
+                    <textarea x-model="notesFields.medical_history" rows="5"
+                              placeholder="Medical history, vet visits, treatments..."
+                              class="w-full px-3 py-2 text-sm border border-[#E8E2D8] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#C9A84C] placeholder-gray-300 resize-none leading-relaxed"></textarea>
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 mt-5 flex-shrink-0">
+                <button @click="sectionEdit = null"
+                        class="px-4 py-2 text-xs font-semibold text-gray-500 border border-[#E8E2D8] rounded-xl hover:bg-gray-50 transition">
+                    Cancel
+                </button>
+                <button @click="saveSection(notesFields)" :disabled="sectionSaving"
                         class="px-4 py-2 text-xs font-semibold text-white bg-[#C9A84C] hover:bg-[#b8963e] rounded-xl transition disabled:opacity-60">
                     <span x-text="sectionSaving ? 'Saving…' : 'Save'"></span>
                 </button>
