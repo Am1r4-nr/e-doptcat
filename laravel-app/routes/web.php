@@ -53,7 +53,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/reporting', [ReportingController::class, 'index'])->name('reporting.index');
 
         // Cat Management
-        Route::resource('cats', CatManagementController::class);
+        Route::resource('cats', CatManagementController::class)->except(['edit', 'update']);
+        Route::patch('cats/{cat}/fields', [CatManagementController::class, 'updateFields'])->name('cats.updateFields');
 
         // Adopter Management
         Route::get('adopters', [AdopterController::class, 'index'])->name('adopters.index');

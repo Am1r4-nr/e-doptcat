@@ -104,6 +104,26 @@ class CatManagementController extends Controller
         return redirect()->route('admin.cats.index')->with('success', 'Cat updated successfully.');
     }
 
+    public function updateFields(Request $request, Cat $cat)
+    {
+        $validated = $request->validate([
+            'name'          => 'nullable|string|max:255',
+            'breed'         => 'nullable|string|max:255',
+            'gender'        => 'nullable|string|max:50',
+            'age'           => 'nullable|integer|min:0',
+            'color'         => 'nullable|string|max:255',
+            'weight'        => 'nullable|numeric|min:0',
+            'status'        => 'nullable|in:Available,Adopted,Lost',
+            'gps_lat'       => 'nullable|numeric|between:-90,90',
+            'gps_lng'       => 'nullable|numeric|between:-180,180',
+            'location_name' => 'nullable|string|max:255',
+        ]);
+
+        $cat->update(array_filter($validated, fn($v) => $v !== null && $v !== ''));
+
+        return response()->json(['success' => true, 'cat' => $cat->fresh()]);
+    }
+
     public function destroy(Cat $cat)
     {
         $cat->delete();

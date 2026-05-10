@@ -114,7 +114,7 @@
                         };
                     @endphp
                     <tr onclick="window.location='{{ route('admin.cats.show', $cat) }}'"
-                        class="hover:bg-[#FAF8F0]/40 transition cursor-pointer">
+                        class="hover:bg-[#F5EDD8] transition-colors duration-150 cursor-pointer">
                         <!-- Subject -->
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
