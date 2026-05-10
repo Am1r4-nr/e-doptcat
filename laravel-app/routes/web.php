@@ -26,6 +26,9 @@ Route::view('/scanner', 'scanner')->name('scanner');
 Route::get('/tracker', App\Http\Controllers\TrackerController::class)->name('tracker');
 
 Route::get('/dashboard', function () {
+    if (auth()->user()->getAttribute('role') === 'admin') {
+        return redirect()->route('admin.dashboard');
+    }
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 

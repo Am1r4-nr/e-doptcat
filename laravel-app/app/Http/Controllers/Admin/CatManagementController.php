@@ -9,10 +9,41 @@ use Illuminate\Support\Facades\Storage;
 
 class CatManagementController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $cats = Cat::paginate(15);
-        return view('admin.cats.index', compact('cats'));
+        $query = Cat::query();
+
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->input('search') . '%');
+        }
+
+        if ($request->filled('breed')) {
+            if ($request->input('breed') === 'unknown') {
+                $query->where(fn($q) => $q->whereNull('breed')->orWhere('breed', ''));
+            } else {
+                $query->where('breed', $request->input('breed'));
+            }
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        if ($request->filled('age')) {
+            match($request->input('age')) {
+                'unknown' => $query->whereNull('age'),
+                'kitten'  => $query->where('age', '<', 1),
+                'young'   => $query->whereBetween('age', [1, 3]),
+                'adult'   => $query->whereBetween('age', [4, 7]),
+                'senior'  => $query->where('age', '>=', 8),
+                default   => null,
+            };
+        }
+
+        $cats   = $query->paginate(15)->withQueryString();
+        $breeds = Cat::whereNotNull('breed')->distinct()->orderBy('breed')->pluck('breed');
+
+        return view('admin.cats.index', compact('cats', 'breeds'));
     }
 
     public function create()

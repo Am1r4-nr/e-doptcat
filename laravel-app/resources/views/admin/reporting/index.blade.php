@@ -1,16 +1,16 @@
-<x-admin-layout>
+﻿<x-admin-layout>
 
 <!-- Page Header -->
 <div class="mb-6 flex items-start justify-between">
     <div>
-        <h1 class="text-3xl font-serif font-semibold text-gray-800">Reporting Hub</h1>
+        <h1 class="text-3xl font-cabinet font-semibold text-gray-800">Reporting Hub</h1>
         <p class="text-sm text-gray-400 mt-1">Review and manage sanctuary reports</p>
     </div>
 </div>
 
 <!-- Lost & Found Reports -->
-<div class="bg-white rounded-2xl shadow-sm border border-amber-100 overflow-hidden mt-6">
-    <div class="px-6 py-4 border-b border-amber-100 flex items-center justify-between">
+<div class="bg-white rounded-2xl shadow-sm border border-[#E8E2D8] overflow-hidden mt-6">
+    <div class="px-6 py-4 border-b border-[#E8E2D8] flex items-center justify-between">
         <div>
             <p class="text-base font-semibold text-gray-800">Lost &amp; Found Reports</p>
             <p class="text-xs text-gray-400 mt-0.5">Review and manage lost and found cat reports</p>
@@ -18,15 +18,15 @@
     </div>
 
     <!-- Filters -->
-    <div class="px-6 py-3 border-b border-amber-50 flex items-center gap-3">
+    <div class="px-6 py-3 border-b border-[#F0EBE3] flex items-center gap-3">
         <select id="lfFilter"
-                class="text-sm text-gray-600 bg-[#FAF6F0] border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-amber-300 min-w-[130px]">
+                class="text-sm text-gray-600 bg-[#FAF6F0] border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-[#C9A84C] min-w-[130px]">
             <option value="">All Reports</option>
             <option value="Lost">Lost</option>
             <option value="Found">Found</option>
         </select>
         <input id="lfSearch" type="text" placeholder="Search by name, location..."
-               class="flex-1 max-w-sm text-sm bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-amber-300 placeholder-gray-400">
+               class="flex-1 max-w-sm text-sm bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-[#C9A84C] placeholder-gray-400">
     </div>
 
     <div class="overflow-x-auto">
@@ -64,10 +64,10 @@
                         </td>
                         <td class="px-4 py-3.5">
                             <p class="font-semibold text-gray-800 text-sm">{{ $reporter }}</p>
-                            <p class="text-xs text-amber-500 mt-0.5">{{ $contact }}</p>
+                            <p class="text-xs text-[#C9A84C] mt-0.5">{{ $contact }}</p>
                         </td>
                         <td class="px-4 py-3.5 text-sm text-gray-600">{{ $r->location ?? '—' }}</td>
-                        <td class="px-4 py-3.5 text-sm text-amber-600 whitespace-nowrap">{{ $r->created_at->format('M d, Y') }}</td>
+                        <td class="px-4 py-3.5 text-sm text-[#C9A84C] whitespace-nowrap">{{ $r->created_at->format('M d, Y') }}</td>
                         <td class="px-4 py-3.5">
                             <span class="text-xs font-medium px-2.5 py-1 rounded-full border {{ $isResolved ? 'border-gray-300 text-gray-500 bg-gray-50' : 'border-gray-300 text-gray-600 bg-white' }}">
                                 {{ $isResolved ? 'Resolved' : 'Active' }}
@@ -94,7 +94,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="px-6 py-10 text-center text-sm text-gray-400 italic font-serif">
+                        <td colspan="7" class="px-6 py-10 text-center text-sm text-gray-400 italic font-cabinet">
                             No lost or found reports yet.
                         </td>
                     </tr>
@@ -105,8 +105,8 @@
 </div>
 
 <!-- Live Map -->
-<div class="mt-6 mb-6 bg-white rounded-2xl shadow-sm border border-amber-100 overflow-hidden">
-    <div class="px-6 py-4 border-b border-amber-100">
+<div class="mt-6 mb-6 bg-white rounded-2xl shadow-sm border border-[#E8E2D8] overflow-hidden">
+    <div class="px-6 py-4 border-b border-[#E8E2D8]">
         <p class="text-base font-semibold text-gray-800">Live Map</p>
         <p class="text-xs text-gray-400 mt-0.5">Real-time GPS locations of sanctuary cats</p>
     </div>
@@ -117,7 +117,7 @@
             <!-- Find Me button -->
             <button onclick="locateMe()"
                     class="absolute top-3 right-3 z-[999] flex items-center gap-1.5 bg-white border border-gray-200 text-xs font-medium text-gray-600 px-3 py-1.5 rounded-lg shadow-sm hover:bg-gray-50 transition">
-                <svg class="w-3.5 h-3.5 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <svg class="w-3.5 h-3.5 text-[#C9A84C]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
                 </svg>
@@ -133,13 +133,13 @@
         </div>
 
         <!-- Cat List Sidebar -->
-        <div class="w-72 flex-shrink-0 border-l border-amber-100 flex flex-col">
+        <div class="w-72 flex-shrink-0 border-l border-[#E8E2D8] flex flex-col">
             <!-- Header + Filter -->
-            <div class="px-4 py-3 border-b border-amber-50 space-y-2">
+            <div class="px-4 py-3 border-b border-[#F0EBE3] space-y-2">
                 <div class="flex items-center justify-between">
                     <div class="flex gap-1">
                         <button id="btnList" onclick="setView('list')"
-                                class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-500 text-white transition">
+                                class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#FAF8F0]0 text-white transition">
                             List
                         </button>
                         <button id="btnScanner" onclick="setView('scanner')"
@@ -151,7 +151,7 @@
                 <div>
                     <p class="text-[10px] text-gray-400 uppercase tracking-widest font-semibold mb-1">Filter Cats</p>
                     <select id="mapFilter" onchange="filterMapCats()"
-                            class="w-full text-sm text-gray-600 bg-[#FAF6F0] border border-amber-100 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-amber-300">
+                            class="w-full text-sm text-gray-600 bg-[#FAF6F0] border border-[#E8E2D8] rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-[#C9A84C]">
                         <option value="">All Statuses</option>
                         <option value="Healthy">Healthy</option>
                         <option value="Recovering">Recovering</option>
@@ -162,7 +162,7 @@
             </div>
 
             <!-- Cat list -->
-            <div class="flex-1 overflow-y-auto divide-y divide-amber-50" id="mapCatList">
+            <div class="flex-1 overflow-y-auto divide-y divide-[#F0EBE3]" id="mapCatList">
                 @forelse($catsWithGps as $cat)
                     @php
                         $dot = match($cat->health_status ?? 'Healthy') {
@@ -171,7 +171,7 @@
                             default            => 'bg-green-500',
                         };
                     @endphp
-                    <div class="flex items-center gap-3 px-4 py-3 hover:bg-amber-50 cursor-pointer transition map-cat-item"
+                    <div class="flex items-center gap-3 px-4 py-3 hover:bg-[#FAF8F0] cursor-pointer transition map-cat-item"
                          data-health="{{ $cat->health_status ?? 'Healthy' }}"
                          data-lat="{{ $cat->gps_lat }}"
                          data-lng="{{ $cat->gps_lng }}"
@@ -180,8 +180,8 @@
                             <img src="{{ Storage::url($cat->image) }}" alt="{{ $cat->name }}"
                                  class="w-10 h-10 rounded-full object-cover flex-shrink-0 ring-2 ring-amber-100">
                         @else
-                            <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0 ring-2 ring-amber-100">
-                                <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 24 24">
+                            <div class="w-10 h-10 rounded-full bg-[#F5EDD8] flex items-center justify-center flex-shrink-0 ring-2 ring-amber-100">
+                                <svg class="w-5 h-5 text-[#C9A84C]" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M12 21c-3.87 0-7-1.57-7-4.5 0-1.5 1-2.8 2.5-3.6.6-.3 1.3-.5 2-.6.8-.1 1.6-.3 2.5-.3s1.7.2 2.5.3c.7.1 1.4.3 2 .6 1.5.8 2.5 2.1 2.5 3.6 0 2.93-3.13 4.5-7 4.5z"/>
                                 </svg>
                             </div>
@@ -196,7 +196,7 @@
                         </div>
                     </div>
                 @empty
-                    <div class="px-4 py-8 text-center text-sm text-gray-400 italic font-serif">
+                    <div class="px-4 py-8 text-center text-sm text-gray-400 italic font-cabinet">
                         No cats with GPS data.
                     </div>
                 @endforelse
@@ -240,7 +240,7 @@ if (mapEl && cats.length > 0) {
     script.onload = initMap;
     document.head.appendChild(script);
 } else if (mapEl) {
-    mapEl.innerHTML = '<div class="flex items-center justify-center h-full text-sm text-gray-400 italic font-serif">No GPS data available for cats yet.</div>';
+    mapEl.innerHTML = '<div class="flex items-center justify-center h-full text-sm text-gray-400 italic font-cabinet">No GPS data available for cats yet.</div>';
 }
 
 function colorFor(health) {
@@ -314,8 +314,8 @@ function filterMapCats() {
 }
 
 function setView(v) {
-    document.getElementById('btnList').className    = v === 'list'    ? 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-500 text-white transition' : 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition';
-    document.getElementById('btnScanner').className = v === 'scanner' ? 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-500 text-white transition' : 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition';
+    document.getElementById('btnList').className    = v === 'list'    ? 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#FAF8F0]0 text-white transition' : 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition';
+    document.getElementById('btnScanner').className = v === 'scanner' ? 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#FAF8F0]0 text-white transition' : 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition';
 }
 </script>
 

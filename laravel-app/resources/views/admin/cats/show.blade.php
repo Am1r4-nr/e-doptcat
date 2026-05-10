@@ -1,10 +1,10 @@
-<x-admin-layout>
+﻿<x-admin-layout>
 <div class="max-w-6xl mx-auto">
 
     <!-- Back -->
     <div class="flex items-center gap-3 mb-7">
-        <a href="{{ route('admin.cats.index') }}" class="text-gray-400 hover:text-amber-600 transition text-lg">←</a>
-        <p class="text-xs tracking-widest text-amber-500 uppercase font-semibold">Cat Profile</p>
+        <a href="{{ route('admin.cats.index') }}" class="text-gray-400 hover:text-[#C9A84C] transition text-lg">←</a>
+        <p class="text-xs tracking-widest text-[#C9A84C] uppercase font-semibold">Cat Profile</p>
     </div>
 
     <!-- Top Row -->
@@ -42,30 +42,30 @@
                     <span class="inline-block px-2 py-0.5 {{ $badge[1] }} text-white text-[10px] font-bold uppercase rounded mb-2 tracking-wide">
                         {{ $badge[0] }}
                     </span>
-                    <p class="text-2xl font-serif font-bold text-white">{{ $cat->name }}</p>
+                    <p class="text-2xl font-cabinet font-bold text-white">{{ $cat->name }}</p>
                 </div>
             </div>
         </div>
 
         <!-- Details -->
-        <div class="col-span-1 bg-white rounded-2xl border border-amber-100 shadow-sm p-6">
-            <p class="text-[10px] tracking-widest text-amber-500 uppercase font-semibold mb-4">Cat Details</p>
+        <div class="col-span-1 bg-white rounded-2xl border border-[#E8E2D8] shadow-sm p-6">
+            <p class="text-[10px] tracking-widest text-[#C9A84C] uppercase font-semibold mb-4">Cat Details</p>
             <div class="space-y-3">
-                <div class="flex justify-between items-center border-b border-amber-50 pb-2">
+                <div class="flex justify-between items-center border-b border-[#F0EBE3] pb-2">
                     <span class="text-xs text-gray-400">Breed</span>
                     <span class="text-sm font-semibold text-gray-700">{{ $cat->breed ?? '—' }}</span>
                 </div>
-                <div class="flex justify-between items-center border-b border-amber-50 pb-2">
+                <div class="flex justify-between items-center border-b border-[#F0EBE3] pb-2">
                     <span class="text-xs text-gray-400">Age</span>
                     <span class="text-sm font-semibold text-gray-700">
                         {{ $cat->age ? $cat->age . ' ' . Str::plural('Year', $cat->age) : '—' }}
                     </span>
                 </div>
-                <div class="flex justify-between items-center border-b border-amber-50 pb-2">
+                <div class="flex justify-between items-center border-b border-[#F0EBE3] pb-2">
                     <span class="text-xs text-gray-400">Color</span>
                     <span class="text-sm font-semibold text-gray-700">{{ $cat->color ?? '—' }}</span>
                 </div>
-                <div class="flex justify-between items-center border-b border-amber-50 pb-2">
+                <div class="flex justify-between items-center border-b border-[#F0EBE3] pb-2">
                     <span class="text-xs text-gray-400">Health</span>
                     <span class="text-sm font-semibold text-gray-700">{{ $cat->health_status ?? 'Not recorded' }}</span>
                 </div>
@@ -81,7 +81,7 @@
             <!-- Action Buttons -->
             <div class="mt-6 space-y-2">
                 <a href="{{ route('admin.cats.edit', $cat) }}"
-                   class="flex items-center justify-center gap-2 w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-sm font-semibold rounded-full transition">
+                   class="flex items-center justify-center gap-2 w-full py-2.5 bg-[#C9A84C] hover:bg-[#b8963e] text-white text-sm font-semibold rounded-full transition">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/></svg>
                     Update Profile
                 </a>
@@ -98,10 +98,10 @@
         </div>
 
         <!-- Asset Identification -->
-        <div class="col-span-1 bg-white rounded-2xl border border-amber-100 shadow-sm p-6 flex flex-col">
-            <p class="text-[10px] tracking-widest text-amber-500 uppercase font-semibold mb-4">Asset Identification</p>
+        <div class="col-span-1 bg-white rounded-2xl border border-[#E8E2D8] shadow-sm p-6 flex flex-col">
+            <p class="text-[10px] tracking-widest text-[#C9A84C] uppercase font-semibold mb-4">Asset Identification</p>
             <div class="flex-1 flex flex-col items-center justify-center">
-                <div class="w-32 h-32 bg-[#FAF6F0] rounded-xl border border-amber-100 flex items-center justify-center mb-3">
+                <div class="w-32 h-32 bg-[#FAF6F0] rounded-xl border border-[#E8E2D8] flex items-center justify-center mb-3">
                     <div class="grid grid-cols-5 gap-0.5 opacity-40">
                         @for($i = 0; $i < 25; $i++)
                             <div class="w-2 h-2 {{ rand(0,1) ? 'bg-gray-800' : 'bg-transparent' }} rounded-sm"></div>
@@ -110,17 +110,17 @@
                 </div>
                 <p class="text-[10px] text-gray-400 text-center">Profile ID: #{{ str_pad($cat->getAttribute('id'), 4, '0', STR_PAD_LEFT) }}</p>
             </div>
-            <p class="text-xs text-amber-600 font-semibold text-center mt-4 cursor-pointer hover:underline">
+            <p class="text-xs text-[#C9A84C] font-semibold text-center mt-4 cursor-pointer hover:underline">
                 Download PDF →
             </p>
         </div>
     </div>
 
     <!-- AI Biological Insights -->
-    <div class="bg-white rounded-2xl border border-amber-100 shadow-sm p-6 mb-6">
-        <p class="text-xs font-bold text-amber-600 mb-5 flex items-center gap-2">
-            <span class="w-6 h-6 bg-amber-100 rounded-full flex items-center justify-center">
-                    <svg class="w-3.5 h-3.5 text-amber-600" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"/></svg>
+    <div class="bg-white rounded-2xl border border-[#E8E2D8] shadow-sm p-6 mb-6">
+        <p class="text-xs font-bold text-[#C9A84C] mb-5 flex items-center gap-2">
+            <span class="w-6 h-6 bg-[#F5EDD8] rounded-full flex items-center justify-center">
+                    <svg class="w-3.5 h-3.5 text-[#C9A84C]" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"/></svg>
                 </span>
             AI Biological Insights
         </p>
@@ -131,8 +131,8 @@
                 <p class="text-3xl font-bold text-gray-800 mb-1">
                     {{ $cat->ai_match_score ?? '—' }}<span class="text-sm text-gray-400">/100</span>
                 </p>
-                <div class="w-full bg-amber-100 rounded-full h-1.5 mt-2">
-                    <div class="bg-amber-500 h-1.5 rounded-full" style="width: {{ min($cat->ai_match_score ?? 0, 100) }}%"></div>
+                <div class="w-full bg-[#F5EDD8] rounded-full h-1.5 mt-2">
+                    <div class="bg-[#FAF8F0]0 h-1.5 rounded-full" style="width: {{ min($cat->ai_match_score ?? 0, 100) }}%"></div>
                 </div>
                 <p class="text-xs text-gray-400 mt-3">
                     {{ $cat->personality ? ucfirst($cat->personality) . ' personality profile.' : 'No personality data recorded yet.' }}
@@ -146,7 +146,7 @@
                     $healthLabel = match(strtolower($cat->health_status ?? '')) {
                         'healthy'   => ['Low Risk',    'text-green-600'],
                         'sick'      => ['High Risk',   'text-red-600'],
-                        'recovering'=> ['Medium Risk', 'text-amber-600'],
+                        'recovering'=> ['Medium Risk', 'text-[#C9A84C]'],
                         default     => ['Unknown',     'text-gray-500'],
                     };
                 @endphp
@@ -161,7 +161,7 @@
 
             <!-- Generated Narrative -->
             <div class="bg-gray-800 rounded-xl p-4">
-                <p class="text-[10px] tracking-widest text-amber-400 uppercase font-semibold mb-3">Generated Narrative</p>
+                <p class="text-[10px] tracking-widest text-[#C9A84C] uppercase font-semibold mb-3">Generated Narrative</p>
                 <p class="text-xs text-gray-300 italic leading-relaxed">
                     "{{ $cat->description
                         ? Str::limit($cat->description, 120)
@@ -175,14 +175,14 @@
     <div class="grid grid-cols-2 gap-6">
 
         <!-- Description / Profile Notes -->
-        <div class="bg-white rounded-2xl border border-amber-100 shadow-sm p-6">
-            <p class="text-[10px] tracking-widest text-amber-500 uppercase font-semibold mb-4">Profile Notes</p>
+        <div class="bg-white rounded-2xl border border-[#E8E2D8] shadow-sm p-6">
+            <p class="text-[10px] tracking-widest text-[#C9A84C] uppercase font-semibold mb-4">Profile Notes</p>
             @if($cat->description)
                 <p class="text-sm text-gray-600 leading-relaxed">{{ $cat->description }}</p>
             @else
                 <p class="text-sm text-gray-400 italic">No profile notes have been added yet.</p>
             @endif
-            <div class="mt-4 pt-4 border-t border-amber-50 grid grid-cols-2 gap-3 text-xs">
+            <div class="mt-4 pt-4 border-t border-[#F0EBE3] grid grid-cols-2 gap-3 text-xs">
                 <div>
                     <p class="text-gray-400">Vaccinated</p>
                     <p class="font-semibold text-gray-700 mt-0.5">{{ $cat->vaccinated ? 'Yes' : 'Not recorded' }}</p>
@@ -195,17 +195,17 @@
         </div>
 
         <!-- Live Asset Tracking -->
-        <div class="bg-white rounded-2xl border border-amber-100 shadow-sm p-6">
+        <div class="bg-white rounded-2xl border border-[#E8E2D8] shadow-sm p-6">
             <div class="flex items-center justify-between mb-4">
-                <p class="text-[10px] tracking-widest text-amber-500 uppercase font-semibold">Live Asset Tracking</p>
-                <span class="px-3 py-1 bg-amber-600 text-white text-[10px] font-bold rounded-full">Log GPS Location</span>
+                <p class="text-[10px] tracking-widest text-[#C9A84C] uppercase font-semibold">Live Asset Tracking</p>
+                <span class="px-3 py-1 bg-[#C9A84C] text-white text-[10px] font-bold rounded-full">Log GPS Location</span>
             </div>
 
             <!-- Map placeholder -->
-            <div class="w-full h-36 bg-[#FAF6F0] rounded-xl border border-amber-100 flex items-center justify-center mb-4">
+            <div class="w-full h-36 bg-[#FAF6F0] rounded-xl border border-[#E8E2D8] flex items-center justify-center mb-4">
                 @if($cat->gps_lat && $cat->gps_lng)
                     <p class="text-xs text-gray-500 flex items-center gap-1">
-                            <svg class="w-3.5 h-3.5 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+                            <svg class="w-3.5 h-3.5 text-[#C9A84C] flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
                             {{ number_format($cat->gps_lat, 4) }}, {{ number_format($cat->gps_lng, 4) }}
                         </p>
                 @else

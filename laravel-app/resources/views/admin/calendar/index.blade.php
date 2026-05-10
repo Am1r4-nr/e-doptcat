@@ -1,4 +1,4 @@
-<x-admin-layout>
+﻿<x-admin-layout>
 
 <!-- FullCalendar CSS -->
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
@@ -96,11 +96,11 @@
 <!-- Page Header -->
 <div class="mb-6 flex items-start justify-between">
     <div>
-        <h1 class="text-3xl font-serif font-semibold text-gray-800">Calendar</h1>
+        <h1 class="text-3xl font-cabinet font-semibold text-gray-800">Calendar</h1>
         <p class="text-sm text-gray-400 mt-1">All sanctuary events on one view</p>
     </div>
     <a href="{{ route('admin.events.create') }}"
-       class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-amber-600 text-white text-sm font-semibold hover:bg-amber-700 transition">
+       class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#C9A84C] text-white text-sm font-semibold hover:bg-[#b8963e] transition">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
         </svg>
@@ -111,7 +111,7 @@
 <!-- Legend -->
 <div class="flex items-center gap-5 mb-4">
     <span class="flex items-center gap-1.5 text-xs font-semibold text-gray-500">
-        <span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span> Upcoming
+        <span class="w-3 h-3 rounded-full bg-[#FAF8F0]0 inline-block"></span> Upcoming
     </span>
     <span class="flex items-center gap-1.5 text-xs font-semibold text-gray-500">
         <span class="w-3 h-3 rounded-full bg-teal-500 inline-block"></span> Completed
@@ -122,7 +122,7 @@
 </div>
 
 <!-- Calendar card -->
-<div class="bg-white rounded-2xl shadow-sm border border-amber-100 p-6">
+<div class="bg-white rounded-2xl shadow-sm border border-[#E8E2D8] p-6">
     <div id="calendar"></div>
 </div>
 
@@ -136,15 +136,15 @@
             </svg>
         </button>
     </div>
-    <p id="popDate"     class="text-xs text-amber-600 font-semibold mb-1"></p>
+    <p id="popDate"     class="text-xs text-[#C9A84C] font-semibold mb-1"></p>
     <p id="popLocation" class="text-xs text-gray-500 mb-1"></p>
     <p id="popDesc"     class="text-xs text-gray-400 mb-3 line-clamp-2"></p>
     <div class="flex gap-2">
         <a id="popEdit" href="#"
-           class="flex-1 text-center text-xs font-semibold px-3 py-1.5 rounded-full bg-amber-600 text-white hover:bg-amber-700 transition">
+           class="flex-1 text-center text-xs font-semibold px-3 py-1.5 rounded-full bg-[#C9A84C] text-white hover:bg-[#b8963e] transition">
             Edit
         </a>
-        <span id="popStatus" class="flex-1 text-center text-xs font-semibold px-3 py-1.5 rounded-full bg-amber-50 text-amber-700"></span>
+        <span id="popStatus" class="flex-1 text-center text-xs font-semibold px-3 py-1.5 rounded-full bg-[#FAF8F0] text-[#C9A84C]"></span>
     </div>
 </div>
 

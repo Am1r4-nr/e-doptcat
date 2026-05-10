@@ -1,14 +1,14 @@
-<x-admin-layout>
+﻿<x-admin-layout>
     <div class="px-8 py-6 max-w-7xl mx-auto">
 
         <!-- Header -->
         <div class="flex justify-between items-center mb-8">
             <div>
-                <h2 class="text-3xl font-serif font-semibold text-amber-900">Expense Tracking & Allocation</h2>
+                <h2 class="text-3xl font-cabinet font-semibold text-[#7A5320]">Expense Tracking & Allocation</h2>
                 <p class="text-sm text-gray-500 mt-1 pl-1">Manage and audit the financial flow of your sanctuary cases.</p>
             </div>
             <div>
-                <button class="bg-amber-600 hover:bg-amber-700 text-white font-semibold py-2.5 px-6 rounded-full text-sm shadow-sm transition flex items-center gap-2">
+                <button class="bg-[#C9A84C] hover:bg-[#b8963e] text-white font-semibold py-2.5 px-6 rounded-full text-sm shadow-sm transition flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
                     New Expense
                 </button>
@@ -18,12 +18,12 @@
         <!-- 3 Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <!-- Total Funds Spent -->
-            <div class="bg-white rounded-[24px] p-7 shadow-sm border border-amber-50">
+            <div class="bg-white rounded-[24px] p-7 shadow-sm border border-[#F0EBE3]">
                 <div class="flex justify-between items-start mb-6">
                     <div class="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                     </div>
-                    <span class="px-3 py-1 bg-amber-50 text-amber-700 text-[11px] font-bold rounded-full">+12% vs last mo</span>
+                    <span class="px-3 py-1 bg-[#FAF8F0] text-[#C9A84C] text-[11px] font-bold rounded-full">+12% vs last mo</span>
                 </div>
                 <div class="text-[12px] font-bold text-gray-400 tracking-wider mb-1">Total Funds Spent</div>
                 <div class="text-3xl font-bold text-gray-900">RM 42,850</div>
@@ -153,8 +153,8 @@
                             <td class="py-5 px-4 font-bold text-gray-900">350.00</td>
                             <td class="py-5 px-4 text-gray-500 text-xs font-medium">Feline Nutrition Ltd.</td>
                             <td class="py-5 px-4">
-                                <span class="flex items-center gap-1.5 text-amber-600 font-bold text-xs">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Pending
+                                <span class="flex items-center gap-1.5 text-[#C9A84C] font-bold text-xs">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#FAF8F0]0"></span> Pending
                                 </span>
                             </td>
                             <td class="py-5 px-4 text-center text-gray-400 relative">

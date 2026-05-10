@@ -1,9 +1,9 @@
-<x-admin-layout>
+﻿<x-admin-layout>
     <div class="px-8 py-6 max-w-7xl mx-auto">
         <!-- Header -->
         <div class="flex justify-between items-center mb-8">
             <div>
-                <h2 class="text-3xl font-serif font-semibold text-amber-900">Donation & Fund Management</h2>
+                <h2 class="text-3xl font-cabinet font-semibold text-[#7A5320]">Donation & Fund Management</h2>
                 <p class="text-sm text-gray-500 mt-1 pl-1">Real-time overview of kitten rescue contributions</p>
             </div>
             <!-- Search placeholder -->
@@ -23,7 +23,7 @@
         <!-- 3 Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <!-- Total Funds -->
-            <div class="bg-white rounded-[20px] p-6 shadow-sm border border-amber-50 relative overflow-hidden">
+            <div class="bg-white rounded-[20px] p-6 shadow-sm border border-[#F0EBE3] relative overflow-hidden">
                 <!-- Background decoration icon -->
                 <div class="absolute -right-2 -bottom-2 text-gray-50 opacity-50">
                     <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
@@ -38,7 +38,7 @@
                 </div>
             </div>
             <!-- Active Cases -->
-            <div class="bg-white rounded-[20px] p-6 shadow-sm border border-amber-50 relative overflow-hidden">
+            <div class="bg-white rounded-[20px] p-6 shadow-sm border border-[#F0EBE3] relative overflow-hidden">
                 <div class="absolute -right-2 -bottom-2 text-gray-50 opacity-50">
                     <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
                 </div>
@@ -49,7 +49,7 @@
                 </div>
             </div>
             <!-- Completed Cases -->
-            <div class="bg-white rounded-[20px] p-6 shadow-sm border border-amber-50 relative overflow-hidden">
+            <div class="bg-white rounded-[20px] p-6 shadow-sm border border-[#F0EBE3] relative overflow-hidden">
                 <div class="absolute -right-2 -bottom-2 text-gray-50 opacity-50">
                     <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
                 </div>
@@ -62,13 +62,13 @@
         </div>
 
         <!-- Recent Donations -->
-        <div class="bg-white rounded-[20px] shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] border border-amber-50 p-7 mb-8">
+        <div class="bg-white rounded-[20px] shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] border border-[#F0EBE3] p-7 mb-8">
             <div class="flex justify-between items-center mb-6">
                 <h3 class="font-bold text-gray-800 flex items-center gap-2 text-lg">
-                    <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <svg class="w-5 h-5 text-[#C9A84C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                     Recent Donations
                 </h3>
-                <a href="#" class="text-[13px] font-bold text-amber-700 hover:text-amber-900 transition">View All History &rsaquo;</a>
+                <a href="#" class="text-[13px] font-bold text-[#C9A84C] hover:text-[#7A5320] transition">View All History &rsaquo;</a>
             </div>
 
             @if (session('success'))
@@ -108,7 +108,7 @@
                                     @php
                                         $statuses = [
                                             ['class' => 'bg-green-100 text-green-600', 'label' => 'SUCCESS'],
-                                            ['class' => 'bg-amber-100 text-amber-600', 'label' => 'PENDING'],
+                                            ['class' => 'bg-[#F5EDD8] text-[#C9A84C]', 'label' => 'PENDING'],
                                             ['class' => 'bg-red-100 text-red-500', 'label' => 'FAILED']
                                         ];
                                         $status = $statuses[$donation->id % 3 == 0 ? array_rand($statuses) : 0]; // heavily favor SUCCESS
@@ -133,9 +133,9 @@
         </div>
 
         <!-- Active Cases Tracking -->
-        <div class="bg-white rounded-[20px] shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] border border-amber-50 p-7">
+        <div class="bg-white rounded-[20px] shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] border border-[#F0EBE3] p-7">
             <h3 class="font-bold text-gray-800 flex items-center gap-2 mb-6 text-lg">
-                <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                <svg class="w-5 h-5 text-[#C9A84C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                 Active Cases Tracking
             </h3>
 
@@ -144,7 +144,7 @@
                 <div class="border border-gray-100 rounded-[16px] p-5 hover:shadow-md transition bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjwvc3ZnPg==')] bg-gray-50/40">
                     <div class="flex justify-between items-start mb-5">
                         <div class="flex items-center gap-4">
-                            <div class="w-14 h-14 bg-amber-100 rounded-full overflow-hidden shrink-0 shadow-sm border border-white">
+                            <div class="w-14 h-14 bg-[#F5EDD8] rounded-full overflow-hidden shrink-0 shadow-sm border border-white">
                                 <!-- Uses unstyled UI avatar as placeholder -->
                                 <img src="https://ui-avatars.com/api/?name=M&background=fde68a&color=92400e" alt="Milo" class="w-full h-full object-cover">
                             </div>
@@ -156,11 +156,11 @@
                         <span class="px-2.5 py-1 bg-gray-200 text-gray-600 text-[10px] font-bold tracking-widest rounded shrink-0 uppercase">KITTEN</span>
                     </div>
                     <div class="flex justify-between text-[11px] font-bold mb-2.5 tracking-wide">
-                        <span class="text-amber-700">RM 2,850.00 raised</span>
+                        <span class="text-[#C9A84C]">RM 2,850.00 raised</span>
                         <span class="text-gray-400">Goal: RM 3,000.00</span>
                     </div>
                     <div class="w-full bg-gray-100 rounded-full h-2.5 mb-5 shadow-inner">
-                        <div class="bg-amber-700 h-2.5 rounded-full" style="width: 95%"></div>
+                        <div class="bg-[#b8963e] h-2.5 rounded-full" style="width: 95%"></div>
                     </div>
                     <div class="text-center">
                         <button class="bg-amber-800 text-white text-xs font-bold py-2.5 px-8 rounded-full hover:bg-amber-900 transition shadow-sm">Mark as Funded</button>
@@ -182,11 +182,11 @@
                         <span class="px-2.5 py-1 bg-gray-200 text-gray-600 text-[10px] font-bold tracking-widest rounded shrink-0 uppercase">SENIOR</span>
                     </div>
                     <div class="flex justify-between text-[11px] font-bold mb-2.5 tracking-wide">
-                        <span class="text-amber-700">RM 420.00 raised</span>
+                        <span class="text-[#C9A84C]">RM 420.00 raised</span>
                         <span class="text-gray-400">Goal: RM 1,200.00</span>
                     </div>
                     <div class="w-full bg-gray-100 rounded-full h-2.5 mb-5 shadow-inner">
-                        <div class="bg-amber-700 h-2.5 rounded-full" style="width: 35%"></div>
+                        <div class="bg-[#b8963e] h-2.5 rounded-full" style="width: 35%"></div>
                     </div>
                     <div class="text-center">
                         <button class="bg-gray-100 text-gray-400 text-xs font-bold py-2.5 px-8 rounded-full cursor-not-allowed">Goal not reached</button>

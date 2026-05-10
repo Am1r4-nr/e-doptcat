@@ -1,14 +1,14 @@
-<x-admin-layout>
+﻿<x-admin-layout>
     <div class="px-8 py-6 max-w-7xl mx-auto">
         <!-- Header Section -->
-        <div class="flex items-start justify-between mb-10 border-b pb-8 border-amber-100/50">
+        <div class="flex items-start justify-between mb-10 border-b pb-8 border-[#E8E2D8]/50">
             <div>
                 <h2 class="text-[32px] font-bold text-gray-900 tracking-tight">Volunteer Applications</h2>
                 <p class="text-[15px] font-medium text-gray-500 mt-1 max-w-2xl">
                     Review and coordinate the compassionate individuals joining our rescue mission.
                 </p>
             </div>
-            <button class="px-6 py-2.5 rounded-full bg-amber-600 text-white text-sm font-bold shadow-md shadow-amber-600/20 hover:bg-amber-700 transition flex items-center justify-center gap-2">
+            <button class="px-6 py-2.5 rounded-full bg-[#C9A84C] text-white text-sm font-bold shadow-md shadow-amber-600/20 hover:bg-[#b8963e] transition flex items-center justify-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
                 New Opening
             </button>
@@ -17,7 +17,7 @@
         <!-- 3 Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
             <!-- ACTIVE VOLUNTEERS -->
-            <div class="bg-white rounded-[28px] p-7 flex items-center justify-between shadow-[0_2px_15px_-5px_rgba(0,0,0,0.05)] border border-amber-50">
+            <div class="bg-white rounded-[28px] p-7 flex items-center justify-between shadow-[0_2px_15px_-5px_rgba(0,0,0,0.05)] border border-[#F0EBE3]">
                 <div>
                     <div class="text-[12px] font-bold text-gray-500 tracking-widest mb-1 uppercase">ACTIVE VOLUNTEERS</div>
                     <div class="text-4xl font-bold text-amber-850">48</div>
@@ -28,18 +28,18 @@
             </div>
 
             <!-- PENDING APPLICATIONS -->
-            <div class="bg-white rounded-[28px] p-7 flex items-center justify-between shadow-[0_2px_15px_-5px_rgba(0,0,0,0.05)] border border-amber-50">
+            <div class="bg-white rounded-[28px] p-7 flex items-center justify-between shadow-[0_2px_15px_-5px_rgba(0,0,0,0.05)] border border-[#F0EBE3]">
                 <div>
                     <div class="text-[12px] font-bold text-gray-500 tracking-widest mb-1 uppercase">PENDING APPLICATIONS</div>
-                    <div class="text-4xl font-bold text-amber-600">12</div>
+                    <div class="text-4xl font-bold text-[#C9A84C]">12</div>
                 </div>
-                <div class="w-14 h-14 rounded-full bg-[#FAF6F0] flex items-center justify-center text-amber-700">
+                <div class="w-14 h-14 rounded-full bg-[#FAF6F0] flex items-center justify-center text-[#C9A84C]">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
                 </div>
             </div>
 
             <!-- ON-BOARDING -->
-            <div class="bg-white rounded-[28px] p-7 flex items-center justify-between shadow-[0_2px_15px_-5px_rgba(0,0,0,0.05)] border border-amber-50">
+            <div class="bg-white rounded-[28px] p-7 flex items-center justify-between shadow-[0_2px_15px_-5px_rgba(0,0,0,0.05)] border border-[#F0EBE3]">
                 <div>
                     <div class="text-[12px] font-bold text-gray-500 tracking-widest mb-1 uppercase">ON-BOARDING</div>
                     <div class="text-4xl font-bold text-amber-850">5</div>
@@ -65,9 +65,9 @@
 
             <div class="flex items-center gap-2 ml-4">
                 <span class="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-2">ACTIVE FILTERS:</span>
-                <span class="px-3 py-1 bg-amber-100/70 text-amber-800 text-[12px] font-bold rounded-full flex items-center gap-1.5 border border-amber-200 ml-1">
+                <span class="px-3 py-1 bg-[#F5EDD8]/70 text-amber-800 text-[12px] font-bold rounded-full flex items-center gap-1.5 border border-amber-200 ml-1">
                     Fostering
-                    <button class="hover:text-amber-900"><svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                    <button class="hover:text-[#7A5320]"><svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
                 </span>
             </div>
 
@@ -75,7 +75,7 @@
                 <button class="p-1.5 text-gray-400 hover:text-amber-850 transition">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
                 </button>
-                <button class="p-1.5 text-amber-850 bg-amber-100 rounded-md transition shadow-sm">
+                <button class="p-1.5 text-amber-850 bg-[#F5EDD8] rounded-md transition shadow-sm">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" /></svg>
                 </button>
             </div>
@@ -93,7 +93,7 @@
         <div class="space-y-4">
 
             <!-- Row 1 -->
-            <div class="bg-white rounded-full flex items-center px-6 py-5 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.05)] border border-amber-50">
+            <div class="bg-white rounded-full flex items-center px-6 py-5 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.05)] border border-[#F0EBE3]">
                 <!-- Profile -->
                 <div class="flex items-center gap-4 w-[35%]">
                     <img src="https://i.pravatar.cc/150?u=sarah" alt="Sarah" class="w-12 h-12 rounded-full border-2 border-[#FAF6F0] object-cover">
@@ -128,7 +128,7 @@
                 <!-- Status & Action -->
                 <div class="w-[20%] flex flex-col items-end gap-2 pr-2">
                     <div class="inline-flex">
-                        <span class="px-2.5 py-1 bg-amber-50 text-amber-700 text-[10px] font-bold rounded-l-lg tracking-wider uppercase border border-r-0 border-amber-100">
+                        <span class="px-2.5 py-1 bg-[#FAF8F0] text-[#C9A84C] text-[10px] font-bold rounded-l-lg tracking-wider uppercase border border-r-0 border-[#E8E2D8]">
                             INTERVIEWING
                         </span>
                         <a href="#" class="px-3 py-1 bg-[#EBE5DA] text-gray-600 text-[10px] font-bold rounded-r-lg tracking-wider uppercase hover:bg-[#dfd7ca] transition border border-l-0 border-[#dfd7ca]">
@@ -139,7 +139,7 @@
             </div>
 
             <!-- Row 2 -->
-            <div class="bg-white rounded-full flex items-center px-6 py-5 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.05)] border border-amber-50">
+            <div class="bg-white rounded-full flex items-center px-6 py-5 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.05)] border border-[#F0EBE3]">
                 <!-- Profile -->
                 <div class="flex items-center gap-4 w-[35%]">
                     <img src="https://i.pravatar.cc/150?u=michael" alt="Michael" class="w-12 h-12 rounded-full border-2 border-[#FAF6F0] object-cover">
@@ -179,7 +179,7 @@
             </div>
 
             <!-- Row 3 -->
-            <div class="bg-white rounded-full flex items-center px-6 py-5 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.05)] border border-amber-50">
+            <div class="bg-white rounded-full flex items-center px-6 py-5 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.05)] border border-[#F0EBE3]">
                 <!-- Profile -->
                 <div class="flex items-center gap-4 w-[35%]">
                     <img src="https://i.pravatar.cc/150?u=elena" alt="Elena" class="w-12 h-12 rounded-full border-2 border-[#FAF6F0] object-cover">

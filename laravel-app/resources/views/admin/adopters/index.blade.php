@@ -1,8 +1,8 @@
-<x-admin-layout>
+﻿<x-admin-layout>
 
 <!-- Page Header -->
 <div class="mb-8">
-    <h1 class="text-3xl font-serif font-semibold text-gray-800">Adopters</h1>
+    <h1 class="text-3xl font-cabinet font-semibold text-gray-800">Adopters</h1>
     <p class="text-sm text-gray-400 mt-1">Registered users who have submitted adoption applications</p>
 </div>
 
@@ -13,7 +13,7 @@
             <p class="text-[11px] font-bold text-gray-500 tracking-wider uppercase mb-1">Total Adopters</p>
             <p class="text-4xl font-bold text-gray-800">{{ $totalAdopters }}</p>
         </div>
-        <div class="w-12 h-12 rounded-2xl bg-amber-100 flex items-center justify-center text-amber-600">
+        <div class="w-12 h-12 rounded-2xl bg-[#F5EDD8] flex items-center justify-center text-[#C9A84C]">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/>
             </svg>
@@ -35,9 +35,9 @@
     <div class="bg-[#FAF8F5] rounded-3xl p-7 flex items-center justify-between">
         <div>
             <p class="text-[11px] font-bold text-gray-500 tracking-wider uppercase mb-1">Pending Review</p>
-            <p class="text-4xl font-bold text-amber-600">{{ $pendingAdopters }}</p>
+            <p class="text-4xl font-bold text-[#C9A84C]">{{ $pendingAdopters }}</p>
         </div>
-        <div class="w-12 h-12 rounded-2xl bg-amber-100 flex items-center justify-center text-amber-600">
+        <div class="w-12 h-12 rounded-2xl bg-[#F5EDD8] flex items-center justify-center text-[#C9A84C]">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
@@ -93,7 +93,7 @@
                         $initials = collect(explode(' ', $user->name))
                             ->map(fn($s) => strtoupper(substr($s, 0, 1)))
                             ->take(2)->implode('');
-                        $colors = ['bg-orange-100 text-orange-700','bg-cyan-100 text-cyan-700','bg-purple-100 text-purple-700','bg-amber-100 text-amber-700','bg-rose-100 text-rose-700'];
+                        $colors = ['bg-orange-100 text-orange-700','bg-cyan-100 text-cyan-700','bg-purple-100 text-purple-700','bg-[#F5EDD8] text-[#C9A84C]','bg-rose-100 text-rose-700'];
                         $color  = $colors[$loop->index % count($colors)];
                         $last   = $user->adoptions->first();
                         $hasApproved = $user->approved_count > 0;
@@ -146,8 +146,8 @@
 
                         <td class="py-5 px-6 text-center">
                             @if($user->pending_count > 0)
-                                <span class="inline-flex items-center gap-1 text-xs font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block"></span>
+                                <span class="inline-flex items-center gap-1 text-xs font-bold text-[#C9A84C] bg-[#FAF8F0] px-2.5 py-1 rounded-full">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#FAF8F0]0 inline-block"></span>
                                     {{ $user->pending_count }}
                                 </span>
                             @else
@@ -161,7 +161,7 @@
 
                         <td class="py-5 px-6 text-right">
                             <a href="{{ route('admin.users.show', $user) }}"
-                               class="inline-flex items-center gap-1 text-xs font-bold text-amber-700 hover:text-amber-900 transition">
+                               class="inline-flex items-center gap-1 text-xs font-bold text-[#C9A84C] hover:text-[#7A5320] transition">
                                 View Profile
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
@@ -171,7 +171,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="py-12 text-center text-gray-400 italic font-serif text-sm">
+                        <td colspan="7" class="py-12 text-center text-gray-400 italic font-cabinet text-sm">
                             No adopters found.
                         </td>
                     </tr>
@@ -196,7 +196,7 @@
 
             @foreach($adopters->getUrlRange(1, $adopters->lastPage()) as $page => $url)
                 @if($page == $adopters->currentPage())
-                    <span class="w-8 h-8 flex items-center justify-center rounded-full bg-amber-700 text-white text-xs font-bold shadow">{{ $page }}</span>
+                    <span class="w-8 h-8 flex items-center justify-center rounded-full bg-[#b8963e] text-white text-xs font-bold shadow">{{ $page }}</span>
                 @else
                     <a href="{{ $url }}"
                        class="w-8 h-8 flex items-center justify-center rounded-full text-gray-600 bg-white shadow-sm text-xs font-bold hover:bg-gray-50">{{ $page }}</a>

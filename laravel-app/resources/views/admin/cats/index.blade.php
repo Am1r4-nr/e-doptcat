@@ -1,51 +1,108 @@
-<x-admin-layout>
+﻿<x-admin-layout>
     <!-- Page Header -->
     <div class="flex items-start justify-between mb-8">
         <div>
-            <h1 class="text-3xl font-serif font-semibold text-gray-800">Cat Directory</h1>
+            <h1 class="text-3xl font-cabinet font-semibold text-gray-800">Cat Directory</h1>
             <p class="text-sm text-gray-400 mt-1">Managing the life-cycle and care records of our feline residents<br>with boutique precision and digital transparency.</p>
         </div>
         <div class="flex items-center gap-3">
-            <div class="text-center bg-white rounded-2xl px-5 py-3 shadow-sm border border-amber-100">
+            <div class="text-center bg-white rounded-2xl px-5 py-3 shadow-sm border border-[#E8E2D8]">
                 <p class="text-2xl font-bold text-gray-800">{{ $cats->total() }}</p>
-                <p class="text-[10px] tracking-widest text-amber-500 uppercase font-semibold">In Care</p>
+                <p class="text-[10px] tracking-widest text-[#C9A84C] uppercase font-semibold">In Care</p>
             </div>
-            <div class="text-center bg-amber-600 rounded-2xl px-5 py-3 shadow-sm">
+            <div class="text-center bg-[#C9A84C] rounded-2xl px-5 py-3 shadow-sm">
                 <p class="text-2xl font-bold text-white">{{ $cats->where('status', 'Available')->count() }}</p>
-                <p class="text-[10px] tracking-widest text-amber-200 uppercase font-semibold">Available</p>
+                <p class="text-[10px] tracking-widest text-[#E8D5A0] uppercase font-semibold">Available</p>
             </div>
         </div>
     </div>
 
-    <!-- Table Card -->
-    <div class="bg-white rounded-2xl shadow-sm border border-amber-100 overflow-hidden">
-        <!-- Table Header -->
-        <div class="px-6 py-4 border-b border-amber-50 flex items-center justify-between gap-4">
-            <p class="text-xs font-semibold text-gray-400 tracking-widest uppercase flex-shrink-0">Feline Registry</p>
-            <div class="flex items-center gap-3 ml-auto">
+    <!-- Filter Bar -->
+    <form method="GET" action="{{ route('admin.cats.index') }}"
+          class="bg-[#3D3D3D] rounded-2xl shadow-sm px-6 py-4 mb-6 flex flex-wrap items-end gap-4">
+        <div class="flex flex-col gap-1 min-w-[180px]">
+            <label class="text-[10px] font-semibold tracking-widest text-[#9A9A9A] uppercase">Cat Breed</label>
+            <select name="breed"
+                    class="px-3 py-2 text-sm bg-white border border-[#555555] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#C9A84C] text-gray-800">
+                <option value="">All Breeds</option>
+                <option value="unknown" {{ request('breed') === 'unknown' ? 'selected' : '' }}>Unknown Breed</option>
+                @foreach($breeds as $breed)
+                    <option value="{{ $breed }}" {{ request('breed') === $breed ? 'selected' : '' }}>{{ $breed }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="flex flex-col gap-1 min-w-[160px]">
+            <label class="text-[10px] font-semibold tracking-widest text-[#9A9A9A] uppercase">Status</label>
+            <select name="status"
+                    class="px-3 py-2 text-sm bg-white border border-[#555555] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#C9A84C] text-gray-800">
+                <option value="">All Statuses</option>
+                @foreach(['Available','Adopted','Lost'] as $s)
+                    <option value="{{ $s }}" {{ request('status') === $s ? 'selected' : '' }}>{{ $s }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="flex flex-col gap-1 min-w-[140px]">
+            <label class="text-[10px] font-semibold tracking-widest text-[#9A9A9A] uppercase">Age</label>
+            <select name="age"
+                    class="px-3 py-2 text-sm bg-white border border-[#555555] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#C9A84C] text-gray-800">
+                <option value="">All Ages</option>
+                <option value="unknown" {{ request('age') === 'unknown' ? 'selected' : '' }}>Unknown Age</option>
+                <option value="kitten"  {{ request('age') === 'kitten'  ? 'selected' : '' }}>Kitten (&lt; 1 yr)</option>
+                <option value="young"   {{ request('age') === 'young'   ? 'selected' : '' }}>Young (1–3 yrs)</option>
+                <option value="adult"   {{ request('age') === 'adult'   ? 'selected' : '' }}>Adult (4–7 yrs)</option>
+                <option value="senior"  {{ request('age') === 'senior'  ? 'selected' : '' }}>Senior (8+ yrs)</option>
+            </select>
+        </div>
+
+        <div class="flex items-end gap-2 pb-0.5">
+            <button type="submit"
+                    class="px-5 py-2 bg-[#C9A84C] hover:bg-[#b8963e] text-white text-sm font-semibold rounded-xl transition">
+                Apply
+            </button>
+            @if(request('breed') || request('status') || request('age'))
+                <a href="{{ route('admin.cats.index') }}"
+                   class="px-4 py-2 text-sm text-white font-semibold border border-white rounded-xl hover:bg-white hover:text-[#3D3D3D] transition">
+                    Reset
+                </a>
+            @endif
+        </div>
+
+        <div class="flex flex-col gap-1 ml-auto">
+            <label class="text-[10px] font-semibold tracking-widest text-[#9A9A9A] uppercase opacity-0 select-none">Search</label>
+            <div class="flex items-center gap-2">
                 <div class="relative">
-                    <input type="text" id="catSearch" placeholder="Search cat registry..."
-                           class="pl-8 pr-4 py-1.5 text-sm bg-[#FAF6F0] border border-amber-100 rounded-full focus:outline-none focus:ring-1 focus:ring-amber-300 w-52">
-                    <svg class="absolute left-2.5 top-2 w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+                    <input type="text" id="catSearch" name="search" value="{{ request('search') }}"
+                           placeholder="Search cat registry..."
+                           class="pl-8 pr-4 py-2 text-sm bg-white border border-[#555555] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#C9A84C] text-gray-800 placeholder-gray-400 w-52">
+                    <svg class="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-[#9A9A9A]" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+                    </svg>
                 </div>
                 <a href="{{ route('admin.cats.create') }}"
-                   class="px-4 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-full transition flex-shrink-0">
+                   class="px-4 py-2 bg-[#C9A84C] hover:bg-[#b8963e] text-white text-sm font-semibold rounded-xl transition whitespace-nowrap">
                     + Add New
                 </a>
             </div>
         </div>
+    </form>
+
+    <!-- Table Card -->
+    <div class="bg-white rounded-2xl shadow-sm border border-[#E8E2D8] overflow-hidden">
+        <!-- Table Header -->
 
         <table class="w-full">
             <thead>
-                <tr class="border-b border-amber-50">
-                    <th class="px-6 py-3 text-left text-[10px] font-semibold text-gray-400 tracking-widest uppercase">Subject</th>
-                    <th class="px-6 py-3 text-left text-[10px] font-semibold text-gray-400 tracking-widest uppercase">Breed & Visuals</th>
-                    <th class="px-6 py-3 text-left text-[10px] font-semibold text-gray-400 tracking-widest uppercase">Age & Status</th>
-                    <th class="px-6 py-3 text-left text-[10px] font-semibold text-gray-400 tracking-widest uppercase">Last Synced</th>
-                    <th class="px-6 py-3 text-left text-[10px] font-semibold text-gray-400 tracking-widest uppercase">Actions</th>
+                <tr class="bg-[#3D3D3D]">
+                    <th class="px-6 py-3 text-left text-[10px] font-semibold text-white tracking-widest uppercase">Subject</th>
+                    <th class="px-6 py-3 text-left text-[10px] font-semibold text-white tracking-widest uppercase">Breed & Visuals</th>
+                    <th class="px-6 py-3 text-left text-[10px] font-semibold text-white tracking-widest uppercase">Age & Status</th>
+                    <th class="px-6 py-3 text-left text-[10px] font-semibold text-white tracking-widest uppercase">Registration Date</th>
+                    <th class="px-6 py-3 text-left text-[10px] font-semibold text-white tracking-widest uppercase">Actions</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-amber-50">
+            <tbody class="divide-y divide-[#F0EBE3]">
                 @forelse ($cats as $cat)
                     @php
                         $statusStyle = match($cat->status) {
@@ -54,22 +111,16 @@
                             'Lost'         => 'bg-red-100 text-red-700',
                             default        => 'bg-gray-100 text-gray-600',
                         };
-                        $dotColor = match($cat->status) {
-                            'Available' => 'bg-green-400',
-                            'Adopted'   => 'bg-blue-400',
-                            'Lost'      => 'bg-red-400',
-                            default     => 'bg-gray-400',
-                        };
                     @endphp
-                    <tr class="hover:bg-amber-50/40 transition">
+                    <tr class="hover:bg-[#FAF8F0]/40 transition">
                         <!-- Subject -->
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full bg-amber-100 overflow-hidden flex-shrink-0 flex items-center justify-center">
+                                <div class="w-10 h-10 rounded-full bg-[#F5EDD8] overflow-hidden flex-shrink-0 flex items-center justify-center">
                                     @if($cat->image)
                                         <img src="{{ asset("storage/{$cat->image}") }}" alt="{{ $cat->name }}" class="w-full h-full object-cover">
                                     @else
-                                        <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.633 10.5c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 012.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 00.322-1.672V3a.75.75 0 01.75-.75A2.25 2.25 0 0116.5 4.5c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 01-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 00-1.423-.23H5.233c-.618 0-1.217-.247-1.605-.729A11.95 11.95 0 011 12c0-.43.023-.855.068-1.285C1.18 9.694 2.1 9 3.126 9h3.507z"/></svg>
+                                        <svg class="w-5 h-5 text-[#C9A84C]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.633 10.5c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 012.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 00.322-1.672V3a.75.75 0 01.75-.75A2.25 2.25 0 0116.5 4.5c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 01-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 00-1.423-.23H5.233c-.618 0-1.217-.247-1.605-.729A11.95 11.95 0 011 12c0-.43.023-.855.068-1.285C1.18 9.694 2.1 9 3.126 9h3.507z"/></svg>
                                     @endif
                                 </div>
                                 <div>
@@ -82,7 +133,6 @@
                         <!-- Breed & Visuals -->
                         <td class="px-6 py-4">
                             <p class="text-sm text-gray-700">{{ $cat->breed ?? '—' }}</p>
-                            <span class="inline-block w-2.5 h-2.5 rounded-full mt-1 {{ $dotColor }}"></span>
                         </td>
 
                         <!-- Age & Status -->
@@ -95,21 +145,21 @@
                             </span>
                         </td>
 
-                        <!-- Last Synced -->
+                        <!-- Registration Date -->
                         <td class="px-6 py-4">
-                            <p class="text-sm text-gray-600">{{ $cat->updated_at->format('M d, Y') }}</p>
-                            <p class="text-[10px] text-gray-400">{{ $cat->updated_at->format('g:i A') }}</p>
+                            <p class="text-sm text-gray-600">{{ $cat->created_at->format('M d, Y') }}</p>
+                            <p class="text-[10px] text-gray-400">{{ $cat->created_at->format('g:i A') }}</p>
                         </td>
 
                         <!-- Actions -->
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-2">
                                 <a href="{{ route('admin.cats.show', $cat) }}"
-                                   class="p-1.5 rounded-lg text-gray-400 hover:bg-amber-50 hover:text-amber-600 transition" title="View">
+                                   class="p-1.5 rounded-lg text-gray-400 hover:bg-[#FAF8F0] hover:text-[#C9A84C] transition" title="View">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                 </a>
                                 <a href="{{ route('admin.cats.edit', $cat) }}"
-                                   class="p-1.5 rounded-lg text-amber-600 hover:bg-amber-50 transition" title="Edit">
+                                   class="p-1.5 rounded-lg text-[#C9A84C] hover:bg-[#FAF8F0] transition" title="Edit">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/></svg>
                                 </a>
                                 <form action="{{ route('admin.cats.destroy', $cat) }}" method="POST"
@@ -126,8 +176,8 @@
                 @empty
                     <tr>
                         <td colspan="5" class="px-6 py-16 text-center">
-                            <p class="text-gray-400 font-serif italic text-lg">No felines in the registry yet.</p>
-                            <a href="{{ route('admin.cats.create') }}" class="mt-4 inline-block text-sm text-amber-600 hover:underline">Add your first cat →</a>
+                            <p class="text-gray-400 font-cabinet italic text-lg">No felines in the registry yet.</p>
+                            <a href="{{ route('admin.cats.create') }}" class="mt-4 inline-block text-sm text-[#C9A84C] hover:underline">Add your first cat →</a>
                         </td>
                     </tr>
                 @endforelse
@@ -136,7 +186,7 @@
 
         @if($cats->hasPages())
 
-            <div class="px-6 py-4 border-t border-amber-50">
+            <div class="px-6 py-4 border-t border-[#F0EBE3]">
                 {{ $cats->links() }}
             </div>
         @endif

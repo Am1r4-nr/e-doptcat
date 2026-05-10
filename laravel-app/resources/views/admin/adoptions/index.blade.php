@@ -1,4 +1,4 @@
-<x-admin-layout>
+﻿<x-admin-layout>
     <div class="px-8 py-6 max-w-7xl mx-auto">
         <!-- Header Section -->
         <div class="mb-10">
@@ -14,9 +14,9 @@
             <div class="bg-[#FAF8F5] rounded-3xl p-7 flex items-center justify-between">
                 <div>
                     <div class="text-[12px] font-bold text-gray-500 tracking-wider mb-1 uppercase">PENDING</div>
-                    <div class="text-4xl font-bold text-amber-600">24</div>
+                    <div class="text-4xl font-bold text-[#C9A84C]">24</div>
                 </div>
-                <div class="w-12 h-12 rounded-2xl bg-amber-100 flex items-center justify-center text-amber-700">
+                <div class="w-12 h-12 rounded-2xl bg-[#F5EDD8] flex items-center justify-center text-[#C9A84C]">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
                 </div>
             </div>
@@ -93,7 +93,7 @@
                             @php
                                 // Mocking data for the UI since the real app might not have all these columns yet
                                 $initials = collect(explode(' ', $adoption->user->name))->map(function($segment) { return strtoupper(substr($segment, 0, 1)); })->take(2)->implode('');
-                                $colorClasses = ['bg-orange-100 text-orange-700', 'bg-cyan-100 text-cyan-700', 'bg-purple-100 text-purple-700', 'bg-amber-100 text-amber-700'];
+                                $colorClasses = ['bg-orange-100 text-orange-700', 'bg-cyan-100 text-cyan-700', 'bg-purple-100 text-purple-700', 'bg-[#F5EDD8] text-[#C9A84C]'];
                                 $initialBadgeColor = $colorClasses[$loop->index % count($colorClasses)];
 
                                 $catBreeds = ['Ragdoll', 'Sphynx', 'Ginger', 'Calico', 'Persian', 'Mixed'];
@@ -103,7 +103,7 @@
                                 $mockEnv = $environments[$adoption->id % count($environments)];
 
                                 $statusLabels = [
-                                    'Pending' => ['label' => 'Reviewing', 'dot' => 'bg-amber-500', 'text' => 'text-amber-700'],
+                                    'Pending' => ['label' => 'Reviewing', 'dot' => 'bg-[#FAF8F0]0', 'text' => 'text-[#C9A84C]'],
                                     'Approved' => ['label' => 'Home Visit Set', 'dot' => 'bg-teal-500', 'text' => 'text-teal-700'],
                                     'Rejected' => ['label' => 'Waitlisted', 'dot' => 'bg-gray-400', 'text' => 'text-gray-500 italic']
                                 ];
@@ -148,10 +148,10 @@
                                 <td class="py-5 px-6 text-right">
                                     <a href="{{ route('admin.adoptions.show', $adoption) }}"
                                        class="inline-flex flex-col items-end group">
-                                        <span class="text-[12px] font-bold text-amber-700 group-hover:text-amber-900 transition flex items-center gap-1">
+                                        <span class="text-[12px] font-bold text-[#C9A84C] group-hover:text-[#7A5320] transition flex items-center gap-1">
                                             View Full
                                         </span>
-                                        <span class="text-[12px] font-bold text-amber-700 group-hover:text-amber-900 transition flex items-center gap-1">
+                                        <span class="text-[12px] font-bold text-[#C9A84C] group-hover:text-[#7A5320] transition flex items-center gap-1">
                                             Application
                                             <svg class="w-3 h-3 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
                                         </span>
@@ -174,7 +174,7 @@
                 </div>
                 <div class="flex items-center gap-1">
                     <button class="w-8 h-8 flex items-center justify-center rounded-full text-gray-400 bg-white shadow-sm hover:bg-gray-50">&lsaquo;</button>
-                    <button class="w-8 h-8 flex items-center justify-center rounded-full bg-amber-700 text-white text-[13px] font-bold shadow">1</button>
+                    <button class="w-8 h-8 flex items-center justify-center rounded-full bg-[#b8963e] text-white text-[13px] font-bold shadow">1</button>
                     <button class="w-8 h-8 flex items-center justify-center rounded-full text-gray-600 bg-white shadow-sm text-[13px] font-bold hover:bg-gray-50">2</button>
                     <button class="w-8 h-8 flex items-center justify-center rounded-full text-gray-600 bg-white shadow-sm text-[13px] font-bold hover:bg-gray-50">3</button>
                     <button class="w-8 h-8 flex items-center justify-center rounded-full text-gray-600 bg-white shadow-sm hover:bg-gray-50">&rsaquo;</button>
