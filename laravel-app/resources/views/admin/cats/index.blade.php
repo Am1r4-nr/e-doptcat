@@ -97,9 +97,10 @@
                 <tr class="bg-[#3D3D3D]">
                     <th class="px-6 py-3 text-left text-[10px] font-semibold text-white tracking-widest uppercase">Subject</th>
                     <th class="px-6 py-3 text-left text-[10px] font-semibold text-white tracking-widest uppercase">Breed & Visuals</th>
-                    <th class="px-6 py-3 text-left text-[10px] font-semibold text-white tracking-widest uppercase">Age & Status</th>
+                    <th class="px-6 py-3 text-left text-[10px] font-semibold text-white tracking-widest uppercase">Age</th>
+                    <th class="px-6 py-3 text-left text-[10px] font-semibold text-white tracking-widest uppercase">Status</th>
                     <th class="px-6 py-3 text-left text-[10px] font-semibold text-white tracking-widest uppercase">Registration Date</th>
-                    <th class="px-6 py-3 text-left text-[10px] font-semibold text-white tracking-widest uppercase">Actions</th>
+                    <th class="px-6 py-3 text-left text-[10px] font-semibold text-white tracking-widest uppercase">Last Updated</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-[#F0EBE3]">
@@ -112,7 +113,8 @@
                             default        => 'bg-gray-100 text-gray-600',
                         };
                     @endphp
-                    <tr class="hover:bg-[#FAF8F0]/40 transition">
+                    <tr onclick="window.location='{{ route('admin.cats.show', $cat) }}'"
+                        class="hover:bg-[#FAF8F0]/40 transition cursor-pointer">
                         <!-- Subject -->
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
@@ -135,11 +137,15 @@
                             <p class="text-sm text-gray-700">{{ $cat->breed ?? '—' }}</p>
                         </td>
 
-                        <!-- Age & Status -->
+                        <!-- Age -->
                         <td class="px-6 py-4">
-                            <p class="text-sm text-gray-700 mb-1">
+                            <p class="text-sm text-gray-700">
                                 {{ $cat->age ? (is_numeric($cat->age) ? "{$cat->age} " . Str::plural('Year', (int)$cat->age) : $cat->age) : '—' }}
                             </p>
+                        </td>
+
+                        <!-- Status -->
+                        <td class="px-6 py-4">
                             <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase {{ $statusStyle }}">
                                 {{ $cat->status }}
                             </span>
@@ -151,31 +157,15 @@
                             <p class="text-[10px] text-gray-400">{{ $cat->created_at->format('g:i A') }}</p>
                         </td>
 
-                        <!-- Actions -->
+                        <!-- Last Updated -->
                         <td class="px-6 py-4">
-                            <div class="flex items-center gap-2">
-                                <a href="{{ route('admin.cats.show', $cat) }}"
-                                   class="p-1.5 rounded-lg text-gray-400 hover:bg-[#FAF8F0] hover:text-[#C9A84C] transition" title="View">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                                </a>
-                                <a href="{{ route('admin.cats.edit', $cat) }}"
-                                   class="p-1.5 rounded-lg text-[#C9A84C] hover:bg-[#FAF8F0] transition" title="Edit">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/></svg>
-                                </a>
-                                <form action="{{ route('admin.cats.destroy', $cat) }}" method="POST"
-                                      onsubmit="return confirm('Delete {{ $cat->name }}?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="p-1.5 rounded-lg text-red-400 hover:bg-red-50 transition" title="Delete">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
-                                    </button>
-                                </form>
-                            </div>
+                            <p class="text-sm text-gray-600">{{ $cat->updated_at->format('M d, Y') }}</p>
+                            <p class="text-[10px] text-gray-400">{{ $cat->updated_at->format('g:i A') }}</p>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="px-6 py-16 text-center">
+                        <td colspan="6" class="px-6 py-16 text-center">
                             <p class="text-gray-400 font-cabinet italic text-lg">No felines in the registry yet.</p>
                             <a href="{{ route('admin.cats.create') }}" class="mt-4 inline-block text-sm text-[#C9A84C] hover:underline">Add your first cat →</a>
                         </td>

@@ -56,6 +56,11 @@
         .nav-item {
             transition: padding 280ms cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+        /* Suppress ALL transitions on first render to prevent load-glitch */
+        .no-transition, .no-transition * {
+            transition: none !important;
+        }
     </style>
 </head>
 <body class="antialiased bg-[#EDE8DE]">
@@ -71,7 +76,16 @@
 @endphp
 
 <div class="flex h-screen overflow-hidden"
-     x-data="{ sidebarOpen: true, openMenu: '{{ $initialMenu }}' }">
+     :class="ready ? '' : 'no-transition'"
+     x-data="{
+         sidebarOpen: JSON.parse(localStorage.getItem('sidebarOpen') ?? 'true'),
+         openMenu: '{{ $initialMenu }}',
+         ready: false,
+         init() {
+             this.$nextTick(() => { this.ready = true })
+             this.$watch('sidebarOpen', v => localStorage.setItem('sidebarOpen', v))
+         }
+     }">
 
     <!-- Sidebar -->
     <aside id="admin-sidebar"
