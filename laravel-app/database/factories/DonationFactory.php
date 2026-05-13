@@ -12,7 +12,7 @@ class DonationFactory extends Factory
         return [
             'user_id' => User::factory(),
             'amount' => $this->faker->randomFloat(2, 10, 500),
-            'payment_method' => $this->faker->randomElement(['toyyibpay', 'fpx', 'card']),
+            'payment_method' => $this->faker->randomElement(['fpx', 'card']),
             'status' => 'Completed',
             'transaction_id' => 'TXN-' . strtoupper($this->faker->bothify('??####')),
         ];

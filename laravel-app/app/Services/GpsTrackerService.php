@@ -125,30 +125,37 @@ class GpsTrackerService
     {
         try {
             $imei = $imei ?? config('gps.tracker_imei');
-            $apiUrl = config('gps.tracker_api_url');
+            $apiUrl = config('gps.tracker_api_url', 'http://www.365gps.net/wx_ilist.php');
             $password = config('gps.tracker_password');
-            $apiKey = config('gps.tracker_api_key');
-            $apiVersion = config('gps.tracker_api_version', '1.41');
+            $apiVersion = '2.0';
             
-            Log::info("GpsTrackerService::getLocation - Calling 365GPS API", [
-                'imei' => $imei,
-                'url' => $apiUrl
-            ]);
-            
+            // New 365GPS authentication logic: 
+            // ak is a hex of (current_timestamp - 1658000000) + a random suffix
+            $timestampOffset = time() - 1658000000;
+            $dynamicAK = dechex($timestampOffset) . rand(50, 99);
+
             // Build query parameters for 365GPS wx_ilist.php endpoint
             $params = [
                 'imei' => $imei,
                 'pw' => $password,
                 'ver' => $apiVersion,
                 'app' => 'wx',
-                'hw' => 'iOS',
-                'ak' => $apiKey,
+                'hw' => 'web',
+                'ak' => $dynamicAK,
             ];
+
+            Log::info("GpsTrackerService::getLocation - Calling 365GPS API", [
+                'imei' => $imei,
+                'url' => $apiUrl,
+                'params_subset' => array_merge($params, ['pw' => substr($params['pw'], 0, 2) . '****'])
+            ]);
             
             /** @var \Illuminate\Http\Client\Response $response */
             $response = Http::timeout(10)->get($apiUrl, $params);
 
-            Log::info("GpsTrackerService::getLocation - Response Status: " . $response->status());
+            Log::info("GpsTrackerService::getLocation - Response Status: " . $response->status(), [
+                'body' => $response->body()
+            ]);
             
             if ($response->successful()) {
                 $body = $response->body();
@@ -191,18 +198,30 @@ class GpsTrackerService
     {
         // 365GPS wx_ilist.php returns an array of devices
         // Format: [{"imei":"xxx","gps":"2026-02-22 16:19:33,13,1,0,9,3.738718,103.26262,19",...}]
+        // Error Format: {"result":"Errcode:402-xxxx"}
         
         if (!is_array($data) || count($data) === 0) {
             return null;
         }
+
+        // Check for error code in 'result' key
+        if (isset($data['result']) && str_contains($data['result'], 'Errcode:')) {
+            Log::error("365GPS API returned error: " . $data['result']);
+            return null;
+        }
         
-        $device = is_array($data) ? $data[0] : $data;
+        $device = isset($data[0]) ? $data[0] : (is_array($data) && !isset($data['result']) ? $data : null);
         
-        // Parse the GPS field which contains: datetime,status,?,?,?,latitude,longitude,?
-        $gpsData = $device['gps'] ?? null;
+        if (!$device || !isset($device['gps'])) {
+            return null;
+        }
+
         $lat = null;
         $lng = null;
         $timestamp = null;
+
+        // Parse the GPS field which contains: datetime,status,?,?,?,latitude,longitude,?
+        $gpsData = $device['gps'] ?? null;
         
         if ($gpsData) {
             // Example: "2026-02-22 16:19:33,13,1,0,9,3.738718,103.26262,19"

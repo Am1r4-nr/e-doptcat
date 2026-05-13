@@ -40,6 +40,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::post('donations', [DonationController::class, 'store'])->name('donations.store');
+    Route::get('donations/success', [DonationController::class, 'success'])->name('donations.success');
+
     Route::resource('reports', ReportController::class)->only(['create', 'store']);
     Route::post('events/{event}/register', [EventController::class, 'register'])->name('events.register');
 

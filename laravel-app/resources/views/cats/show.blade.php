@@ -98,6 +98,51 @@
                         </p>
                     </div>
 
+                    <!-- AI Personality Profile -->
+                    @if($cat->ai_profile || $cat->temperament_score)
+                    <div class="mb-8 bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-2xl border-2 border-purple-200">
+                        <div class="flex items-center gap-2 mb-4">
+                            <svg class="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 11-2 0 1 1 0 012 0zm0 3a1 1 0 11-2 0 1 1 0 012 0zm4-1a1 1 0 11-2 0 1 1 0 012 0z"></path>
+                            </svg>
+                            <h3 class="font-serif text-xl font-bold text-purple-900">AI Personality Profile</h3>
+                        </div>
+
+                        @if($cat->temperament_score)
+                        <div class="mb-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-semibold text-gray-700">Temperament Score</span>
+                                <span class="text-2xl font-bold text-purple-600">{{ $cat->temperament_score }}/10</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-3">
+                                <div class="bg-gradient-to-r from-purple-500 to-pink-500 h-3 rounded-full" style="width: {{ ($cat->temperament_score / 10) * 100 }}%"></div>
+                            </div>
+                        </div>
+                        @endif
+
+                        @if($cat->ai_profile)
+                        <div class="mb-4">
+                            <span class="text-sm font-semibold text-gray-700 block mb-2">Personality Summary</span>
+                            <p class="text-gray-700 leading-relaxed text-base">{{ $cat->ai_profile }}</p>
+                        </div>
+                        @endif
+
+                        @if($cat->ideal_adopters)
+                        <div class="mb-4">
+                            <span class="text-sm font-semibold text-gray-700 block mb-2">Perfect For</span>
+                            <p class="text-gray-700 leading-relaxed text-base">{{ $cat->ideal_adopters }}</p>
+                        </div>
+                        @endif
+
+                        @if($cat->care_notes)
+                        <div>
+                            <span class="text-sm font-semibold text-gray-700 block mb-2">Care Recommendations</span>
+                            <p class="text-gray-700 leading-relaxed text-base">{{ $cat->care_notes }}</p>
+                        </div>
+                        @endif
+                    </div>
+                    @endif
+
                     <div class="border-t border-boho-light my-6"></div>
 
                     <!-- Location Wrapper -->
