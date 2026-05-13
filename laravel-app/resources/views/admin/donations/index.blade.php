@@ -95,32 +95,34 @@
                             <tr class="hover:bg-gray-50/50 transition duration-150">
                                 <td class="py-4 px-4 font-bold text-gray-800">{{ $donation->user->name }}</td>
                                 <td class="py-4 px-4 text-gray-500 font-medium">
-                                    {{-- Use dummy data or real case if available --}}
-                                    {{ ['Luna\'s Surgery', 'Winter Recovery', 'Shelter Kibbles', 'Felix Eye Care'][array_rand(['Luna\'s Surgery', 'Winter Recovery', 'Shelter Kibbles', 'Felix Eye Care'])] }}
+                                    General Support
                                 </td>
                                 <td class="py-4 px-4 font-bold text-gray-900">{{ number_format($donation->amount, 2) }}</td>
                                 <td class="py-4 px-4 text-gray-500 text-xs">
-                                    {{-- Use dummy text --}}
-                                    {{ ['Online Banking', 'Credit Card', 'E-Wallet'][$donation->id % 3] }}
+                                    {{ $donation->payment_method === 'fpx' ? 'Online Banking (FPX)' : ($donation->payment_method === 'card' ? 'Credit Card' : ucfirst($donation->payment_method)) }}
                                 </td>
-                                <td class="py-4 px-4 text-gray-400 font-medium text-xs">TXN-{{ 998200 + $donation->id }}</td>
+                                <td class="py-4 px-4 text-gray-400 font-medium text-xs">
+                                    {{ $donation->transaction_id ?? 'TXN-' . (998200 + $donation->id) }}
+                                </td>
                                 <td class="py-4 px-4 text-center">
                                     @php
-                                        $statuses = [
-                                            ['class' => 'bg-green-100 text-green-600', 'label' => 'SUCCESS'],
-                                            ['class' => 'bg-amber-100 text-amber-600', 'label' => 'PENDING'],
-                                            ['class' => 'bg-red-100 text-red-500', 'label' => 'FAILED']
-                                        ];
-                                        $status = $statuses[$donation->id % 3 == 0 ? array_rand($statuses) : 0]; // heavily favor SUCCESS
+                                        $statusClass = match(strtolower($donation->status)) {
+                                            'completed', 'success' => 'bg-green-100 text-green-600',
+                                            'pending' => 'bg-amber-100 text-amber-600',
+                                            'failed' => 'bg-red-100 text-red-500',
+                                            default => 'bg-gray-100 text-gray-600'
+                                        };
+                                        $statusLabel = strtoupper($donation->status ?? 'SUCCESS');
+                                        if ($statusLabel === 'COMPLETED') $statusLabel = 'SUCCESS';
                                     @endphp
-                                    <span class="px-3 py-1 {{ $status['class'] }} text-[10px] font-bold rounded-full tracking-wider">{{ $status['label'] }}</span>
+                                    <span class="px-3 py-1 {{ $statusClass }} text-[10px] font-bold rounded-full tracking-wider">{{ $statusLabel }}</span>
                                 </td>
                                 <td class="py-4 px-4 text-gray-500 font-medium text-xs">{{ $donation->created_at->format('M d, Y') }}</td>
 
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center py-8 text-gray-500">No donations found.</td>
+                                <td colspan="7" class="text-center py-8 text-gray-500 italic">No real donations recorded yet.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -129,69 +131,6 @@
 
             <div class="mt-6">
                 {{ $donations->links() }}
-            </div>
-        </div>
-
-        <!-- Active Cases Tracking -->
-        <div class="bg-white rounded-[20px] shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] border border-amber-50 p-7">
-            <h3 class="font-bold text-gray-800 flex items-center gap-2 mb-6 text-lg">
-                <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                Active Cases Tracking
-            </h3>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Case 1 -->
-                <div class="border border-gray-100 rounded-[16px] p-5 hover:shadow-md transition bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjwvc3ZnPg==')] bg-gray-50/40">
-                    <div class="flex justify-between items-start mb-5">
-                        <div class="flex items-center gap-4">
-                            <div class="w-14 h-14 bg-amber-100 rounded-full overflow-hidden shrink-0 shadow-sm border border-white">
-                                <!-- Uses unstyled UI avatar as placeholder -->
-                                <img src="https://ui-avatars.com/api/?name=M&background=fde68a&color=92400e" alt="Milo" class="w-full h-full object-cover">
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-gray-800 text-[15px]">Milo's Specialized Diet Fund</h4>
-                                <p class="text-xs text-gray-500 font-medium mt-0.5">Post-op kidney care supplies</p>
-                            </div>
-                        </div>
-                        <span class="px-2.5 py-1 bg-gray-200 text-gray-600 text-[10px] font-bold tracking-widest rounded shrink-0 uppercase">KITTEN</span>
-                    </div>
-                    <div class="flex justify-between text-[11px] font-bold mb-2.5 tracking-wide">
-                        <span class="text-amber-700">RM 2,850.00 raised</span>
-                        <span class="text-gray-400">Goal: RM 3,000.00</span>
-                    </div>
-                    <div class="w-full bg-gray-100 rounded-full h-2.5 mb-5 shadow-inner">
-                        <div class="bg-amber-700 h-2.5 rounded-full" style="width: 95%"></div>
-                    </div>
-                    <div class="text-center">
-                        <button class="bg-amber-800 text-white text-xs font-bold py-2.5 px-8 rounded-full hover:bg-amber-900 transition shadow-sm">Mark as Funded</button>
-                    </div>
-                </div>
-
-                <!-- Case 2 -->
-                <div class="border border-gray-100 rounded-[16px] p-5 hover:shadow-md transition bg-gray-50/40">
-                    <div class="flex justify-between items-start mb-5">
-                        <div class="flex items-center gap-4">
-                            <div class="w-14 h-14 bg-gray-200 rounded-full overflow-hidden shrink-0 shadow-sm border border-white">
-                                <img src="https://ui-avatars.com/api/?name=S&background=e5e7eb&color=374151" alt="Snowy" class="w-full h-full object-cover">
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-gray-800 text-[15px]">Snowy's Dental Treatment</h4>
-                                <p class="text-xs text-gray-500 font-medium mt-0.5">Advanced molar extraction</p>
-                            </div>
-                        </div>
-                        <span class="px-2.5 py-1 bg-gray-200 text-gray-600 text-[10px] font-bold tracking-widest rounded shrink-0 uppercase">SENIOR</span>
-                    </div>
-                    <div class="flex justify-between text-[11px] font-bold mb-2.5 tracking-wide">
-                        <span class="text-amber-700">RM 420.00 raised</span>
-                        <span class="text-gray-400">Goal: RM 1,200.00</span>
-                    </div>
-                    <div class="w-full bg-gray-100 rounded-full h-2.5 mb-5 shadow-inner">
-                        <div class="bg-amber-700 h-2.5 rounded-full" style="width: 35%"></div>
-                    </div>
-                    <div class="text-center">
-                        <button class="bg-gray-100 text-gray-400 text-xs font-bold py-2.5 px-8 rounded-full cursor-not-allowed">Goal not reached</button>
-                    </div>
-                </div>
             </div>
         </div>
 

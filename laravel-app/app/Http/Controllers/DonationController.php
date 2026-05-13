@@ -21,7 +21,7 @@ class DonationController extends Controller
             'payment_method' => 'required|string|in:fpx,card',
         ]);
 
-        Stripe::setApiKey(env('STRIPE_SECRET'));
+        Stripe::setApiKey(config('services.stripe.secret'));
 
         $paymentMethodTypes = $validated['payment_method'] === 'fpx' ? ['fpx'] : ['card'];
         
@@ -57,25 +57,39 @@ class DonationController extends Controller
         $sessionId = $request->get('session_id');
         
         if (!$sessionId) {
+            \Log::warning('Donation success reached without session_id');
             return redirect()->route('donations.index');
         }
 
-        Stripe::setApiKey(env('STRIPE_SECRET'));
-        $session = Session::retrieve($sessionId);
+        try {
+            Stripe::setApiKey(config('services.stripe.secret'));
+            $session = Session::retrieve($sessionId);
 
-        // Check if donation already exists for this session to prevent duplicates on refresh
-        $exists = Donation::where('transaction_id', $session->id)->exists();
+            \Log::info('Stripe Session Retrieved', ['id' => $session->id, 'status' => $session->payment_status]);
 
-        if (!$exists && $session->payment_status === 'paid') {
-            Donation::create([
-                'user_id' => $session->metadata->user_id,
-                'amount' => $session->metadata->amount,
-                'payment_method' => $session->metadata->payment_method,
-                'status' => 'Completed',
-                'transaction_id' => $session->id,
-            ]);
+            // Check if donation already exists for this session to prevent duplicates on refresh
+            $exists = Donation::where('transaction_id', $session->id)->exists();
+
+            if (!$exists && $session->payment_status === 'paid') {
+                Donation::create([
+                    'user_id' => $session->metadata->user_id,
+                    'amount' => $session->metadata->amount,
+                    'payment_method' => $session->metadata->payment_method,
+                    'status' => 'Completed',
+                    'transaction_id' => $session->id,
+                ]);
+                \Log::info('Donation record created successfully');
+            } else if ($exists) {
+                \Log::info('Donation record already exists for this session');
+            } else {
+                \Log::warning('Stripe session status not paid', ['status' => $session->payment_status]);
+            }
+
+            return view('donations.index')->with('success', 'Thank you for your generous RM ' . $session->metadata->amount . ' donation! Your support makes a real difference.');
+
+        } catch (\Exception $e) {
+            \Log::error('Error processing donation success', ['message' => $e->getMessage()]);
+            return redirect()->route('donations.index')->with('error', 'There was an issue verifying your payment. Please contact support if the amount was deducted.');
         }
-
-        return view('donations.index')->with('success', 'Thank you for your generous RM ' . $session->metadata->amount . ' donation! Your support makes a real difference.');
     }
 }

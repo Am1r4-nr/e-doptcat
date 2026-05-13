@@ -39,4 +39,8 @@ return [
         'url' => env('AI_MATCHER_URL', 'http://localhost:5000'),
     ],
 
+    'stripe' => [
+        'secret' => env('STRIPE_SECRET'),
+    ],
+
 ];

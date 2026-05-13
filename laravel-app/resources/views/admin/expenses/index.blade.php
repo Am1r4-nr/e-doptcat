@@ -23,10 +23,10 @@
                     <div class="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                     </div>
-                    <span class="px-3 py-1 bg-amber-50 text-amber-700 text-[11px] font-bold rounded-full">+12% vs last mo</span>
+                    <span class="px-3 py-1 bg-green-50 text-green-700 text-[11px] font-bold rounded-full">Within Budget</span>
                 </div>
                 <div class="text-[12px] font-bold text-gray-400 tracking-wider mb-1">Total Funds Spent</div>
-                <div class="text-3xl font-bold text-gray-900">RM 42,850</div>
+                <div class="text-3xl font-bold text-gray-900">RM 12,450.00</div>
             </div>
 
             <!-- Remaining Budget -->
@@ -37,9 +37,9 @@
                     </div>
                 </div>
                 <div class="text-[12px] font-bold text-gray-400 tracking-wider mb-1">Remaining Budget</div>
-                <div class="text-3xl font-bold text-gray-900 mb-3">RM 15,200</div>
+                <div class="text-3xl font-bold text-gray-900 mb-3">RM 8,550.00</div>
                 <div class="w-full bg-gray-100 rounded-full h-1.5">
-                    <div class="bg-teal-600 h-1.5 rounded-full w-[70%]"></div>
+                    <div class="bg-teal-600 h-1.5 rounded-full w-[60%]"></div>
                 </div>
             </div>
 
@@ -51,46 +51,8 @@
                     </div>
                 </div>
                 <div class="text-[12px] font-bold text-gray-400 tracking-wider mb-1">Active Rescue Cases</div>
-                <div class="text-3xl font-bold text-gray-900 mb-4">24</div>
-                <div class="flex -space-x-2">
-                    <img class="inline-block h-6 w-6 rounded-full ring-2 ring-white" src="https://ui-avatars.com/api/?name=Luna&background=random" alt=""/>
-                    <img class="inline-block h-6 w-6 rounded-full ring-2 ring-white" src="https://ui-avatars.com/api/?name=Milo&background=random" alt=""/>
-                    <img class="inline-block h-6 w-6 rounded-full ring-2 ring-white" src="https://ui-avatars.com/api/?name=Oscar&background=random" alt=""/>
-                    <div class="inline-flex h-6 w-6 items-center justify-center rounded-full ring-2 ring-white bg-gray-100 text-[10px] font-medium text-gray-500">+21</div>
-                </div>
+                <div class="text-3xl font-bold text-gray-900 mb-4">12</div>
             </div>
-        </div>
-
-        <!-- Filters -->
-        <div class="flex items-center gap-4 mb-6 bg-white p-4 rounded-full shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] border border-gray-100">
-            <div class="relative flex-1 max-w-md">
-                <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                </span>
-                <input type="text" class="w-full pl-10 pr-4 py-2 bg-gray-50 border-transparent focus:border-amber-300 focus:bg-white focus:ring-0 rounded-full text-sm placeholder-gray-400" placeholder="Search by case name or vendor...">
-            </div>
-
-            <div class="relative">
-                <select class="appearance-none bg-gray-50 border-transparent py-2 pl-4 pr-10 rounded-full text-sm text-gray-600 focus:ring-0 focus:border-amber-300 font-medium">
-                    <option>All Categories</option>
-                </select>
-                <span class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
-                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                </span>
-            </div>
-
-            <div class="relative">
-                <select class="appearance-none bg-gray-50 border-transparent py-2 pl-4 pr-10 rounded-full text-sm text-gray-600 focus:ring-0 focus:border-amber-300 font-medium">
-                    <option>Last 30 Days</option>
-                </select>
-                <span class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-gray-400">
-                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                </span>
-            </div>
-
-            <button class="ml-auto w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
-            </button>
         </div>
 
         <!-- Table -->
@@ -111,21 +73,21 @@
                     <tbody class="divide-y divide-gray-50">
                         <!-- Row 1 -->
                         <tr class="hover:bg-gray-50/50 transition">
-                            <td class="py-5 px-4 font-medium text-gray-500 text-xs">Oct 24,<br>2023</td>
+                            <td class="py-5 px-4 font-medium text-gray-500 text-xs">May 12,<br>2026</td>
                             <td class="py-5 px-4">
                                 <div class="flex items-center gap-3">
-                                    <img src="https://ui-avatars.com/api/?name=Luna&background=f3f4f6&color=374151" class="w-10 h-10 rounded-full" alt="Luna">
+                                    <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center font-bold text-amber-700">B</div>
                                     <div>
-                                        <div class="font-bold text-gray-900">Luna (Rescue #402)</div>
-                                        <div class="text-[11px] text-gray-500 font-medium">Dental Surgery</div>
+                                        <div class="font-bold text-gray-900">Bits (Rescue #882)</div>
+                                        <div class="text-[11px] text-gray-500 font-medium">GPS Tracker Installation</div>
                                     </div>
                                 </div>
                             </td>
                             <td class="py-5 px-4">
-                                <span class="px-2.5 py-1 bg-blue-50 text-blue-600 text-[10px] font-bold rounded tracking-wide uppercase">MEDICAL</span>
+                                <span class="px-2.5 py-1 bg-blue-50 text-blue-600 text-[10px] font-bold rounded tracking-wide uppercase">EQUIPMENT</span>
                             </td>
-                            <td class="py-5 px-4 font-bold text-gray-900">1,240.00</td>
-                            <td class="py-5 px-4 text-gray-500 text-xs font-medium">Vet Care Specialists</td>
+                            <td class="py-5 px-4 font-bold text-gray-900">250.00</td>
+                            <td class="py-5 px-4 text-gray-500 text-xs font-medium">SafeTrack Solutions</td>
                             <td class="py-5 px-4">
                                 <span class="flex items-center gap-1.5 text-green-600 font-bold text-xs">
                                     <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Approved
@@ -137,78 +99,47 @@
                         </tr>
                         <!-- Row 2 -->
                         <tr class="hover:bg-gray-50/50 transition">
-                            <td class="py-5 px-4 font-medium text-gray-500 text-xs">Oct 22,<br>2023</td>
+                            <td class="py-5 px-4 font-medium text-gray-500 text-xs">May 10,<br>2026</td>
                             <td class="py-5 px-4">
                                 <div class="flex items-center gap-3">
-                                    <img src="https://ui-avatars.com/api/?name=Milo&background=fed7aa&color=c2410c" class="w-10 h-10 rounded-full" alt="Milo">
+                                    <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center font-bold text-orange-700">M</div>
                                     <div>
-                                        <div class="font-bold text-gray-900">Milo (Rescue #405)</div>
-                                        <div class="text-[11px] text-gray-500 font-medium">Premium Kitten Starter</div>
+                                        <div class="font-bold text-gray-900">Bits's Diet Case</div>
+                                        <div class="text-[11px] text-gray-500 font-medium">Specialized Kidney Food</div>
                                     </div>
                                 </div>
                             </td>
                             <td class="py-5 px-4">
                                 <span class="px-2.5 py-1 bg-orange-50 text-orange-600 text-[10px] font-bold rounded tracking-wide uppercase">FOOD</span>
                             </td>
-                            <td class="py-5 px-4 font-bold text-gray-900">350.00</td>
-                            <td class="py-5 px-4 text-gray-500 text-xs font-medium">Feline Nutrition Ltd.</td>
+                            <td class="py-5 px-4 font-bold text-gray-900">420.00</td>
+                            <td class="py-5 px-4 text-gray-500 text-xs font-medium">PetMart Supplies</td>
                             <td class="py-5 px-4">
                                 <span class="flex items-center gap-1.5 text-amber-600 font-bold text-xs">
                                     <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Pending
-                                </span>
-                            </td>
-                            <td class="py-5 px-4 text-center text-gray-400 relative">
-                                <div class="absolute right-8 top-1/2 -translate-y-1/2">
-                                    <button class="w-10 h-10 rounded-full bg-amber-800 text-white flex items-center justify-center shadow-lg hover:bg-amber-900 transition-colors z-10 relative">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                                    </button>
-                                </div>
-                                <button class="hover:text-gray-600 opacity-0 pointer-events-none"><svg class="w-5 h-5 mx-auto" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></button>
-                            </td>
-                        </tr>
-                        <!-- Row 3 -->
-                        <tr class="hover:bg-gray-50/50 transition">
-                            <td class="py-5 px-4 font-medium text-gray-500 text-xs">Oct 20,<br>2023</td>
-                            <td class="py-5 px-4">
-                                <div class="flex items-center gap-3">
-                                    <img src="https://ui-avatars.com/api/?name=Oscar&background=e5e7eb&color=374151" class="w-10 h-10 rounded-full" alt="Oscar">
-                                    <div>
-                                        <div class="font-bold text-gray-900">Oscar (Rescue #398)</div>
-                                        <div class="text-[11px] text-gray-500 font-medium">Shelter Maintenance</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="py-5 px-4">
-                                <span class="px-2.5 py-1 bg-purple-50 text-purple-600 text-[10px] font-bold rounded tracking-wide uppercase">SHELTER</span>
-                            </td>
-                            <td class="py-5 px-4 font-bold text-gray-900">2,800.00</td>
-                            <td class="py-5 px-4 text-gray-500 text-xs font-medium">Sanctuary BuildCo.</td>
-                            <td class="py-5 px-4">
-                                <span class="flex items-center gap-1.5 text-green-600 font-bold text-xs">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Approved
                                 </span>
                             </td>
                             <td class="py-5 px-4 text-center text-gray-400">
                                 <button class="hover:text-gray-600"><svg class="w-5 h-5 mx-auto" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></button>
                             </td>
                         </tr>
-                        <!-- Row 4 -->
-                        <tr class="hover:bg-gray-50/50 transition border-b-transparent">
-                            <td class="py-5 px-4 font-medium text-gray-500 text-xs">Oct 18,<br>2023</td>
+                        <!-- Row 3 -->
+                        <tr class="hover:bg-gray-50/50 transition">
+                            <td class="py-5 px-4 font-medium text-gray-500 text-xs">May 05,<br>2026</td>
                             <td class="py-5 px-4">
                                 <div class="flex items-center gap-3">
-                                    <img src="https://ui-avatars.com/api/?name=Bella&background=ffedd5&color=9a3412" class="w-10 h-10 rounded-full" alt="Bella">
+                                    <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center font-bold text-purple-700">S</div>
                                     <div>
-                                        <div class="font-bold text-gray-900">Bella (Rescue #410)</div>
-                                        <div class="text-[11px] text-gray-500 font-medium">Adoption Campaign</div>
+                                        <div class="font-bold text-gray-900">Shelter Upgrade</div>
+                                        <div class="text-[11px] text-gray-500 font-medium">Ventilation System Fix</div>
                                     </div>
                                 </div>
                             </td>
                             <td class="py-5 px-4">
-                                <span class="px-2.5 py-1 bg-pink-50 text-pink-600 text-[10px] font-bold rounded tracking-wide uppercase">MARKETING</span>
+                                <span class="px-2.5 py-1 bg-purple-50 text-purple-600 text-[10px] font-bold rounded tracking-wide uppercase">MAINTENANCE</span>
                             </td>
-                            <td class="py-5 px-4 font-bold text-gray-900">1,100.00</td>
-                            <td class="py-5 px-4 text-gray-500 text-xs font-medium">Purrfect Media Agency</td>
+                            <td class="py-5 px-4 font-bold text-gray-900">1,850.00</td>
+                            <td class="py-5 px-4 text-gray-500 text-xs font-medium">BuildSafe Engineering</td>
                             <td class="py-5 px-4">
                                 <span class="flex items-center gap-1.5 text-green-600 font-bold text-xs">
                                     <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Approved
@@ -224,14 +155,7 @@
 
             <div class="flex items-center justify-between mt-6 pt-6 border-t border-gray-50">
                 <div class="text-[10px] font-bold text-gray-400 tracking-wider uppercase">
-                    SHOWING 1 - 10 OF 142 TRANSACTIONS
-                </div>
-                <div class="flex items-center gap-1">
-                    <button class="w-7 h-7 flex items-center justify-center rounded text-gray-400 hover:bg-gray-50">&lsaquo;</button>
-                    <button class="w-7 h-7 flex items-center justify-center rounded-full bg-amber-800 text-white text-xs font-bold shadow">1</button>
-                    <button class="w-7 h-7 flex items-center justify-center rounded text-gray-500 text-xs font-medium hover:bg-gray-50">2</button>
-                    <button class="w-7 h-7 flex items-center justify-center rounded text-gray-500 text-xs font-medium hover:bg-gray-50">3</button>
-                    <button class="w-7 h-7 flex items-center justify-center rounded text-gray-400 hover:bg-gray-50">&rsaquo;</button>
+                    SHOWING 3 OF 3 TRANSACTIONS
                 </div>
             </div>
         </div>
