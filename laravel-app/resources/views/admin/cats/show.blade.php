@@ -1,10 +1,14 @@
 <x-admin-layout>
 <script>
 function healthRecordsData() {
+    let _toastTimer = null;
     return {
         open: null,
         editing: null,
         todos: [],
+        toastVisible: false,
+        toastMsg: '',
+        toastType: 'success',
         vaccines: {
             'Vaccinated': [
                 { title: 'FVRCP (Combo Shot)',   note: 'Herpesvirus, Calicivirus, Panleukopenia', tag: 'Core' },
@@ -43,9 +47,48 @@ function healthRecordsData() {
             }
             this.open = null;
         },
+        confirmDelete: null,
+        confirmDone: null,
+        askDone(title) {
+            const item = this.todos.find(t => t.title === title);
+            if (item && item.status === 'Done') {
+                item.status = 'Pending';
+            } else {
+                this.confirmDone = title;
+            }
+        },
         remove(title) {
             this.todos = this.todos.filter(t => t.title !== title);
             if (this.editing && this.editing.title === title) this.editing = null;
+            this.confirmDelete = null;
+            this.showToast('Examination removed.', 'error');
+        },
+        askDelete(title) {
+            this.confirmDelete = title;
+        },
+        tick() {
+            const item = this.todos.find(t => t.title === this.confirmDone);
+            if (!item) { this.confirmDone = null; return; }
+            item.status = 'Done';
+            this.todos = this.todos.filter(t => t.title !== item.title);
+            this.confirmDone = null;
+            this.showToast(item.title + ' marked as done!', 'success');
+            window.dispatchEvent(new CustomEvent('examination-done', { detail: {
+                type: item.title,
+                date: new Date().toISOString().split('T')[0],
+                clinic: item.clinic || '',
+                vet: item.volunteer || '',
+                weight: '',
+                notes: item.notes || '',
+                files: [...(item.files || [])],
+            }}));
+        },
+        showToast(msg, type) {
+            this.toastMsg = msg;
+            this.toastType = type;
+            this.toastVisible = true;
+            clearTimeout(_toastTimer);
+            _toastTimer = setTimeout(() => { this.toastVisible = false; }, 3000);
         },
         openEdit(item) {
             this.editing = { ...item, files: [...(item.files || [])] };
@@ -77,6 +120,7 @@ function catShowPage() {
         galleryFiles: [],
         sectionEdit: null,
         sectionSaving: false,
+        catDeleteConfirm: false,
         catFields: {
             name:   {!! json_encode($cat->name) !!},
             breed:  {!! json_encode($cat->breed) !!},
@@ -141,10 +185,9 @@ function catShowPage() {
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"/></svg>
                 Gallery
             </button>
-            <form action="{{ route('admin.cats.destroy', $cat) }}" method="POST"
-                  onsubmit="return confirm('Delete {{ $cat->name }}?')">
+            <form id="cat-delete-form" action="{{ route('admin.cats.destroy', $cat) }}" method="POST">
                 @csrf @method('DELETE')
-                <button type="submit"
+                <button type="button" @click="catDeleteConfirm = true"
                         class="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white text-xs font-semibold transition" title="Delete">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
                     Delete
@@ -345,11 +388,276 @@ function catShowPage() {
                 </div>
             </div>
 
-            <!-- Health Records -->
+            <!-- Health Record -->
+            <div class="bg-white rounded-2xl border border-[#E8E2D8] shadow-sm p-6"
+                 x-data="{
+                     records: [],
+                     showForm: false,
+                     form: { date: '', type: '', clinic: '', vet: '', weight: '', notes: '', files: [] },
+                     editIdx: null,
+                     deleteIdx: null,
+                     types: ['General Checkup', 'Vaccination', 'Deworming', 'Flea Treatment', 'Surgery', 'Dental Cleaning', 'Blood Test', 'X-Ray / Imaging', 'Follow-Up', 'Other'],
+                     init() {
+                         window.addEventListener('examination-done', (e) => {
+                             this.records.unshift({ ...e.detail });
+                         });
+                     },
+                     openAdd() { this.form = { date: '', type: '', clinic: '', vet: '', weight: '', notes: '', files: [] }; this.editIdx = null; this.showForm = true; },
+                     openEdit(i) { this.form = { ...this.records[i], files: [...(this.records[i].files || [])] }; this.editIdx = i; this.showForm = true; },
+                     save() {
+                         if (!this.form.date || !this.form.type) return;
+                         const record = { ...this.form, files: [...this.form.files] };
+                         if (this.editIdx !== null) { this.records[this.editIdx] = record; }
+                         else { this.records.unshift(record); }
+                         this.showForm = false;
+                     },
+                     remove(i) { this.records.splice(i, 1); this.deleteIdx = null; },
+                     handleFiles(e) {
+                         Array.from(e.target.files).forEach(f => {
+                             const reader = new FileReader();
+                             reader.onload = ev => {
+                                 this.form.files = [...this.form.files, { name: f.name, url: ev.target.result, type: f.type }];
+                             };
+                             reader.readAsDataURL(f);
+                         });
+                         e.target.value = '';
+                     },
+                     removeFile(i) { this.form.files = this.form.files.filter((_, idx) => idx !== i); },
+                     openFile(f) {
+                         const parts = f.url.split(',');
+                         const mime = parts[0].split(':')[1].split(';')[0];
+                         const bytes = atob(parts[1]);
+                         const ab = new Uint8Array(bytes.length);
+                         for (let i = 0; i < bytes.length; i++) ab[i] = bytes.charCodeAt(i);
+                         const blob = new Blob([ab], { type: mime });
+                         window.open(URL.createObjectURL(blob), '_blank');
+                     },
+                     typeBadge(t) {
+                         const map = { 'Vaccination': 'bg-amber-100 text-amber-700', 'Surgery': 'bg-red-100 text-red-600', 'Blood Test': 'bg-purple-100 text-purple-600', 'X-Ray / Imaging': 'bg-blue-100 text-blue-600', 'General Checkup': 'bg-green-100 text-green-600' };
+                         return map[t] || 'bg-gray-100 text-gray-500';
+                     }
+                 }">
+
+                <!-- Header -->
+                <div class="flex items-center justify-between mb-5">
+                    <div class="flex items-center gap-2">
+                        <span class="w-6 h-6 bg-[#F5EDD8] rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg class="w-3.5 h-3.5 text-[#C9A84C]" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+                        </span>
+                        <h2 class="text-base font-bold text-gray-800">Health Record</h2>
+                        <span class="text-[10px] font-bold text-[#C9A84C] bg-[#F5EDD8] px-2 py-0.5 rounded-full" x-text="records.length + ' entries'"></span>
+                    </div>
+                    <button @click="openAdd()"
+                            class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#C9A84C] hover:bg-[#b8963e] text-white text-xs font-semibold transition">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                        Add Record
+                    </button>
+                </div>
+
+                <!-- Empty state -->
+                <template x-if="records.length === 0">
+                    <div class="flex flex-col items-center justify-center bg-[#FAF6F0] rounded-2xl py-10 text-center">
+                        <svg class="w-10 h-10 text-gray-300 mb-3" fill="none" stroke="currentColor" stroke-width="1.25" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+                        <p class="text-sm text-gray-400 italic">No health records yet.</p>
+                        <p class="text-xs text-gray-300 mt-1">Click <span class="font-semibold">Add Record</span> to log the first entry.</p>
+                    </div>
+                </template>
+
+                <!-- Records table -->
+                <div x-show="records.length > 0" class="overflow-hidden rounded-2xl border border-[#E8E2D8]">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="bg-[#FAF6F0] border-b border-[#E8E2D8]">
+                                <th class="text-left text-[10px] tracking-widest text-gray-400 uppercase font-semibold px-4 py-2.5">Date</th>
+                                <th class="text-left text-[10px] tracking-widest text-gray-400 uppercase font-semibold px-4 py-2.5">Type</th>
+                                <th class="text-left text-[10px] tracking-widest text-gray-400 uppercase font-semibold px-4 py-2.5">Notes</th>
+                                <th class="text-left text-[10px] tracking-widest text-gray-400 uppercase font-semibold px-4 py-2.5">Clinic / Vet</th>
+                                <th class="text-left text-[10px] tracking-widest text-gray-400 uppercase font-semibold px-4 py-2.5">Volunteer</th>
+                                <th class="text-left text-[10px] tracking-widest text-gray-400 uppercase font-semibold px-4 py-2.5">Attachments</th>
+                                <th class="px-4 py-2.5"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template x-for="(rec, i) in records" :key="i">
+                                <tr class="border-b border-[#F0EBE3] last:border-0 hover:bg-[#FAF6F0] transition-colors">
+                                    <td class="px-4 py-3 whitespace-nowrap">
+                                        <p class="text-xs font-semibold text-gray-800"
+                                           x-text="rec.date ? new Date(rec.date).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}) : '—'"></p>
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap"
+                                              :class="typeBadge(rec.type)" x-text="rec.type || '—'"></span>
+                                    </td>
+                                    <td class="px-4 py-3 max-w-[180px]">
+                                        <p class="text-xs text-gray-500 italic leading-snug line-clamp-2"
+                                           x-text="rec.notes || '—'"></p>
+                                    </td>
+                                    <td class="px-4 py-3 whitespace-nowrap">
+                                        <p class="text-xs text-gray-700" x-text="rec.clinic || '—'"></p>
+                                    </td>
+                                    <td class="px-4 py-3 whitespace-nowrap">
+                                        <p class="text-xs text-gray-700" x-text="rec.vet || '—'"></p>
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        <template x-if="rec.files && rec.files.length > 0">
+                                            <div class="flex items-center gap-1 flex-wrap">
+                                                <template x-for="(f, fi) in rec.files" :key="fi">
+                                                    <div class="w-8 h-8 rounded-lg overflow-hidden border border-[#E8E2D8] bg-[#FAF6F0] flex items-center justify-center flex-shrink-0">
+                                                        <template x-if="f.type && f.type.startsWith('image/')">
+                                                            <button @click="openFile(f)" :title="f.name" class="block w-full h-full cursor-pointer">
+                                                                <img :src="f.url" class="w-full h-full object-cover">
+                                                            </button>
+                                                        </template>
+                                                        <template x-if="!f.type || !f.type.startsWith('image/')">
+                                                            <button @click="openFile(f)" :title="f.name" class="flex items-center justify-center w-full h-full cursor-pointer">
+                                                                <svg class="w-4 h-4 text-[#C9A84C]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+                                                            </button>
+                                                        </template>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </template>
+                                        <template x-if="!rec.files || rec.files.length === 0">
+                                            <p class="text-xs text-gray-400">—</p>
+                                        </template>
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        <div class="flex items-center gap-1.5 justify-end">
+<button @click="deleteIdx = i"
+                                                    class="w-6 h-6 rounded-full bg-red-100 hover:bg-red-200 text-red-500 flex items-center justify-center transition">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Add / Edit Modal -->
+                <div x-show="showForm" x-transition
+                     class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+                    <div @click.outside="showForm = false"
+                         class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
+                        <div class="flex items-center justify-between mb-5">
+                            <p class="text-sm font-bold text-gray-800" x-text="editIdx !== null ? 'Edit Health Record' : 'Add Health Record'"></p>
+                            <button @click="showForm = false" class="text-gray-400 hover:text-gray-600">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                            </button>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="text-[10px] tracking-widest text-gray-400 uppercase font-semibold block mb-1">Date <span class="text-red-400">*</span></label>
+                                    <input type="date" x-model="form.date" @click="$el.showPicker()"
+                                           class="w-full px-3 py-2 text-sm border border-[#E8E2D8] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#C9A84C] cursor-pointer">
+                                </div>
+                                <div>
+                                    <label class="text-[10px] tracking-widest text-gray-400 uppercase font-semibold block mb-1">Weight (kg)</label>
+                                    <input type="number" x-model="form.weight" min="0" step="0.01" placeholder="e.g. 4.2"
+                                           class="w-full px-3 py-2 text-sm border border-[#E8E2D8] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#C9A84C] placeholder-gray-300">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="text-[10px] tracking-widest text-gray-400 uppercase font-semibold block mb-1">Type <span class="text-red-400">*</span></label>
+                                <select x-model="form.type"
+                                        class="w-full px-3 py-2 text-sm border border-[#E8E2D8] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#C9A84C]">
+                                    <option value="">— Select type —</option>
+                                    <template x-if="form.type && !types.includes(form.type)">
+                                        <option :value="form.type" x-text="form.type"></option>
+                                    </template>
+                                    <template x-for="t in types" :key="t">
+                                        <option :value="t" x-text="t"></option>
+                                    </template>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-[10px] tracking-widest text-gray-400 uppercase font-semibold block mb-1">Clinic / Vet Centre</label>
+                                <input type="text" x-model="form.clinic" placeholder="e.g. PetCare Clinic KL"
+                                       class="w-full px-3 py-2 text-sm border border-[#E8E2D8] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#C9A84C] placeholder-gray-300">
+                            </div>
+                            <div>
+                                <label class="text-[10px] tracking-widest text-gray-400 uppercase font-semibold block mb-1">Attending Vet</label>
+                                <input type="text" x-model="form.vet" placeholder="e.g. Dr. Amirah"
+                                       class="w-full px-3 py-2 text-sm border border-[#E8E2D8] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#C9A84C] placeholder-gray-300">
+                            </div>
+                            <div>
+                                <label class="text-[10px] tracking-widests text-gray-400 uppercase font-semibold block mb-1">Notes</label>
+                                <textarea x-model="form.notes" rows="2" placeholder="Findings, medications prescribed, follow-up needed..."
+                                          class="w-full px-3 py-2 text-sm border border-[#E8E2D8] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#C9A84C] placeholder-gray-300 resize-none"></textarea>
+                            </div>
+                            <div>
+                                <label class="text-[10px] tracking-widest text-gray-400 uppercase font-semibold block mb-2">Attachments</label>
+                                <div class="flex flex-wrap gap-2">
+                                    <template x-for="(f, fi) in form.files" :key="fi">
+                                        <div class="relative w-16 h-16 rounded-xl overflow-hidden border border-[#E8E2D8] bg-[#FAF6F0] flex items-center justify-center group">
+                                            <template x-if="f.type && f.type.startsWith('image/')">
+                                                <img :src="f.url" class="w-full h-full object-cover">
+                                            </template>
+                                            <template x-if="!f.type || !f.type.startsWith('image/')">
+                                                <div class="flex flex-col items-center justify-center p-1 w-full">
+                                                    <svg class="w-5 h-5 text-[#C9A84C]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+                                                    <p class="text-[8px] text-gray-400 mt-0.5 truncate w-full text-center px-1" x-text="f.name"></p>
+                                                </div>
+                                            </template>
+                                            <button @click.prevent="removeFile(fi)"
+                                                    class="absolute top-0.5 right-0.5 w-4 h-4 bg-red-500 rounded-full text-white items-center justify-center hidden group-hover:flex">
+                                                <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                                            </button>
+                                        </div>
+                                    </template>
+                                    <label class="w-16 h-16 rounded-xl border-2 border-dashed border-[#E8E2D8] bg-[#FAF6F0] hover:border-[#C9A84C] hover:bg-[#F5EDD8] flex items-center justify-center cursor-pointer transition group">
+                                        <input type="file" class="hidden" multiple accept="image/*,.pdf" @change="handleFiles($event)">
+                                        <svg class="w-5 h-5 text-[#C9A84C] group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                                    </label>
+                                </div>
+                                <p class="text-[10px] text-gray-300 mt-1.5">Images or PDF accepted.</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-end gap-2 mt-5">
+                            <button @click="showForm = false"
+                                    class="px-4 py-2 text-xs font-semibold text-gray-500 border border-[#E8E2D8] rounded-xl hover:bg-gray-50 transition">
+                                Cancel
+                            </button>
+                            <button @click="save()" :disabled="!form.date || !form.type"
+                                    class="px-4 py-2 text-xs font-semibold text-white bg-[#C9A84C] hover:bg-[#b8963e] rounded-xl transition disabled:opacity-50">
+                                Save Record
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delete Confirmation -->
+                <div x-show="deleteIdx !== null" x-transition
+                     class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+                    <div @click.outside="deleteIdx = null"
+                         class="bg-white rounded-2xl shadow-xl w-full max-w-xs p-6 text-center">
+                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
+                        </div>
+                        <p class="text-sm font-bold text-gray-800 mb-1">Remove Health Record?</p>
+                        <p class="text-xs text-gray-400 mb-5" x-text="deleteIdx !== null && records[deleteIdx] ? records[deleteIdx].type + ' · ' + records[deleteIdx].date : ''"></p>
+                        <div class="flex gap-2">
+                            <button @click="deleteIdx = null"
+                                    class="flex-1 px-4 py-2 text-xs font-semibold text-gray-500 border border-[#E8E2D8] rounded-xl hover:bg-gray-50 transition">
+                                Cancel
+                            </button>
+                            <button @click="remove(deleteIdx)"
+                                    class="flex-1 px-4 py-2 text-xs font-semibold text-white bg-red-500 hover:bg-red-600 rounded-xl transition">
+                                Remove
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Health Examination -->
             <div class="bg-white rounded-2xl border border-[#E8E2D8] shadow-sm p-6"
                  x-data="healthRecordsData()">
                 <div class="flex items-center justify-between mb-5">
-                    <h2 class="text-base font-bold text-gray-800">Health Records</h2>
+                    <h2 class="text-base font-bold text-gray-800">Health Examination</h2>
                 </div>
 
                 @php
@@ -461,11 +769,18 @@ function catShowPage() {
                                             </template>
                                         </div>
                                     </div>
+                                    <button @click="askDone(item.title)"
+                                            :class="item.status === 'Done'
+                                                ? 'bg-green-500 text-white hover:bg-green-600'
+                                                : 'bg-green-100 text-green-600 hover:bg-green-500 hover:text-white'"
+                                            class="w-6 h-6 rounded-full flex items-center justify-center transition flex-shrink-0">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                                    </button>
                                     <button @click="openEdit(item)"
                                             class="w-6 h-6 rounded-full bg-[#F5EDD8] hover:bg-[#C9A84C] text-[#C9A84C] hover:text-white flex items-center justify-center transition flex-shrink-0">
                                         <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
                                     </button>
-                                    <button @click="remove(item.title)"
+                                    <button @click="askDelete(item.title)"
                                             class="w-6 h-6 rounded-full bg-red-100 hover:bg-red-200 text-red-500 flex items-center justify-center transition flex-shrink-0">
                                         <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                                     </button>
@@ -560,6 +875,72 @@ function catShowPage() {
                                 Save
                             </button>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Done Confirmation — inside healthRecordsData() scope -->
+                <div x-show="confirmDone" x-transition
+                     class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+                    <div @click.outside="confirmDone = null"
+                         class="bg-white rounded-2xl shadow-xl w-full max-w-xs p-6 text-center">
+                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                        </div>
+                        <p class="text-sm font-bold text-gray-800 mb-1">Mark as Done?</p>
+                        <p class="text-xs text-gray-400 mb-5" x-text="confirmDone"></p>
+                        <div class="flex gap-2">
+                            <button @click="confirmDone = null"
+                                    class="flex-1 px-4 py-2 text-xs font-semibold text-gray-500 border border-[#E8E2D8] rounded-xl hover:bg-gray-50 transition">
+                                Cancel
+                            </button>
+                            <button @click="tick()"
+                                    class="flex-1 px-4 py-2 text-xs font-semibold text-white bg-green-500 hover:bg-green-600 rounded-xl transition">
+                                Mark Done
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delete Confirmation — inside healthRecordsData() scope -->
+                <div x-show="confirmDelete" x-transition
+                     class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+                    <div @click.outside="confirmDelete = null"
+                         class="bg-white rounded-2xl shadow-xl w-full max-w-xs p-6 text-center">
+                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
+                        </div>
+                        <p class="text-sm font-bold text-gray-800 mb-1">Remove Examination?</p>
+                        <p class="text-xs text-gray-400 mb-5" x-text="confirmDelete"></p>
+                        <div class="flex gap-2">
+                            <button @click="confirmDelete = null"
+                                    class="flex-1 px-4 py-2 text-xs font-semibold text-gray-500 border border-[#E8E2D8] rounded-xl hover:bg-gray-50 transition">
+                                Cancel
+                            </button>
+                            <button @click="remove(confirmDelete)"
+                                    class="flex-1 px-4 py-2 text-xs font-semibold text-white bg-red-500 hover:bg-red-600 rounded-xl transition">
+                                Remove
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Toast — inside healthRecordsData() scope -->
+                <div x-show="toastVisible" x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 translate-y-2"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     x-transition:leave="transition ease-in duration-150"
+                     x-transition:leave-start="opacity-100 translate-y-0"
+                     x-transition:leave-end="opacity-0 translate-y-2"
+                     class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] pointer-events-none">
+                    <div class="flex items-center gap-2.5 px-5 py-3 rounded-2xl shadow-lg text-sm font-semibold"
+                         :class="toastType === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'">
+                        <template x-if="toastType === 'success'">
+                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                        </template>
+                        <template x-if="toastType === 'error'">
+                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </template>
+                        <span x-text="toastMsg"></span>
                     </div>
                 </div>
 
@@ -693,6 +1074,29 @@ function catShowPage() {
                 <button @click="saveSection(notesFields)" :disabled="sectionSaving"
                         class="px-4 py-2 text-xs font-semibold text-white bg-[#C9A84C] hover:bg-[#b8963e] rounded-xl transition disabled:opacity-60">
                     <span x-text="sectionSaving ? 'Saving…' : 'Save'"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cat Delete Confirmation Modal -->
+    <div x-show="catDeleteConfirm" x-transition
+         class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+        <div @click.outside="catDeleteConfirm = false"
+             class="bg-white rounded-2xl shadow-xl w-full max-w-xs p-6 text-center">
+            <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
+            </div>
+            <p class="text-sm font-bold text-gray-800 mb-1">Delete Cat Profile?</p>
+            <p class="text-xs text-gray-400 mb-5">This will permanently remove <span class="font-semibold text-gray-600">{{ $cat->name }}</span> and all associated records.</p>
+            <div class="flex gap-2">
+                <button @click="catDeleteConfirm = false"
+                        class="flex-1 px-4 py-2 text-xs font-semibold text-gray-500 border border-[#E8E2D8] rounded-xl hover:bg-gray-50 transition">
+                    Cancel
+                </button>
+                <button @click="catDeleteConfirm = false; document.getElementById('cat-delete-form').submit()"
+                        class="flex-1 px-4 py-2 text-xs font-semibold text-white bg-red-500 hover:bg-red-600 rounded-xl transition">
+                    Delete
                 </button>
             </div>
         </div>

@@ -11,6 +11,8 @@ class Donation extends Model
 
     protected $fillable = [
         'user_id',
+        'cat_id',
+        'type',
         'amount',
         'payment_method',
         'status',
@@ -20,5 +22,10 @@ class Donation extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function cat()
+    {
+        return $this->belongsTo(Cat::class);
     }
 }
