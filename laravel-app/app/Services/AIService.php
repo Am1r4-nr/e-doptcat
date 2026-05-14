@@ -5,7 +5,7 @@ namespace App\Services;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class OpenRouterAIService
+class AIService
 {
     private $apiUrl = 'https://api.groq.com/openai/v1/chat/completions';
     private $model = 'llama-3.3-70b-versatile';

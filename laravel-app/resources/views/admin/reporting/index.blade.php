@@ -135,13 +135,13 @@
             <!-- Legend (Floating) -->
             <div class="absolute bottom-6 left-6 z-[999] bg-white/90 backdrop-blur-md border border-amber-100 rounded-2xl p-5 shadow-xl text-xs space-y-2.5">
                 <p class="font-bold text-gray-400 uppercase tracking-widest text-[10px] mb-2">Status Key</p>
-                <div class="flex items-center gap-2.5"><span class="w-3.5 h-3.5 rounded-full bg-green-500 shadow-sm border-2 border-white"></span><span class="font-semibold text-gray-700">Healthy</span></div>
-                <div class="flex items-center gap-2.5"><span class="w-3.5 h-3.5 rounded-full bg-orange-400 shadow-sm border-2 border-white"></span><span class="font-semibold text-gray-700">Recovering</span></div>
-                <div class="flex items-center gap-2.5"><span class="w-3.5 h-3.5 rounded-full bg-red-500 shadow-sm border-2 border-white"></span><span class="font-semibold text-gray-700">Attention Needed</span></div>
+                <div class="flex items-center gap-2.5"><span class="w-3.5 h-3.5 rounded-full bg-green-500 shadow-sm border-2 border-white"></span><span class="font-semibold text-gray-700">Available</span></div>
+                <div class="flex items-center gap-2.5"><span class="w-3.5 h-3.5 rounded-full bg-orange-500 shadow-sm border-2 border-white"></span><span class="font-semibold text-gray-700">Pending</span></div>
+                <div class="flex items-center gap-2.5"><span class="w-3.5 h-3.5 rounded-full bg-blue-500 shadow-sm border-2 border-white"></span><span class="font-semibold text-gray-700">Adopted</span></div>
             </div>
         </div>
 
-        <!-- Sidebar (Same as User Tracker) -->
+        <!-- Sidebar -->
         <div class="w-full lg:w-80 flex flex-col bg-white border-l border-amber-50">
             <div class="p-6 border-b border-amber-50 bg-[#FAF6F0]/20">
                 <h3 class="font-serif font-bold text-lg text-amber-900 mb-3">Cat Directory</h3>
@@ -155,17 +155,19 @@
                     <div @click="focusCat(cat)" class="flex items-center gap-4 px-6 py-5 hover:bg-amber-50/50 cursor-pointer transition-all group border-l-4 border-transparent hover:border-amber-500">
                         <div class="relative flex-shrink-0">
                             <img :src="cat.image_url" class="w-14 h-14 rounded-2xl object-cover shadow-md ring-2 ring-white group-hover:ring-amber-200 transition-all duration-300">
-                            <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white shadow-sm" :class="statusColor(cat.health_status)"></span>
+                            <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white shadow-sm" :class="statusColor(cat.status)"></span>
                         </div>
                         <div class="flex-1 min-w-0">
                             <div class="flex justify-between items-start mb-0.5">
                                 <h4 class="text-lg font-serif font-bold text-gray-800 truncate group-hover:text-amber-700 transition-colors" x-text="cat.name"></h4>
-                                <span class="inline-block px-1.5 py-0.5 bg-red-100 text-red-600 text-[8px] font-bold uppercase rounded-full animate-pulse">🔴 LIVE</span>
+                                <template x-if="cat.gps_live">
+                                    <span class="inline-block px-1.5 py-0.5 bg-red-100 text-red-600 text-[8px] font-bold uppercase rounded-full animate-pulse">🔴 LIVE GPS</span>
+                                </template>
                             </div>
                             <p class="text-xs text-gray-500 truncate mb-2" x-text="cat.breed"></p>
                             <div class="flex items-center gap-1.5">
-                                <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-tighter" x-text="cat.location_name || 'Sanctuary Grounds'"></span>
+                                <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest" x-text="formatDate(cat.updated_at)"></span>
                             </div>
                         </div>
                     </div>
@@ -207,7 +209,7 @@ function reportingMap() {
 
         initMap() {
             const firstCat = this.cats[0];
-            const center = firstCat ? [firstCat.gps_lat, firstCat.gps_lng] : [3.1390, 101.6869];
+            const center = firstCat ? [firstCat.gps_lat, firstCat.gps_lng] : [3.2535, 101.7323];
             
             this.map = L.map('reporting-map', { zoomControl: false }).setView(center, 15);
             L.control.zoom({ position: 'bottomright' }).addTo(this.map);
@@ -224,22 +226,37 @@ function reportingMap() {
             this.markers = [];
 
             this.cats.forEach(cat => {
-                const color = this.hexColor(cat.health_status);
+                let colorName = 'green';
+                if (cat.status === 'Pending') colorName = 'orange'; 
+                if (cat.status === 'Adopted') colorName = 'blue';
+                if (!['Available', 'Pending', 'Adopted'].includes(cat.status)) colorName = 'red';
+
+                const colorCode = this.hexColor(colorName);
+                
                 const icon = L.divIcon({
-                    className: 'custom-div-icon',
-                    html: `<div style="background-color:${color}; width:16px; height:16px; border-radius:50%; border:3px solid white; box-shadow:0 2px 10px rgba(0,0,0,0.2);"></div>`,
-                    iconSize: [16, 16],
-                    iconAnchor: [8, 8]
+                    className: 'custom-pin',
+                    html: `<div style="background-color:${colorCode}; width:20px; height:20px; border-radius:50%; border:3px solid white; box-shadow:0 2px 10px rgba(0,0,0,0.2);"></div>`,
+                    iconSize: [20, 20],
+                    iconAnchor: [10, 10]
                 });
 
                 const marker = L.marker([cat.gps_lat, cat.gps_lng], { icon }).addTo(this.map);
                 
                 const popupContent = `
-                    <div class="text-center p-3 w-44">
-                        <img src="${cat.image_url}" class="w-16 h-16 rounded-full object-cover mx-auto mb-3 border-2 border-amber-200">
-                        <h4 class="font-bold text-gray-800 text-sm mb-1">${cat.name}</h4>
-                        <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold text-white mb-2" style="background:${color}">${cat.health_status || 'Healthy'}</span>
-                        <div class="text-[10px] text-gray-400">Last seen: ${cat.location_name || 'Just now'}</div>
+                    <div class="text-center p-3 min-w-[160px]">
+                        <div class="w-16 h-16 rounded-full overflow-hidden mx-auto mb-3 border-2 shadow-sm" style="border-color: ${colorCode}">
+                            <img src="${cat.image_url}" class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="font-serif font-bold text-lg text-gray-800 leading-tight mb-1">${cat.name}</h3>
+                        ${cat.gps_live ? '<span class="inline-block px-2 py-0.5 bg-red-100 text-red-600 text-[9px] font-bold uppercase rounded-full mb-2 animate-pulse">🔴 LIVE GPS</span>' : ''}
+                        <div class="mb-2">
+                            <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide text-white" style="background-color: ${colorCode}">${cat.status || 'Available'}</span>
+                        </div>
+                        ${cat.gps_battery ? `<div class="text-xs text-gray-600 mt-1 font-bold">🔋 Battery: ${cat.gps_battery}%</div>` : ''}
+                        <div class="text-[10px] text-gray-500 mt-1">Last seen: ${this.formatDate(cat.updated_at)}</div>
+                        <div class="mt-3">
+                            <a href="/admin/cats/${cat.id}" class="inline-block w-full py-1.5 bg-gray-800 hover:bg-amber-600 text-white text-[10px] font-bold rounded-lg transition-colors">View Details</a>
+                        </div>
                     </div>
                 `;
                 
@@ -250,7 +267,6 @@ function reportingMap() {
 
         focusCat(cat) {
             this.map.flyTo([cat.gps_lat, cat.gps_lng], 17, { duration: 1.5 });
-            // Find marker and open popup
             const marker = this.markers.find(m => m.getLatLng().lat == cat.gps_lat && m.getLatLng().lng == cat.gps_lng);
             if (marker) marker.openPopup();
         },
@@ -266,15 +282,27 @@ function reportingMap() {
         },
 
         statusColor(status) {
-            if (status === 'Recovering') return 'bg-orange-400';
-            if (status === 'Attention Needed') return 'bg-red-500';
+            if (status === 'Pending') return 'bg-orange-500';
+            if (status === 'Adopted') return 'bg-blue-500';
+            if (!['Available', 'Pending', 'Adopted'].includes(status)) return 'bg-red-500';
             return 'bg-green-500';
         },
 
-        hexColor(status) {
-            if (status === 'Recovering') return '#fb923c';
-            if (status === 'Attention Needed') return '#ef4444';
-            return '#22c55e';
+        hexColor(name) {
+            const colors = {
+                'green': '#22c55e',
+                'orange': '#f97316',
+                'blue': '#3b82f6',
+                'red': '#ef4444'
+            };
+            return colors[name] || '#9ca3af';
+        },
+
+        formatDate(dateString) {
+            if (!dateString) return 'Unknown';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ', ' +
+                date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
         }
     }
 }
