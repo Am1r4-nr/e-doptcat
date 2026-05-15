@@ -46,6 +46,9 @@
                             <a href="{{ route('admin.donations.index') }}" class="text-gray-300 hover:text-white px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.donations.*') ? 'text-white border-b-2 border-blue-500' : '' }}">
                                 Donations
                             </a>
+                            <a href="{{ route('admin.calendar.index') }}" class="text-gray-300 hover:text-white px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.calendar.*') ? 'text-white border-b-2 border-blue-500' : '' }}">
+                                Calendar
+                            </a>
                         </div>
                     </div>
 

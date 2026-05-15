@@ -18,6 +18,9 @@ use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\ReportingController;
 use App\Http\Controllers\Admin\DonationManagementController;
 use App\Http\Controllers\Admin\MessageController;
+use App\Http\Controllers\Admin\IncidentManagementController;
+use App\Http\Controllers\Admin\MessageManagementController;
+use App\Http\Controllers\Admin\CalendarManagementController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', App\Http\Controllers\HomeController::class)->name('home');

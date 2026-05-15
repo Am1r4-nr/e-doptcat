@@ -77,59 +77,93 @@ class CatController extends Controller
     private function getAiMatchScores($cats, $preferences)
     {
         try {
-            $apiUrl = config('services.ai_matcher.url');
+            $openaiService = new OpenAIService();
             
-            // Prepare cat data
-            $catData = $cats->map(function ($cat) {
-                return [
-                    'id' => $cat->id,
-                    'name' => $cat->name,
-                    'personality' => $cat->personality ?? 'friendly',
-                    'health_status' => $cat->health_status ?? 'Healthy',
-                    'size' => $cat->size ?? 'Medium',
-                    'energy_level' => $this->getEnergyLevel($cat),
-                    'temperament_score' => $this->getTemperamentScore($cat),
-                ];
-            })->toArray();
+            // Build user preference description
+            $prefDescription = $this->buildPreferenceDescription($preferences);
             
-            // Call batch prediction API
-            $response = Http::post("{$apiUrl}/api/predict-batch", [
-                'user_prefs' => $preferences,
-                'cats' => $catData,
-            ]);
+            // Get AI personality recommendations
+            $recommendations = $openaiService->matchCatsToProfile($prefDescription);
+            $suitablePersonalities = $recommendations['personalities'] ?? [];
             
-            if ($response->successful()) {
-                $results = $response->json('results', []);
+            // Score each cat based on personality match
+            foreach ($cats as $cat) {
+                $catPersonality = strtolower($cat->personality ?? $cat->behavior ?? '');
+                $matchScore = 70; // Base score
                 
-                // Map results back to cats
-                foreach ($cats as $cat) {
-                    $match = collect($results)->firstWhere('cat_id', $cat->id);
-                    $cat->ai_match_score = $match['match_score'] ?? rand(70, 99);
+                // Check if cat personality matches recommended personalities
+                foreach ($suitablePersonalities as $personality) {
+                    if (stripos($catPersonality, strtolower($personality)) !== false || 
+                        stripos($personality, $catPersonality) !== false) {
+                        $matchScore = 85;
+                        break;
+                    }
                 }
-            } else {
-                // Fallback to default scores if API fails
-                Log::warning('AI Matcher API failed', [
-                    'status' => $response->status(),
-                    'error' => $response->body(),
-                ]);
-                foreach ($cats as $cat) {
-                    $cat->ai_match_score = rand(70, 99);
+                
+                // Adjust based on other factors
+                if ($preferences['experience'] == 'first_time' && $cat->medical_history) {
+                    $matchScore -= 10; // Less suitable for first-timers if medical history exists
                 }
+                
+                if ($preferences['activity'] == 'little' && $this->getEnergyLevel($cat) == 'High') {
+                    $matchScore -= 5; // Less suitable for active cats
+                }
+                
+                if ($preferences['budget'] == 'limited' && $cat->medical_history) {
+                    $matchScore -= 10; // Medical needs cost more
+                }
+                
+                $cat->ai_match_score = max(60, min(99, $matchScore)); // Clamp between 60-99
+                $cat->match_reason = $this->generateMatchReason($cat, $preferences);
             }
             
             return $cats;
         } catch (\Exception $e) {
-            Log::error('Error calling AI Matcher API', [
+            Log::error('Error with OpenAI matching', [
                 'error' => $e->getMessage(),
             ]);
             
             // Fallback to default scores
             foreach ($cats as $cat) {
-                $cat->ai_match_score = rand(70, 99);
+                $cat->ai_match_score = rand(70, 85);
+                $cat->match_reason = 'AI matching unavailable, showing available cats';
             }
             
             return $cats;
         }
+    }
+    
+    private function buildPreferenceDescription($preferences)
+    {
+        $lifestyle = $preferences['lifestyle'] ?? '';
+        $budget = $preferences['budget'] ?? '';
+        $home = $preferences['home_env'] ?? '';
+        $activity = $preferences['activity'] ?? '';
+        $experience = $preferences['experience'] ?? '';
+        
+        return "I have a $lifestyle lifestyle, live in a $home, can spend $budget monthly on cat care, have $activity time for playtime daily, and I am $experience with cats.";
+    }
+    
+    private function generateMatchReason($cat, $preferences)
+    {
+        $reasons = [];
+        
+        $energy = $this->getEnergyLevel($cat);
+        if ($preferences['activity'] == 'little' && $energy == 'Low') {
+            $reasons[] = "Low energy matches your schedule";
+        } elseif ($preferences['activity'] == 'lots' && $energy == 'High') {
+            $reasons[] = "High energy matches your active lifestyle";
+        }
+        
+        if (!$cat->medical_history && $preferences['budget'] == 'limited') {
+            $reasons[] = "Healthy cat suits your budget";
+        }
+        
+        if ($preferences['experience'] == 'experienced' && $cat->medical_history) {
+            $reasons[] = "You can handle special needs";
+        }
+        
+        return count($reasons) > 0 ? implode(", ", $reasons) : "Good match for you";
     }
     
     private function getEnergyLevel($cat)
