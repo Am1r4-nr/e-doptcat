@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cat;
-use App\Services\OpenRouterAIService;
+use App\Services\AIService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
@@ -13,7 +13,7 @@ class CatManagementController extends Controller
 {
     private $nvidiaService;
 
-    public function __construct(OpenRouterAIService $nvidiaService)
+    public function __construct(AIService $nvidiaService)
     {
         $this->nvidiaService = $nvidiaService;
     }

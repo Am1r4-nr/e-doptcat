@@ -4,7 +4,7 @@ $app = require_once __DIR__.'/bootstrap/app.php';
 $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
 $kernel->bootstrap();
 
-$service = app(App\Services\OpenRouterAIService::class);
+$service = app(App\Services\AIService::class);
 $cats = App\Models\Cat::all();
 foreach ($cats as $cat) {
     echo "Processing " . $cat->name . "...\n";
