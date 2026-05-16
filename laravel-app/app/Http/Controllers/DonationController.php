@@ -85,7 +85,10 @@ class DonationController extends Controller
                 \Log::warning('Stripe session status not paid', ['status' => $session->payment_status]);
             }
 
-            return view('donations.index')->with('success', 'Thank you for your generous RM ' . $session->metadata->amount . ' donation! Your support makes a real difference.');
+            return view('donations.success', [
+                'amount' => $session->metadata->amount,
+                'transaction_id' => $session->id
+            ]);
 
         } catch (\Exception $e) {
             \Log::error('Error processing donation success', ['message' => $e->getMessage()]);
