@@ -255,7 +255,7 @@ function catShowPage() {
                         <div class="flex justify-between items-center border-b border-[#F0EBE3] pb-2">
                             <span class="text-sm text-gray-500">Age</span>
                             <span class="text-sm font-semibold text-gray-800">
-                                {{ $cat->age ? $cat->age . ' ' . Str::plural('Year', $cat->age) : '—' }}
+                                {{ $cat->age ? (is_numeric($cat->age) ? "{$cat->age} " . Str::plural('Year', (int)$cat->age) : $cat->age) : '—' }}
                             </span>
                         </div>
                         <div class="flex justify-between items-center border-b border-[#F0EBE3] pb-2">
