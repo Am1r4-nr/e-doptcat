@@ -31,7 +31,7 @@
             <div class="bg-white rounded-[28px] p-7 flex items-center justify-between shadow-[0_2px_15px_-5px_rgba(0,0,0,0.05)] border border-[#F0EBE3]">
                 <div>
                     <div class="text-[12px] font-bold text-gray-500 tracking-widest mb-1 uppercase">ACTIVE VOLUNTEERS</div>
-                    <div class="text-4xl font-bold text-amber-850">48</div>
+                    <div class="text-4xl font-bold text-amber-850" x-text="volunteers.filter(v => v.status === 'APPROVED').length"></div>
                 </div>
                 <div class="w-14 h-14 rounded-full bg-[#FAF6F0] flex items-center justify-center text-amber-850">
                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
@@ -40,7 +40,7 @@
             <div class="bg-white rounded-[28px] p-7 flex items-center justify-between shadow-[0_2px_15px_-5px_rgba(0,0,0,0.05)] border border-[#F0EBE3]">
                 <div>
                     <div class="text-[12px] font-bold text-gray-500 tracking-widest mb-1 uppercase">PENDING APPLICATIONS</div>
-                    <div class="text-4xl font-bold text-[#C9A84C]">12</div>
+                    <div class="text-4xl font-bold text-[#C9A84C]" x-text="volunteers.filter(v => v.status === 'PENDING').length"></div>
                 </div>
                 <div class="w-14 h-14 rounded-full bg-[#FAF6F0] flex items-center justify-center text-[#C9A84C]">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
@@ -49,7 +49,7 @@
             <div class="bg-white rounded-[28px] p-7 flex items-center justify-between shadow-[0_2px_15px_-5px_rgba(0,0,0,0.05)] border border-[#F0EBE3]">
                 <div>
                     <div class="text-[12px] font-bold text-gray-500 tracking-widest mb-1 uppercase">ON-BOARDING</div>
-                    <div class="text-4xl font-bold text-amber-850">5</div>
+                    <div class="text-4xl font-bold text-amber-850" x-text="volunteers.filter(v => v.status === 'INTERVIEWING').length"></div>
                 </div>
                 <div class="w-14 h-14 rounded-full bg-[#FAF6F0] flex items-center justify-center text-amber-850">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>

@@ -37,7 +37,13 @@ class VolunteerController extends Controller
             ];
         });
 
-        return view('admin.volunteers.index', compact('volunteers'));
+        $stats = [
+            'active'      => Volunteer::where('status', 'APPROVED')->count(),
+            'pending'     => Volunteer::where('status', 'PENDING')->count(),
+            'onboarding'  => Volunteer::where('status', 'INTERVIEWING')->count(),
+        ];
+
+        return view('admin.volunteers.index', compact('volunteers', 'stats'));
     }
 
     public function store(Request $request)
