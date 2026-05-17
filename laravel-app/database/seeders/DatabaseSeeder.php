@@ -35,6 +35,9 @@ class DatabaseSeeder extends Seeder
         $this->call(AHCCatSeeder::class);
         $this->call(CatsSeeder::class);
 
+        // Seed volunteers
+        $this->call(VolunteerSeeder::class);
+
         // Event::factory(10)->create();
 
         // Create reports tied to random users
