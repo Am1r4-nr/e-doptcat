@@ -1,14 +1,19 @@
-﻿<x-admin-layout>
+<x-admin-layout>
 
-<div class="mb-8 flex items-center gap-4">
-    <a href="{{ route('admin.events.index') }}" class="text-gray-400 hover:text-[#C9A84C] transition">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
-        </svg>
-    </a>
-    <div>
-        <h1 class="text-3xl font-cabinet font-semibold text-gray-800">Edit Event</h1>
-        <p class="text-sm text-gray-400 mt-0.5">{{ $event->title }}</p>
+<div class="flex items-center justify-between mb-7 bg-[#3D3D3D] rounded-2xl px-5 py-3 shadow-sm">
+    <div class="flex items-center gap-3">
+        <a href="{{ route('admin.events.index') }}"
+           class="w-8 h-8 flex items-center justify-center rounded-lg text-[#9A9A9A] hover:bg-[#4A4A4A] hover:text-white transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
+            </svg>
+        </a>
+        <div class="w-px h-4 bg-[#555555]"></div>
+        <p class="text-xs tracking-widest text-[#C9A84C] uppercase font-semibold">Events</p>
+        <span class="text-sm text-[#555555]">·</span>
+        <p class="text-sm font-semibold text-white">Edit Event</p>
+        <span class="text-sm text-[#555555]">·</span>
+        <p class="text-xs text-[#9A9A9A]">{{ $event->title }}</p>
     </div>
 </div>
 
