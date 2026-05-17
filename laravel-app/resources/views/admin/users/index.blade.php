@@ -672,7 +672,7 @@ function staffApp() {
             }
             this.showAddStaff = false;
         },
-        volunteers: [],
+        volunteers: @json($volunteers),
     };
 }
 </script>

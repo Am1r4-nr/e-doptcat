@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Volunteer;
 use Illuminate\Http\Request;
 
 class UserManagementController extends Controller
@@ -16,7 +17,18 @@ class UserManagementController extends Controller
             'admins'  => User::where('role', 'admin')->count(),
             'members' => User::where('role', 'user')->count(),
         ];
-        return view('admin.users.index', compact('users', 'stats'));
+        $volunteers = Volunteer::orderBy('created_at', 'desc')->get()
+            ->map(fn($v) => [
+                'id'           => $v->id,
+                'name'         => $v->name,
+                'matric'       => $v->matric ?? '',
+                'email'        => $v->email ?? '',
+                'phone'        => $v->phone ?? '',
+                'program'      => $v->program ?? '',
+                'availability' => $v->availability ?? '',
+                'status'       => $v->status,
+            ]);
+        return view('admin.users.index', compact('users', 'stats', 'volunteers'));
     }
 
     public function show(User $user)
