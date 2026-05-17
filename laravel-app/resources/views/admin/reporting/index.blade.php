@@ -3,7 +3,7 @@
 <!-- Page Header -->
 <div class="mb-6 flex items-start justify-between">
     <div>
-        <h1 class="text-3xl font-serif font-semibold text-gray-800">Reporting Hub</h1>
+        <h1 class="text-3xl font-cabinet font-semibold text-gray-800">Reporting Hub</h1>
         <p class="text-sm text-gray-400 mt-1">Review and manage sanctuary reports</p>
     </div>
 </div>
@@ -14,8 +14,8 @@
 <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
 <!-- Lost & Found Reports -->
-<div class="bg-white rounded-2xl shadow-sm border border-amber-100 overflow-hidden mt-6">
-    <div class="px-6 py-4 border-b border-amber-100 flex items-center justify-between">
+<div class="bg-white rounded-2xl shadow-sm border border-[#E8E2D8] overflow-hidden mt-6">
+    <div class="px-6 py-4 border-b border-[#E8E2D8] flex items-center justify-between">
         <div>
             <p class="text-base font-semibold text-gray-800">Lost &amp; Found Reports</p>
             <p class="text-xs text-gray-400 mt-0.5">Review and manage lost and found cat reports</p>
@@ -23,15 +23,15 @@
     </div>
 
     <!-- Filters -->
-    <div class="px-6 py-3 border-b border-amber-50 flex items-center gap-3">
+    <div class="px-6 py-3 border-b border-[#F0EBE3] flex items-center gap-3">
         <select id="lfFilter"
-                class="text-sm text-gray-600 bg-[#FAF6F0] border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-amber-300 min-w-[130px]">
+                class="text-sm text-gray-600 bg-[#FAF6F0] border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-[#C9A84C] min-w-[130px]">
             <option value="">All Reports</option>
             <option value="Lost">Lost</option>
             <option value="Found">Found</option>
         </select>
         <input id="lfSearch" type="text" placeholder="Search by name, location..."
-               class="flex-1 max-w-sm text-sm bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-amber-300 placeholder-gray-400">
+               class="flex-1 max-w-sm text-sm bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-[#C9A84C] placeholder-gray-400">
     </div>
 
     <div class="overflow-x-auto">
@@ -69,10 +69,10 @@
                         </td>
                         <td class="px-4 py-3.5">
                             <p class="font-semibold text-gray-800 text-sm">{{ $reporter }}</p>
-                            <p class="text-xs text-amber-500 mt-0.5">{{ $contact }}</p>
+                            <p class="text-xs text-[#C9A84C] mt-0.5">{{ $contact }}</p>
                         </td>
                         <td class="px-4 py-3.5 text-sm text-gray-600">{{ $r->location ?? '—' }}</td>
-                        <td class="px-4 py-3.5 text-sm text-amber-600 whitespace-nowrap">{{ $r->created_at->format('M d, Y') }}</td>
+                        <td class="px-4 py-3.5 text-sm text-[#C9A84C] whitespace-nowrap">{{ $r->created_at->format('M d, Y') }}</td>
                         <td class="px-4 py-3.5">
                             <span class="text-xs font-medium px-2.5 py-1 rounded-full border {{ $isResolved ? 'border-gray-300 text-gray-500 bg-gray-50' : 'border-gray-300 text-gray-600 bg-white' }}">
                                 {{ $isResolved ? 'Resolved' : 'Active' }}
@@ -99,7 +99,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="px-6 py-10 text-center text-sm text-gray-400 italic font-serif">
+                        <td colspan="7" class="px-6 py-10 text-center text-sm text-gray-400 italic font-cabinet">
                             No lost or found reports yet.
                         </td>
                     </tr>
@@ -140,7 +140,6 @@
                 <div class="flex items-center gap-2.5"><span class="w-3.5 h-3.5 rounded-full bg-blue-500 shadow-sm border-2 border-white"></span><span class="font-semibold text-gray-700">Adopted</span></div>
             </div>
         </div>
-
         <!-- Sidebar -->
         <div class="w-full lg:w-80 flex flex-col bg-white border-l border-amber-50">
             <div class="p-6 border-b border-amber-50 bg-[#FAF6F0]/20">

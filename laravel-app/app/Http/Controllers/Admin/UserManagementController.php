@@ -10,8 +10,13 @@ class UserManagementController extends Controller
 {
     public function index()
     {
-        $users = User::paginate(15);
-        return view('admin.users.index', compact('users'));
+        $users = User::latest()->paginate(15);
+        $stats = [
+            'total'   => User::count(),
+            'admins'  => User::where('role', 'admin')->count(),
+            'members' => User::where('role', 'user')->count(),
+        ];
+        return view('admin.users.index', compact('users', 'stats'));
     }
 
     public function show(User $user)

@@ -1,12 +1,12 @@
-<x-admin-layout>
+﻿<x-admin-layout>
 <div class="max-w-6xl mx-auto">
 
     <!-- Header -->
     <div class="mb-8 flex items-center gap-4">
-        <a href="{{ route('admin.cats.index') }}" class="text-gray-400 hover:text-amber-600 transition text-lg">←</a>
+        <a href="{{ route('admin.cats.index') }}" class="text-gray-400 hover:text-[#C9A84C] transition text-lg">←</a>
         <div>
-            <p class="text-[10px] tracking-widest text-amber-500 uppercase font-semibold">New Entry</p>
-            <h1 class="text-3xl font-serif font-semibold text-gray-800">Register New Feline</h1>
+            <p class="text-[10px] tracking-widest text-[#C9A84C] uppercase font-semibold">New Entry</p>
+            <h1 class="text-3xl font-cabinet font-semibold text-gray-800">Register New Feline</h1>
             <p class="text-sm text-gray-400 mt-1">Expand the e-Doptcat family. Fill in the details below<br>to curate a new digital profile for our latest companion.</p>
         </div>
     </div>
@@ -17,7 +17,7 @@
         <div class="col-span-3">
             <form action="{{ route('admin.cats.store') }}" method="POST" enctype="multipart/form-data" id="catForm">
                 @csrf
-                <div class="bg-white rounded-2xl border border-amber-100 shadow-sm p-7 space-y-5">
+                <div class="bg-white rounded-2xl border border-[#E8E2D8] shadow-sm p-7 space-y-5">
 
                     <!-- Name + Breed -->
                     <div class="grid grid-cols-2 gap-4">
@@ -29,7 +29,7 @@
                             <input type="text" name="name" id="previewName" value="{{ old('name') }}" required
                                 placeholder="e.g. Whiskers"
                                 oninput="updatePreview()"
-                                class="w-full px-4 py-2.5 text-sm bg-[#FAF6F0] border border-amber-100 rounded-xl focus:outline-none focus:ring-1 focus:ring-amber-300 @error('name') border-red-300 @enderror">
+                                class="w-full px-4 py-2.5 text-sm bg-[#FAF6F0] border border-[#E8E2D8] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#C9A84C] @error('name') border-red-300 @enderror">
                             @error('name')<p class="mt-1 text-xs text-red-500">{{ $message }}</p>@enderror
                         </div>
                         <div>
@@ -40,7 +40,7 @@
                             <input type="text" name="breed" id="previewBreed" value="{{ old('breed') }}" required
                                 placeholder="e.g. Maine Coon"
                                 oninput="updatePreview()"
-                                class="w-full px-4 py-2.5 text-sm bg-[#FAF6F0] border border-amber-100 rounded-xl focus:outline-none focus:ring-1 focus:ring-amber-300 @error('breed') border-red-300 @enderror">
+                                class="w-full px-4 py-2.5 text-sm bg-[#FAF6F0] border border-[#E8E2D8] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#C9A84C] @error('breed') border-red-300 @enderror">
                             @error('breed')<p class="mt-1 text-xs text-red-500">{{ $message }}</p>@enderror
                         </div>
                     </div>
@@ -55,7 +55,7 @@
                             <input type="text" name="color" id="previewColor" value="{{ old('color') }}"
                                 placeholder="Calico"
                                 oninput="updatePreview()"
-                                class="w-full px-4 py-2.5 text-sm bg-[#FAF6F0] border border-amber-100 rounded-xl focus:outline-none focus:ring-1 focus:ring-amber-300">
+                                class="w-full px-4 py-2.5 text-sm bg-[#FAF6F0] border border-[#E8E2D8] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#C9A84C]">
                         </div>
                         <div>
                             <label class="flex items-center gap-1.5 text-xs font-semibold text-gray-500 mb-1.5">
@@ -64,7 +64,7 @@
                             </label>
                             <input type="number" name="age" value="{{ old('age') }}" required min="0"
                                 placeholder="2"
-                                class="w-full px-4 py-2.5 text-sm bg-[#FAF6F0] border border-amber-100 rounded-xl focus:outline-none focus:ring-1 focus:ring-amber-300 @error('age') border-red-300 @enderror">
+                                class="w-full px-4 py-2.5 text-sm bg-[#FAF6F0] border border-[#E8E2D8] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#C9A84C] @error('age') border-red-300 @enderror">
                             @error('age')<p class="mt-1 text-xs text-red-500">{{ $message }}</p>@enderror
                         </div>
                         <div>
@@ -73,7 +73,7 @@
                                 Status
                             </label>
                             <select name="status" required
-                                class="w-full px-4 py-2.5 text-sm bg-[#FAF6F0] border border-amber-100 rounded-xl focus:outline-none focus:ring-1 focus:ring-amber-300 @error('status') border-red-300 @enderror">
+                                class="w-full px-4 py-2.5 text-sm bg-[#FAF6F0] border border-[#E8E2D8] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#C9A84C] @error('status') border-red-300 @enderror">
                                 <option value="Available" {{ old('status') === 'Available' ? 'selected' : '' }}>Available</option>
                                 <option value="Adopted"   {{ old('status') === 'Adopted'   ? 'selected' : '' }}>Adopted</option>
                                 <option value="Lost"      {{ old('status') === 'Lost'      ? 'selected' : '' }}>Lost</option>
@@ -90,7 +90,7 @@
                         </label>
                         <textarea name="description" rows="3"
                             placeholder="A brief personality and background note..."
-                            class="w-full px-4 py-2.5 text-sm bg-[#FAF6F0] border border-amber-100 rounded-xl focus:outline-none focus:ring-1 focus:ring-amber-300 resize-none">{{ old('description') }}</textarea>
+                            class="w-full px-4 py-2.5 text-sm bg-[#FAF6F0] border border-[#E8E2D8] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#C9A84C] resize-none">{{ old('description') }}</textarea>
                     </div>
 
                     <!-- Profile Photography -->
@@ -112,7 +112,7 @@
 
                     <!-- Submit -->
                     <button type="submit"
-                        class="w-full py-3.5 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-full transition shadow-sm shadow-amber-200 flex items-center justify-center gap-2">
+                        class="w-full py-3.5 bg-[#C9A84C] hover:bg-[#b8963e] text-white font-semibold rounded-full transition shadow-sm shadow-amber-200 flex items-center justify-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
                         Register Cat
                     </button>
@@ -142,14 +142,14 @@
                         </svg>
                     </div>
                     <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900/80 to-transparent p-4">
-                        <p class="text-[10px] tracking-widest text-amber-400 uppercase font-semibold">Profile Preview</p>
-                        <p class="text-xl font-serif font-semibold text-white" id="previewNameDisplay">New Resident</p>
+                        <p class="text-[10px] tracking-widest text-[#C9A84C] uppercase font-semibold">Profile Preview</p>
+                        <p class="text-xl font-cabinet font-semibold text-white" id="previewNameDisplay">New Resident</p>
                     </div>
                 </div>
                 <div class="p-4">
                     <div class="flex gap-2 mb-3">
                         <span id="previewColorTag" class="px-2.5 py-0.5 bg-gray-600 text-gray-200 text-[10px] font-bold uppercase rounded-full tracking-wide">Colour</span>
-                        <span class="px-2.5 py-0.5 bg-amber-600 text-white text-[10px] font-bold uppercase rounded-full tracking-wide">New</span>
+                        <span class="px-2.5 py-0.5 bg-[#C9A84C] text-white text-[10px] font-bold uppercase rounded-full tracking-wide">New</span>
                     </div>
                     <p class="text-xs text-gray-400 italic leading-relaxed">
                         "Every feline has a story waiting to be written in a forever home. This profile will represent their first chapter with us."
@@ -158,22 +158,22 @@
             </div>
 
             <!-- Registration Guidelines -->
-            <div class="bg-white rounded-2xl border border-amber-100 shadow-sm p-5">
-                <p class="text-xs font-bold text-amber-600 mb-3 flex items-center gap-1.5">
+            <div class="bg-white rounded-2xl border border-[#E8E2D8] shadow-sm p-5">
+                <p class="text-xs font-bold text-[#C9A84C] mb-3 flex items-center gap-1.5">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"/></svg>
                     Registration Guidelines
                 </p>
                 <ol class="space-y-2.5">
                     <li class="flex gap-3 text-xs text-gray-500">
-                        <span class="text-amber-400 font-bold flex-shrink-0">01</span>
+                        <span class="text-[#C9A84C] font-bold flex-shrink-0">01</span>
                         Ensure photography highlights the cat's unique features.
                     </li>
                     <li class="flex gap-3 text-xs text-gray-500">
-                        <span class="text-amber-400 font-bold flex-shrink-0">02</span>
+                        <span class="text-[#C9A84C] font-bold flex-shrink-0">02</span>
                         Double-check health status before finalizing registration.
                     </li>
                     <li class="flex gap-3 text-xs text-gray-500">
-                        <span class="text-amber-400 font-bold flex-shrink-0">03</span>
+                        <span class="text-[#C9A84C] font-bold flex-shrink-0">03</span>
                         Registration automatically generates a unique profile entry.
                     </li>
                 </ol>

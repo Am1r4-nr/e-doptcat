@@ -18,6 +18,9 @@ use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\ReportingController;
 use App\Http\Controllers\Admin\DonationManagementController;
 use App\Http\Controllers\Admin\MessageController;
+use App\Http\Controllers\Admin\IncidentManagementController;
+use App\Http\Controllers\Admin\MessageManagementController;
+use App\Http\Controllers\Admin\CalendarManagementController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', App\Http\Controllers\HomeController::class)->name('home');
@@ -26,6 +29,9 @@ Route::view('/scanner', 'scanner')->name('scanner');
 Route::get('/tracker', App\Http\Controllers\TrackerController::class)->name('tracker');
 
 Route::get('/dashboard', function () {
+    if (auth()->user()->getAttribute('role') === 'admin') {
+        return redirect()->route('admin.dashboard');
+    }
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -52,7 +58,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/reporting', [ReportingController::class, 'index'])->name('reporting.index');
 
         // Cat Management
-        Route::resource('cats', CatManagementController::class);
+        Route::resource('cats', CatManagementController::class)->except(['edit', 'update']);
+        Route::patch('cats/{cat}/fields', [CatManagementController::class, 'updateFields'])->name('cats.updateFields');
 
         // Adopter Management
         Route::get('adopters', [AdopterController::class, 'index'])->name('adopters.index');

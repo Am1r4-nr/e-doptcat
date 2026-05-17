@@ -18,10 +18,41 @@ class CatManagementController extends Controller
         $this->nvidiaService = $nvidiaService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $cats = Cat::paginate(15);
-        return view('admin.cats.index', compact('cats'));
+        $query = Cat::query();
+
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->input('search') . '%');
+        }
+
+        if ($request->filled('breed')) {
+            if ($request->input('breed') === 'unknown') {
+                $query->where(fn($q) => $q->whereNull('breed')->orWhere('breed', ''));
+            } else {
+                $query->where('breed', $request->input('breed'));
+            }
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        if ($request->filled('age')) {
+            match($request->input('age')) {
+                'unknown' => $query->whereNull('age'),
+                'kitten'  => $query->where('age', '<', 1),
+                'young'   => $query->whereBetween('age', [1, 3]),
+                'adult'   => $query->whereBetween('age', [4, 7]),
+                'senior'  => $query->where('age', '>=', 8),
+                default   => null,
+            };
+        }
+
+        $cats   = $query->paginate(15)->withQueryString();
+        $breeds = Cat::whereNotNull('breed')->distinct()->orderBy('breed')->pluck('breed');
+
+        return view('admin.cats.index', compact('cats', 'breeds'));
     }
 
     public function create()
@@ -97,6 +128,28 @@ class CatManagementController extends Controller
         }
 
         return redirect()->route('admin.cats.index')->with('success', 'Cat updated successfully.');
+    }
+
+    public function updateFields(Request $request, Cat $cat)
+    {
+        $validated = $request->validate([
+            'name'          => 'nullable|string|max:255',
+            'breed'         => 'nullable|string|max:255',
+            'gender'        => 'nullable|string|max:50',
+            'age'           => 'nullable|integer|min:0',
+            'color'         => 'nullable|string|max:255',
+            'weight'        => 'nullable|numeric|min:0',
+            'status'        => 'nullable|in:Available,Adopted,Lost',
+            'gps_lat'       => 'nullable|numeric|between:-90,90',
+            'gps_lng'       => 'nullable|numeric|between:-180,180',
+            'location_name'   => 'nullable|string|max:255',
+            'description'     => 'nullable|string',
+            'medical_history' => 'nullable|string',
+        ]);
+
+        $cat->update(array_filter($validated, fn($v) => $v !== null && $v !== ''));
+
+        return response()->json(['success' => true, 'cat' => $cat->fresh()]);
     }
 
     public function destroy(Cat $cat)

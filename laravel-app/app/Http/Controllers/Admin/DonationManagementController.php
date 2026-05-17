@@ -3,18 +3,19 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Adoption;
 use App\Models\Donation;
 
 class DonationManagementController extends Controller
 {
     public function index()
     {
-        $donations = Donation::with('user')->paginate(15);
-        $aggregate = Donation::selectRaw('SUM(amount) as total, AVG(amount) as average, COUNT(*) as count')->first();
+        $donations = Donation::with(['user', 'cat'])->latest()->paginate(15);
         $stats = [
-            'total_donations' => $aggregate->total ?? 0,
-            'average_donation' => $aggregate->average ?? 0,
-            'donation_count' => $aggregate->count ?? 0,
+            'total_donations'   => Donation::sum('amount') ?? 0,
+            'donation_count'    => Donation::count(),
+            'adoption_payments' => Donation::where('type', 'adoption_payment')->sum('amount'),
+            'completed_cases'   => Adoption::where('status', 'approved')->count(),
         ];
         return view('admin.donations.index', compact('donations', 'stats'));
     }
