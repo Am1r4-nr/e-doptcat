@@ -10,11 +10,20 @@
                     Review and coordinate the compassionate individuals joining our rescue mission.
                 </p>
             </div>
-            <button @click="openNewOpening()"
-                    class="px-6 py-2.5 rounded-full bg-[#C9A84C] text-white text-sm font-bold shadow-md shadow-amber-600/20 hover:bg-[#b8963e] transition flex items-center justify-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-                New Opening
-            </button>
+            <div class="flex items-center gap-3">
+                <!-- Excel import -->
+                <input type="file" id="excelUpload" accept=".xlsx,.xls" class="hidden" @change="importExcel($event)">
+                <button onclick="document.getElementById('excelUpload').click()"
+                        class="px-5 py-2.5 rounded-full text-sm font-bold bg-white border border-[#E8E2D8] text-gray-600 hover:bg-[#FAF6F0] hover:border-[#C9A84C] hover:text-[#C9A84C] transition flex items-center gap-2 shadow-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
+                    + Add Excel
+                </button>
+                <button @click="openNewOpening()"
+                        class="px-6 py-2.5 rounded-full bg-[#C9A84C] text-white text-sm font-bold shadow-md shadow-amber-600/20 hover:bg-[#b8963e] transition flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                    New Opening
+                </button>
+            </div>
         </div>
 
         <!-- 3 Stats Cards -->
@@ -596,47 +605,75 @@
 
             <!-- Header bar -->
             <div class="flex items-center justify-between px-6 py-4 border-b border-[#F0EBE3] flex-shrink-0">
-                <p class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Volunteer Profile</p>
-                <button @click="open = false" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#FAF6F0] text-gray-400 hover:text-gray-700 transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                </button>
+                <p class="text-[11px] font-bold text-gray-400 uppercase tracking-widest"
+                   x-text="editing ? 'Edit Profile' : 'Volunteer Profile'"></p>
+                <div class="flex items-center gap-2">
+                    <!-- Edit toggle button (hidden while editing) -->
+                    <button x-show="!editing" @click="startEdit()"
+                            class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#FAF6F0] text-gray-400 hover:text-[#C9A84C] transition" title="Edit Profile">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125"/></svg>
+                    </button>
+                    <button @click="open = false; editing = false"
+                            class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#FAF6F0] text-gray-400 hover:text-gray-700 transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
             </div>
 
-            <!-- Avatar + name -->
-            <div class="flex flex-col items-center pt-8 pb-6 px-6 bg-[#FAF6F0] flex-shrink-0">
-                <img :src="selected.avatar" :alt="selected.name"
-                     class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg mb-4">
-                <h3 class="text-xl font-bold text-gray-900" x-text="selected.name"></h3>
+            <!-- Avatar + name (view mode) -->
+            <div x-show="!editing" class="flex flex-col items-center pt-8 pb-6 px-6 bg-[#FAF6F0] flex-shrink-0">
+                <div class="w-20 h-20 rounded-full bg-[#E8E0D0] flex items-center justify-center text-[#8B7355] font-bold text-2xl mb-4 border-4 border-white shadow-lg"
+                     x-text="selected.name.split(' ').filter((_,i)=>i<2).map(w=>w[0]).join('')"></div>
+                <h3 class="text-xl font-bold text-gray-900 text-center" x-text="selected.name"></h3>
                 <p class="text-sm text-gray-400 mt-0.5" x-text="'Applied ' + selected.applied"></p>
                 <span class="mt-3 px-3 py-1 text-[11px] font-bold rounded-full uppercase tracking-wider"
                       :class="selected.statusClass" x-text="selected.status"></span>
             </div>
 
-            <!-- Scrollable body -->
-            <div class="flex-1 overflow-y-auto px-6 py-5 space-y-6">
+            <!-- ── VIEW MODE body ── -->
+            <div x-show="!editing" class="flex-1 overflow-y-auto px-6 py-5 space-y-6">
 
-                <!-- Contact -->
-                <div>
-                    <p class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3">Contact Info</p>
-                    <div class="space-y-2.5">
-                        <div class="flex items-center gap-3 text-sm text-gray-700">
-                            <div class="w-8 h-8 rounded-full bg-[#FAF6F0] flex items-center justify-center flex-shrink-0">
-                                <svg class="w-4 h-4 text-[#C9A84C]" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
-                            </div>
-                            <span x-text="selected.email"></span>
+                <!-- Matric + Contact row -->
+                <div class="bg-[#FAF6F0] rounded-2xl px-4 py-4 border border-[#F0EBE3] space-y-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center flex-shrink-0 border border-[#E8E2D8]">
+                            <svg class="w-4 h-4 text-[#C9A84C]" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"/></svg>
                         </div>
-                        <div class="flex items-center gap-3 text-sm text-gray-700">
-                            <div class="w-8 h-8 rounded-full bg-[#FAF6F0] flex items-center justify-center flex-shrink-0">
-                                <svg class="w-4 h-4 text-[#C9A84C]" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>
-                            </div>
-                            <span x-text="selected.phone"></span>
+                        <div>
+                            <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Matric No.</div>
+                            <div class="text-sm font-bold text-gray-800" x-text="selected.matric || '—'"></div>
                         </div>
-                        <div class="flex items-center gap-3 text-sm text-gray-700">
-                            <div class="w-8 h-8 rounded-full bg-[#FAF6F0] flex items-center justify-center flex-shrink-0">
-                                <svg class="w-4 h-4 text-[#C9A84C]" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
-                            </div>
-                            <span x-text="selected.location"></span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center flex-shrink-0 border border-[#E8E2D8]">
+                            <svg class="w-4 h-4 text-[#C9A84C]" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
                         </div>
+                        <div class="min-w-0">
+                            <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Email</div>
+                            <div class="text-sm text-gray-700 truncate" x-text="selected.email || '—'"></div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center flex-shrink-0 border border-[#E8E2D8]">
+                            <svg class="w-4 h-4 text-[#C9A84C]" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>
+                        </div>
+                        <div>
+                            <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Phone</div>
+                            <div class="text-sm text-gray-700" x-text="selected.phone || '—'"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Program & Availability -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-[#FAF6F0] rounded-2xl px-4 py-3 border border-[#F0EBE3]">
+                        <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Program</div>
+                        <div class="text-sm font-bold text-gray-800" x-text="selected.program || '—'"></div>
+                    </div>
+                    <div class="bg-[#FAF6F0] rounded-2xl px-4 py-3 border border-[#F0EBE3]">
+                        <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Availability</div>
+                        <div class="text-sm font-bold text-gray-800" x-text="selected.availability || '—'"></div>
+                        <div class="text-[11px] text-gray-500" x-text="selected.availTime"></div>
                     </div>
                 </div>
 
@@ -648,55 +685,125 @@
                             <span class="px-3 py-1.5 bg-[#F2EDE4] text-gray-700 text-[11px] font-bold rounded-lg uppercase tracking-wider"
                                   x-text="skill.label"></span>
                         </template>
-                    </div>
-                </div>
-
-                <!-- Volunteer Program -->
-                <div>
-                    <p class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3">Volunteer Program</p>
-                    <div class="flex items-center gap-3 bg-[#FAF6F0] rounded-xl px-4 py-3 border border-[#F0EBE3]">
-                        <svg class="w-5 h-5 text-[#C9A84C] flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
-                        <span class="text-sm font-bold text-gray-800" x-text="selected.program"></span>
-                    </div>
-                </div>
-
-                <!-- Availability -->
-                <div>
-                    <p class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3">Availability</p>
-                    <div class="flex items-center gap-3 bg-[#FAF6F0] rounded-xl px-4 py-3 border border-[#F0EBE3]">
-                        <svg class="w-5 h-5 text-[#C9A84C] flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                        <div>
-                            <div class="text-sm font-bold text-gray-800" x-text="selected.availability"></div>
-                            <div class="text-[12px] text-gray-500 mt-0.5" x-text="selected.availTime"></div>
-                        </div>
+                        <p x-show="selected.skills.length === 0" class="text-sm text-gray-400 italic">No skills listed.</p>
                     </div>
                 </div>
 
                 <!-- Bio -->
-                <div>
+                <div x-show="selected.bio">
                     <p class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3">About</p>
                     <p class="text-sm text-gray-600 leading-relaxed" x-text="selected.bio"></p>
                 </div>
 
                 <!-- Experience -->
-                <div>
+                <div x-show="selected.experience">
                     <p class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3">Experience</p>
                     <p class="text-sm text-gray-600 leading-relaxed" x-text="selected.experience"></p>
                 </div>
 
             </div>
 
-            <!-- Action Buttons -->
+            <!-- ── EDIT MODE body ── -->
+            <div x-show="editing" class="flex-1 overflow-y-auto px-6 py-5 space-y-4">
+
+                <div>
+                    <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Full Name</label>
+                    <input type="text" x-model="editForm.name"
+                           class="w-full px-4 py-2.5 rounded-xl border border-[#E8E2D8] bg-[#FAF6F0] text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]/40 focus:border-[#C9A84C]">
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Matric No.</label>
+                    <input type="text" x-model="editForm.matric"
+                           class="w-full px-4 py-2.5 rounded-xl border border-[#E8E2D8] bg-[#FAF6F0] text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]/40 focus:border-[#C9A84C]">
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Email</label>
+                    <input type="email" x-model="editForm.email"
+                           class="w-full px-4 py-2.5 rounded-xl border border-[#E8E2D8] bg-[#FAF6F0] text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]/40 focus:border-[#C9A84C]">
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Phone Number</label>
+                    <input type="text" x-model="editForm.phone"
+                           class="w-full px-4 py-2.5 rounded-xl border border-[#E8E2D8] bg-[#FAF6F0] text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]/40 focus:border-[#C9A84C]">
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Volunteer Program</label>
+                    <input type="text" x-model="editForm.program"
+                           class="w-full px-4 py-2.5 rounded-xl border border-[#E8E2D8] bg-[#FAF6F0] text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]/40 focus:border-[#C9A84C]">
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Availability</label>
+                    <div class="flex gap-2">
+                        <template x-for="opt in ['Weekdays','Weekends','Flexible']" :key="opt">
+                            <button type="button" @click="editForm.availability = opt"
+                                    class="flex-1 py-2 rounded-xl text-[12px] font-bold transition border"
+                                    :class="editForm.availability === opt ? 'bg-[#C9A84C] text-white border-[#C9A84C]' : 'bg-[#FAF6F0] text-gray-600 border-[#E8E2D8] hover:border-[#C9A84C]'"
+                                    x-text="opt"></button>
+                        </template>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Status</label>
+                    <select x-model="editForm.status"
+                            class="w-full px-4 py-2.5 rounded-xl border border-[#E8E2D8] bg-[#FAF6F0] text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]/40 focus:border-[#C9A84C]">
+                        <option value="PENDING">Pending</option>
+                        <option value="INTERVIEWING">Interviewing</option>
+                        <option value="APPROVED">Approved</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <!-- Footer: action buttons (view) / save-cancel (edit) -->
             <div class="px-6 py-4 border-t border-[#F0EBE3] bg-white flex gap-3 flex-shrink-0">
-                <button class="flex-1 py-2.5 rounded-full bg-green-50 text-green-700 text-[13px] font-bold hover:bg-green-100 transition border border-green-200">
-                    Approve
-                </button>
-                <button class="flex-1 py-2.5 rounded-full bg-[#FAF6F0] text-[#C9A84C] text-[13px] font-bold hover:bg-[#F5EDD8] transition border border-[#E8E2D8]">
-                    Schedule Interview
-                </button>
-                <button class="py-2.5 px-4 rounded-full bg-red-50 text-red-400 text-[13px] font-bold hover:bg-red-100 transition border border-red-100">
-                    Reject
-                </button>
+
+                <!-- View mode actions -->
+                <template x-if="!editing">
+                    <div class="flex gap-3 w-full">
+                        <button @click="updateStatus('APPROVED')"
+                                class="flex-1 py-2.5 rounded-full text-[13px] font-bold transition border"
+                                :class="selected.status === 'APPROVED'
+                                    ? 'bg-green-100 text-green-800 border-green-300 cursor-default'
+                                    : 'bg-green-50 text-green-700 hover:bg-green-100 border-green-200'">
+                            Approve
+                        </button>
+                        <button @click="updateStatus('INTERVIEWING')"
+                                class="flex-1 py-2.5 rounded-full text-[13px] font-bold transition border"
+                                :class="selected.status === 'INTERVIEWING'
+                                    ? 'bg-[#F5EDD8] text-[#8B6914] border-[#C9A84C] cursor-default'
+                                    : 'bg-[#FAF6F0] text-[#C9A84C] hover:bg-[#F5EDD8] border-[#E8E2D8]'">
+                            Schedule Interview
+                        </button>
+                        <button @click="updateStatus('REJECTED')"
+                                class="py-2.5 px-4 rounded-full text-[13px] font-bold transition border"
+                                :class="selected.status === 'REJECTED'
+                                    ? 'bg-red-100 text-red-600 border-red-300 cursor-default'
+                                    : 'bg-red-50 text-red-400 hover:bg-red-100 border-red-100'">
+                            Reject
+                        </button>
+                    </div>
+                </template>
+
+                <!-- Edit mode actions -->
+                <template x-if="editing">
+                    <div class="flex gap-3 w-full">
+                        <button @click="editing = false"
+                                class="flex-1 py-2.5 rounded-full border border-[#E8E2D8] text-[13px] font-bold text-gray-500 hover:bg-[#FAF6F0] transition">
+                            Cancel
+                        </button>
+                        <button @click="saveVolunteerEdit()"
+                                class="flex-1 py-2.5 rounded-full bg-[#C9A84C] text-white text-[13px] font-bold hover:bg-[#b8963e] transition shadow-md shadow-amber-600/20">
+                            Save Changes
+                        </button>
+                    </div>
+                </template>
+
             </div>
 
             </div><!-- end x-if root -->
@@ -710,6 +817,8 @@ function volunteerApp() {
     return {
         open: false,
         selected: null,
+        editing: false,
+        editForm: {},
         viewMode: 'list',
         showNewOpening: false,
         showManageSkills: false,
@@ -771,62 +880,7 @@ function volunteerApp() {
             this.showNewOpening = false;
             alert('Opening "' + this.newOpening.program + '" created successfully!');
         },
-        volunteers: [
-            {
-                id: 1,
-                name: 'Sarah Jenkins',
-                matric: '2021891234',
-                avatar: 'https://i.pravatar.cc/150?u=sarah',
-                applied: 'Oct 12, 2023',
-                email: 'sarah.jenkins@email.com',
-                phone: '+60 12-345 6789',
-                location: 'Petaling Jaya, Selangor',
-                availability: 'Weekends',
-                availTime: '9:00 AM – 5:00 PM',
-                status: 'INTERVIEWING',
-                statusClass: 'bg-[#FAF8F0] text-[#C9A84C] border border-[#E8E2D8]',
-                program: 'Semester Break Cat Care',
-                skills: [{ label: 'FOSTERING' }, { label: 'PHOTOGRAPHY' }],
-                bio: 'Sarah is a passionate animal lover with two rescue cats of her own. She has been volunteering at local shelters for 3 years and specialises in kitten fostering.',
-                experience: '3 years at SPCA Selangor · Fostered 20+ kittens · Certified in basic feline first aid',
-            },
-            {
-                id: 2,
-                name: 'Michael Chen',
-                matric: '2021765432',
-                avatar: 'https://i.pravatar.cc/150?u=michael',
-                applied: 'Oct 15, 2023',
-                email: 'michael.chen@email.com',
-                phone: '+60 11-234 5678',
-                location: 'Cheras, Kuala Lumpur',
-                availability: 'Flexible',
-                availTime: '10:00 AM – 3:00 PM',
-                status: 'PENDING',
-                statusClass: 'bg-cyan-50 text-cyan-600 border border-cyan-100',
-                program: 'Events & Adoption Drive',
-                skills: [{ label: 'EVENT SUPPORT' }],
-                bio: 'Michael is an events coordinator by profession who wants to give back to the community. He can help plan and run adoption drives and fundraising events.',
-                experience: '5 years event management · Organised 2 charity runs · Volunteer at KL Animal Rescue',
-            },
-            {
-                id: 3,
-                name: 'Elena Rodriguez',
-                matric: '2021543210',
-                avatar: 'https://i.pravatar.cc/150?u=elena',
-                applied: 'Oct 09, 2023',
-                email: 'elena.rodriguez@email.com',
-                phone: '+60 16-789 0123',
-                location: 'Bangsar, Kuala Lumpur',
-                availability: 'Weekdays',
-                availTime: '8:00 AM – 12:00 PM',
-                status: 'APPROVED',
-                statusClass: 'bg-green-50 text-green-600 border border-green-100',
-                program: 'Social Media & Outreach',
-                skills: [{ label: 'SOCIAL MEDIA' }, { label: 'DESIGN' }],
-                bio: 'Elena is a graphic designer and content creator who wants to boost the sanctuary\'s online presence. She has a large following on Instagram where she already advocates for animal rescue.',
-                experience: '4 years freelance design · Manages social media for 2 NGOs · 50k+ Instagram followers',
-            },
-        ],
+        volunteers: [],
         addSkill() {
             const skill = this.newSkillInput.trim();
             if (!skill) return;
@@ -841,9 +895,115 @@ function volunteerApp() {
         },
         openProfile(volunteer) {
             this.selected = volunteer;
+            this.editing = false;
             this.open = true;
+        },
+        updateStatus(status) {
+            const statusMap = {
+                'APPROVED':    'bg-green-50 text-green-600 border border-green-100',
+                'PENDING':     'bg-cyan-50 text-cyan-600 border border-cyan-100',
+                'INTERVIEWING':'bg-[#FAF8F0] text-[#C9A84C] border border-[#E8E2D8]',
+                'REJECTED':    'bg-red-50 text-red-500 border border-red-100',
+            };
+            const idx = this.volunteers.findIndex(v => v.id === this.selected.id);
+            if (idx !== -1) {
+                const updated = { ...this.volunteers[idx], status, statusClass: statusMap[status] };
+                this.volunteers[idx] = updated;
+                this.selected = updated;
+            }
+        },
+        startEdit() {
+            this.editForm = {
+                name:         this.selected.name,
+                matric:       this.selected.matric,
+                email:        this.selected.email,
+                phone:        this.selected.phone,
+                program:      this.selected.program,
+                availability: this.selected.availability,
+                availTime:    this.selected.availTime,
+                status:       this.selected.status,
+            };
+            this.editing = true;
+        },
+        saveVolunteerEdit() {
+            if (!this.editForm.name.trim()) { alert('Name is required.'); return; }
+            const statusMap = {
+                'APPROVED':    'bg-green-50 text-green-600 border border-green-100',
+                'PENDING':     'bg-cyan-50 text-cyan-600 border border-cyan-100',
+                'INTERVIEWING':'bg-[#FAF8F0] text-[#C9A84C] border border-[#E8E2D8]',
+                'REJECTED':    'bg-red-50 text-red-500 border border-red-100',
+            };
+            const idx = this.volunteers.findIndex(v => v.id === this.selected.id);
+            if (idx !== -1) {
+                const updated = {
+                    ...this.volunteers[idx],
+                    ...this.editForm,
+                    statusClass: statusMap[this.editForm.status] || statusMap['PENDING'],
+                };
+                this.volunteers[idx] = updated;
+                this.selected = updated;
+            }
+            this.editing = false;
+        },
+        importExcel(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+
+                // Case-insensitive column finder — tries each candidate key in order
+                const col = (row, ...candidates) => {
+                    const keys = Object.keys(row);
+                    for (const c of candidates) {
+                        const match = keys.find(k => k.trim().toLowerCase() === c.trim().toLowerCase());
+                        if (match !== undefined && row[match] !== '') return row[match].toString().trim();
+                    }
+                    return '';
+                };
+
+                const statusMap = {
+                    'APPROVED':    'bg-green-50 text-green-600 border border-green-100',
+                    'PENDING':     'bg-cyan-50 text-cyan-600 border border-cyan-100',
+                    'INTERVIEWING':'bg-[#FAF8F0] text-[#C9A84C] border border-[#E8E2D8]',
+                };
+                let added = 0;
+                rows.forEach(row => {
+                    const name = col(row, 'Name', 'Full Name', 'FULL NAME', 'Nama', 'Nama Penuh');
+                    if (!name) return;
+                    const statusRaw = (col(row, 'Status', 'STATUS') || 'PENDING').toUpperCase();
+                    const resolvedStatus = statusMap[statusRaw] ? statusRaw : 'PENDING';
+                    this.volunteers.push({
+                        id: Date.now() + Math.random(),
+                        name,
+                        matric: col(row, 'Matric', 'Matric No', 'Matric No.', 'Matric Number', 'MATRIC', 'No Matrik', 'No. Matrik', 'Nombor Matrik', 'matric_no'),
+                        avatar: '',
+                        applied: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+                        email: col(row, 'email', 'Email', 'E-mail', 'EMAIL', 'Email Address', 'Emel'),
+                        phone: col(row, 'phone number', 'Phone Number', 'Phone', 'Phone No', 'Phone No.', 'No Phone', 'No. Phone', 'Tel', 'Telephone', 'PHONE', 'Telefon'),
+                        location: '',
+                        availability: col(row, 'Availability', 'Available', 'AVAILABILITY', 'Ketersediaan'),
+                        availTime: col(row, 'Time', 'Time Range', 'Available Time', 'TIME'),
+                        status: resolvedStatus,
+                        statusClass: statusMap[resolvedStatus],
+                        program: col(row, 'Program', 'Programme', 'Volunteer Program', 'PROGRAM', 'Program Sukarela'),
+                        skills: [],
+                        bio: '',
+                        experience: '',
+                    });
+                    added++;
+                });
+                event.target.value = '';
+                if (added > 0) alert(added + ' volunteer(s) imported successfully.');
+                else alert('No valid rows found. Make sure your Excel has a "Name" column.');
+            };
+            reader.readAsArrayBuffer(file);
         },
     };
 }
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </x-admin-layout>
