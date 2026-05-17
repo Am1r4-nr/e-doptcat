@@ -19,17 +19,11 @@
                     :class="activeTab === 'upcoming' ? 'bg-boho-orange text-white shadow-lg scale-105' : 'bg-white text-boho-brown border border-boho-light hover:bg-boho-light/30'" 
                     class="px-8 py-3.5 rounded-2xl font-bold transition-all transform duration-200 text-sm flex items-center gap-2">
                     <span>📅</span> Upcoming Events
-                    <span class="ml-1 px-2.5 py-0.5 text-xs bg-white/20 text-white rounded-full" :class="activeTab === 'upcoming' ? '' : 'bg-boho-light text-boho-brown'">
-                        {{ count($upcomingEvents) }}
-                    </span>
                 </button>
                 <button @click="activeTab = 'completed'" 
                     :class="activeTab === 'completed' ? 'bg-boho-orange text-white shadow-lg scale-105' : 'bg-white text-boho-brown border border-boho-light hover:bg-boho-light/30'" 
                     class="px-8 py-3.5 rounded-2xl font-bold transition-all transform duration-200 text-sm flex items-center gap-2">
                     <span>🏆</span> Completed Events
-                    <span class="ml-1 px-2.5 py-0.5 text-xs bg-white/20 text-white rounded-full" :class="activeTab === 'completed' ? '' : 'bg-boho-light text-boho-brown'">
-                        {{ count($completedEvents) }}
-                    </span>
                 </button>
             </div>
 
