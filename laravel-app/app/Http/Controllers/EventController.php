@@ -10,8 +10,9 @@ class EventController extends Controller
 {
     public function index()
     {
-        $events = Event::where('status', 'Upcoming')->orderBy('event_date')->get();
-        return view('events.index', compact('events'));
+        $upcomingEvents = Event::where('status', 'Upcoming')->orderBy('event_date', 'asc')->get();
+        $completedEvents = Event::where('status', 'Completed')->orderBy('event_date', 'desc')->get();
+        return view('events.index', compact('upcomingEvents', 'completedEvents'));
     }
 
     public function show(Event $event)

@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
         // Seed cats from AHC Cats Database
         $this->call(CatsSeeder::class);
 
-        Event::factory(10)->create();
+        // Event::factory(10)->create();
 
         // Create reports tied to random users
         User::factory(10)->create()->each(function ($user) {
