@@ -25,8 +25,8 @@ class TrackerController extends Controller
             $gpsDevice = $cat->gpsDevice ?? $cat->gpsDevices()->first();
             
             if ($gpsDevice) {
-                // Check if this cat is Florian - if so, get LIVE data from GPS tracker
-                if (strtolower($cat->name) === 'florian') {
+                // Check if this cat is Bits - if so, get LIVE data from GPS tracker
+                if (strtolower($cat->name) === 'bits' || strtolower($cat->name) === 'florian') {
                     try {
                         // Fetch live location from 365GPS.net
                         $liveLocation = $this->gpsService->getLocation($gpsDevice->imei);
@@ -39,10 +39,10 @@ class TrackerController extends Controller
                             $cat->gps_battery = $liveLocation['battery'] ?? null;
                             $cat->gps_live = true; // Mark as live data
                             
-                            Log::info("Florian GPS location fetched LIVE from 365GPS: [{$cat->gps_lat}, {$cat->gps_lng}]");
+                            Log::info("{$cat->name} GPS location fetched LIVE from 365GPS: [{$cat->gps_lat}, {$cat->gps_lng}]");
                         }
                     } catch (\Exception $e) {
-                        Log::error("Failed to get live GPS for Florian: " . $e->getMessage());
+                        Log::error("Failed to get live GPS for {$cat->name}: " . $e->getMessage());
                         
                         // Fallback to database if live fetch fails
                         $latestLocation = $gpsDevice->history()->latest('timestamp')->first();

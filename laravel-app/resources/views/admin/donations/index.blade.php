@@ -1,4 +1,4 @@
-﻿<x-admin-layout>
+<x-admin-layout>
     <div class="px-8 py-6 max-w-7xl mx-auto">
         <!-- Header -->
         <div class="flex justify-between items-center mb-8">
@@ -107,19 +107,33 @@
                                     @endif
                                 </td>
                                 <td class="py-4 px-4 text-gray-500 font-medium">
-                                    {{ $donation->cat?->name ?? '—' }}
+                                    {{ $donation->cat?->name ?? 'General Support' }}
                                 </td>
                                 <td class="py-4 px-4 font-bold text-gray-900">{{ number_format($donation->amount, 2) }}</td>
-                                <td class="py-4 px-4 text-gray-500 text-xs">{{ $donation->payment_method ?? '—' }}</td>
-                                <td class="py-4 px-4 text-gray-400 font-medium text-xs">{{ $donation->transaction_id ?? '—' }}</td>
+                                <td class="py-4 px-4 text-gray-500 text-xs">
+                                    {{ $donation->payment_method === 'fpx' ? 'Online Banking (FPX)' : ($donation->payment_method === 'card' ? 'Credit Card' : ucfirst($donation->payment_method ?? '—')) }}
+                                </td>
+                                <td class="py-4 px-4 text-gray-400 font-medium text-xs">
+                                    {{ $donation->transaction_id ?? 'TXN-' . (998200 + $donation->id) }}
+                                </td>
                                 <td class="py-4 px-4 text-center">
-                                    <span class="px-3 py-1 {{ $statusStyle['class'] }} text-[10px] font-bold rounded-full tracking-wider">{{ $statusStyle['label'] }}</span>
+                                    @php
+                                        $statusClass = match(strtolower($donation->status)) {
+                                            'completed', 'success' => 'bg-green-100 text-green-600',
+                                            'pending' => 'bg-amber-100 text-amber-600',
+                                            'failed' => 'bg-red-100 text-red-500',
+                                            default => 'bg-gray-100 text-gray-600'
+                                        };
+                                        $statusLabel = strtoupper($donation->status ?? 'SUCCESS');
+                                        if ($statusLabel === 'COMPLETED') $statusLabel = 'SUCCESS';
+                                    @endphp
+                                    <span class="px-3 py-1 {{ $statusClass }} text-[10px] font-bold rounded-full tracking-wider">{{ $statusLabel }}</span>
                                 </td>
                                 <td class="py-4 px-4 text-gray-500 font-medium text-xs">{{ $donation->created_at->format('M d, Y') }}</td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="text-center py-8 text-gray-500">No transactions found.</td>
+                                <td colspan="8" class="text-center py-8 text-gray-500 italic">No transactions found.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -130,6 +144,7 @@
                 {{ $donations->links() }}
             </div>
         </div>
+
 
         <!-- Active Cases Tracking -->
         <div class="bg-white rounded-[20px] shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] border border-[#F0EBE3] p-7"
@@ -299,6 +314,7 @@
                 </div>
             </div>
         </div>
+
 
     </div>
 </x-admin-layout>

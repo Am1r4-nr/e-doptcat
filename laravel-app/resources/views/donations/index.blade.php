@@ -106,7 +106,6 @@
                         <div class="relative">
                             <select name="payment_method"
                                 class="w-full appearance-none py-4 px-6 rounded-xl border-gray-300 focus:border-boho-brown focus:ring focus:ring-boho-brown/20 bg-white text-gray-700 font-medium cursor-pointer">
-                                <option value="toyyibpay">ToyyibPay (FPX / Card)</option>
                                 <option value="fpx">Online Banking (FPX)</option>
                                 <option value="card">Credit / Debit Card</option>
                             </select>

@@ -46,6 +46,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::post('donations', [DonationController::class, 'store'])->name('donations.store');
+    Route::get('donations/success', [DonationController::class, 'success'])->name('donations.success');
+
     Route::resource('reports', ReportController::class)->only(['create', 'store']);
     Route::post('events/{event}/register', [EventController::class, 'register'])->name('events.register');
 
@@ -68,7 +70,11 @@ Route::middleware('auth')->group(function () {
         Route::patch('adoptions/{adoption}/reject', [AdoptionManagementController::class, 'reject'])->name('adoptions.reject');
 
         // Volunteer Management
-        Route::get('volunteers', function() { return view('admin.volunteers.index'); })->name('volunteers.index');
+        Route::get('volunteers', [\App\Http\Controllers\Admin\VolunteerController::class, 'index'])->name('volunteers.index');
+        Route::post('volunteers/import', [\App\Http\Controllers\Admin\VolunteerController::class, 'import'])->name('volunteers.import');
+        Route::post('volunteers', [\App\Http\Controllers\Admin\VolunteerController::class, 'store'])->name('volunteers.store');
+        Route::patch('volunteers/{volunteer}/status', [\App\Http\Controllers\Admin\VolunteerController::class, 'updateStatus'])->name('volunteers.updateStatus');
+        Route::patch('volunteers/{volunteer}', [\App\Http\Controllers\Admin\VolunteerController::class, 'update'])->name('volunteers.update');
 
         // Report Management
         Route::resource('reports', ReportManagementController::class)->only(['index', 'show', 'destroy']);

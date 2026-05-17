@@ -1,4 +1,4 @@
-﻿<x-admin-layout>
+<x-admin-layout>
 
 <!-- Page Header -->
 <div class="mb-6 flex items-start justify-between">
@@ -7,6 +7,11 @@
         <p class="text-sm text-gray-400 mt-1">Review and manage sanctuary reports</p>
     </div>
 </div>
+
+<!-- Load Map Dependencies -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
 <!-- Lost & Found Reports -->
 <div class="bg-white rounded-2xl shadow-sm border border-[#E8E2D8] overflow-hidden mt-6">
@@ -104,219 +109,222 @@
     </div>
 </div>
 
-<!-- Live Map -->
-<div class="mt-6 mb-6 bg-white rounded-2xl shadow-sm border border-[#E8E2D8] overflow-hidden">
-    <div class="px-6 py-4 border-b border-[#E8E2D8]">
-        <p class="text-base font-semibold text-gray-800">Live Map</p>
-        <p class="text-xs text-gray-400 mt-0.5">Real-time GPS locations of sanctuary cats</p>
-    </div>
-    <div class="flex" style="height: 480px;">
-        <!-- Map -->
-        <div class="flex-1 relative">
-            <div id="liveMap" class="w-full h-full"></div>
-            <!-- Find Me button -->
-            <button onclick="locateMe()"
-                    class="absolute top-3 right-3 z-[999] flex items-center gap-1.5 bg-white border border-gray-200 text-xs font-medium text-gray-600 px-3 py-1.5 rounded-lg shadow-sm hover:bg-gray-50 transition">
-                <svg class="w-3.5 h-3.5 text-[#C9A84C]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
-                </svg>
-                Find Me
+<!-- Live Map Tracker -->
+<div class="mt-6 mb-8 bg-white rounded-[32px] shadow-sm border border-amber-100 overflow-hidden" x-data="reportingMap()">
+    <div class="px-8 py-5 border-b border-amber-50 flex items-center justify-between bg-[#FAF6F0]/30">
+        <div>
+            <h3 class="text-xl font-serif font-bold text-gray-800 flex items-center gap-2">
+                <svg class="w-6 h-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                Sanctuary Live Tracker
+            </h3>
+            <p class="text-xs text-gray-400 mt-0.5">Unified GPS tracking for all resident cats</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <button @click="locateMe" class="px-4 py-2 bg-amber-50 text-amber-700 font-bold text-xs rounded-xl hover:bg-amber-100 transition shadow-sm flex items-center gap-2">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                My Location
             </button>
-            <!-- Legend -->
-            <div class="absolute bottom-4 left-3 z-[999] bg-white border border-gray-200 rounded-xl px-4 py-3 shadow-sm text-xs space-y-1.5">
-                <p class="font-semibold text-gray-600 uppercase tracking-widest text-[10px] mb-2">Status Legend</p>
-                <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-green-500 inline-block"></span>Healthy</div>
-                <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-orange-400 inline-block"></span>Recovering</div>
-                <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span>Attention Needed</div>
+        </div>
+    </div>
+
+    <div class="flex flex-col lg:flex-row" style="height: 550px;">
+        <!-- Interactive Map -->
+        <div class="flex-1 relative border-r border-amber-50">
+            <div id="reporting-map" class="w-full h-full z-0"></div>
+            
+            <!-- Legend (Floating) -->
+            <div class="absolute bottom-6 left-6 z-[999] bg-white/90 backdrop-blur-md border border-amber-100 rounded-2xl p-5 shadow-xl text-xs space-y-2.5">
+                <p class="font-bold text-gray-400 uppercase tracking-widest text-[10px] mb-2">Status Key</p>
+                <div class="flex items-center gap-2.5"><span class="w-3.5 h-3.5 rounded-full bg-green-500 shadow-sm border-2 border-white"></span><span class="font-semibold text-gray-700">Available</span></div>
+                <div class="flex items-center gap-2.5"><span class="w-3.5 h-3.5 rounded-full bg-orange-500 shadow-sm border-2 border-white"></span><span class="font-semibold text-gray-700">Pending</span></div>
+                <div class="flex items-center gap-2.5"><span class="w-3.5 h-3.5 rounded-full bg-blue-500 shadow-sm border-2 border-white"></span><span class="font-semibold text-gray-700">Adopted</span></div>
             </div>
         </div>
-
-        <!-- Cat List Sidebar -->
-        <div class="w-72 flex-shrink-0 border-l border-[#E8E2D8] flex flex-col">
-            <!-- Header + Filter -->
-            <div class="px-4 py-3 border-b border-[#F0EBE3] space-y-2">
-                <div class="flex items-center justify-between">
-                    <div class="flex gap-1">
-                        <button id="btnList" onclick="setView('list')"
-                                class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#FAF8F0]0 text-white transition">
-                            List
-                        </button>
-                        <button id="btnScanner" onclick="setView('scanner')"
-                                class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition">
-                            Scanner
-                        </button>
-                    </div>
-                </div>
-                <div>
-                    <p class="text-[10px] text-gray-400 uppercase tracking-widest font-semibold mb-1">Filter Cats</p>
-                    <select id="mapFilter" onchange="filterMapCats()"
-                            class="w-full text-sm text-gray-600 bg-[#FAF6F0] border border-[#E8E2D8] rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-[#C9A84C]">
-                        <option value="">All Statuses</option>
-                        <option value="Healthy">Healthy</option>
-                        <option value="Recovering">Recovering</option>
-                        <option value="Attention Needed">Attention Needed</option>
-                    </select>
-                    <p class="text-[11px] text-gray-400 mt-1.5" id="mapCatCount">Showing {{ $catsWithGps->count() }} cats</p>
-                </div>
+        <!-- Sidebar -->
+        <div class="w-full lg:w-80 flex flex-col bg-white border-l border-amber-50">
+            <div class="p-6 border-b border-amber-50 bg-[#FAF6F0]/20">
+                <h3 class="font-serif font-bold text-lg text-amber-900 mb-3">Cat Directory</h3>
+                <input type="text" x-model="search" placeholder="Search by name..." 
+                       class="w-full text-sm bg-white border border-amber-200 rounded-2xl px-4 py-3 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 focus:outline-none placeholder-gray-400 shadow-sm transition-all">
+                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-4">Showing <span x-text="filteredCats.length"></span> active trackers</p>
             </div>
-
-            <!-- Cat list -->
-            <div class="flex-1 overflow-y-auto divide-y divide-[#F0EBE3]" id="mapCatList">
-                @forelse($catsWithGps as $cat)
-                    @php
-                        $dot = match($cat->health_status ?? 'Healthy') {
-                            'Recovering'       => 'bg-orange-400',
-                            'Attention Needed' => 'bg-red-500',
-                            default            => 'bg-green-500',
-                        };
-                    @endphp
-                    <div class="flex items-center gap-3 px-4 py-3 hover:bg-[#FAF8F0] cursor-pointer transition map-cat-item"
-                         data-health="{{ $cat->health_status ?? 'Healthy' }}"
-                         data-lat="{{ $cat->gps_lat }}"
-                         data-lng="{{ $cat->gps_lng }}"
-                         onclick="focusCat({{ $cat->gps_lat }}, {{ $cat->gps_lng }})">
-                        @if($cat->image)
-                            <img src="{{ Storage::url($cat->image) }}" alt="{{ $cat->name }}"
-                                 class="w-10 h-10 rounded-full object-cover flex-shrink-0 ring-2 ring-amber-100">
-                        @else
-                            <div class="w-10 h-10 rounded-full bg-[#F5EDD8] flex items-center justify-center flex-shrink-0 ring-2 ring-amber-100">
-                                <svg class="w-5 h-5 text-[#C9A84C]" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 21c-3.87 0-7-1.57-7-4.5 0-1.5 1-2.8 2.5-3.6.6-.3 1.3-.5 2-.6.8-.1 1.6-.3 2.5-.3s1.7.2 2.5.3c.7.1 1.4.3 2 .6 1.5.8 2.5 2.1 2.5 3.6 0 2.93-3.13 4.5-7 4.5z"/>
-                                </svg>
-                            </div>
-                        @endif
+            
+            <div class="flex-1 overflow-y-auto divide-y divide-gray-50 custom-scrollbar">
+                <template x-for="cat in filteredCats" :key="cat.id">
+                    <div @click="focusCat(cat)" class="flex items-center gap-4 px-6 py-5 hover:bg-amber-50/50 cursor-pointer transition-all group border-l-4 border-transparent hover:border-amber-500">
+                        <div class="relative flex-shrink-0">
+                            <img :src="cat.image_url" class="w-14 h-14 rounded-2xl object-cover shadow-md ring-2 ring-white group-hover:ring-amber-200 transition-all duration-300">
+                            <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white shadow-sm" :class="statusColor(cat.status)"></span>
+                        </div>
                         <div class="flex-1 min-w-0">
-                            <p class="text-sm font-semibold text-gray-800 truncate">{{ $cat->name }}</p>
-                            <p class="text-xs text-gray-400 truncate">{{ $cat->breed }}</p>
-                            <div class="flex items-center gap-1 mt-0.5">
-                                <span class="w-2 h-2 rounded-full {{ $dot }} inline-block"></span>
-                                <span class="text-[10px] text-gray-500">{{ $cat->location_name ?? now()->format('M d, g:i A') }}</span>
+                            <div class="flex justify-between items-start mb-0.5">
+                                <h4 class="text-lg font-serif font-bold text-gray-800 truncate group-hover:text-amber-700 transition-colors" x-text="cat.name"></h4>
+                                <template x-if="cat.gps_live">
+                                    <span class="inline-block px-1.5 py-0.5 bg-red-100 text-red-600 text-[8px] font-bold uppercase rounded-full animate-pulse">🔴 LIVE GPS</span>
+                                </template>
+                            </div>
+                            <p class="text-xs text-gray-500 truncate mb-2" x-text="cat.breed"></p>
+                            <div class="flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest" x-text="formatDate(cat.updated_at)"></span>
                             </div>
                         </div>
                     </div>
-                @empty
-                    <div class="px-4 py-8 text-center text-sm text-gray-400 italic font-cabinet">
-                        No cats with GPS data.
-                    </div>
-                @endforelse
+                </template>
+                
+                <div x-show="filteredCats.length === 0" class="p-10 text-center text-gray-400 italic font-serif">
+                    <p class="text-sm">No active trackers found.</p>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
+<style>
+    .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #E5E7EB; border-radius: 10px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #D1D5DB; }
+</style>
+
 <script>
+function reportingMap() {
+    return {
+        map: null,
+        cats: @json($catsWithGps).map(c => ({
+            ...c,
+            image_url: c.image ? `/storage/${c.image}` : `https://ui-avatars.com/api/?name=${c.name}&background=fde68a&color=92400e`
+        })),
+        search: '',
+        markers: [],
 
-// ---------- Lost & Found filter ----------
-document.getElementById('lfFilter').addEventListener('change', filterLF);
-document.getElementById('lfSearch').addEventListener('input', filterLF);
+        init() {
+            this.initMap();
+        },
 
-function filterLF() {
-    const type   = document.getElementById('lfFilter').value.toLowerCase();
-    const search = document.getElementById('lfSearch').value.toLowerCase();
-    document.querySelectorAll('.lf-row').forEach(row => {
-        const matchType   = !type   || row.dataset.type.toLowerCase() === type;
-        const matchSearch = !search || row.dataset.search.includes(search);
-        row.style.display = matchType && matchSearch ? '' : 'none';
-    });
-}
+        get filteredCats() {
+            if (!this.search) return this.cats;
+            return this.cats.filter(c => c.name.toLowerCase().includes(this.search.toLowerCase()));
+        },
 
-// ---------- Live Map (Leaflet) ----------
-const cats = @json($catsWithGps);
+        initMap() {
+            const firstCat = this.cats[0];
+            const center = firstCat ? [firstCat.gps_lat, firstCat.gps_lng] : [3.2535, 101.7323];
+            
+            this.map = L.map('reporting-map', { zoomControl: false }).setView(center, 15);
+            L.control.zoom({ position: 'bottomright' }).addTo(this.map);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(this.map);
 
-// Only init map if container exists
-const mapEl = document.getElementById('liveMap');
-let map, markers = [];
+            this.updateMarkers();
+        },
 
-if (mapEl && cats.length > 0) {
-    // Load Leaflet dynamically
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-    document.head.appendChild(link);
+        updateMarkers() {
+            this.markers.forEach(m => this.map.removeLayer(m));
+            this.markers = [];
 
-    const script = document.createElement('script');
-    script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-    script.onload = initMap;
-    document.head.appendChild(script);
-} else if (mapEl) {
-    mapEl.innerHTML = '<div class="flex items-center justify-center h-full text-sm text-gray-400 italic font-cabinet">No GPS data available for cats yet.</div>';
-}
+            this.cats.forEach(cat => {
+                let colorName = 'green';
+                if (cat.status === 'Pending') colorName = 'orange'; 
+                if (cat.status === 'Adopted') colorName = 'blue';
+                if (!['Available', 'Pending', 'Adopted'].includes(cat.status)) colorName = 'red';
 
-function colorFor(health) {
-    if (health === 'Recovering')       return '#fb923c';
-    if (health === 'Attention Needed') return '#ef4444';
-    return '#22c55e';
-}
+                const colorCode = this.hexColor(colorName);
+                
+                const icon = L.divIcon({
+                    className: 'custom-pin',
+                    html: `<div style="background-color:${colorCode}; width:20px; height:20px; border-radius:50%; border:3px solid white; box-shadow:0 2px 10px rgba(0,0,0,0.2);"></div>`,
+                    iconSize: [20, 20],
+                    iconAnchor: [10, 10]
+                });
 
-function initMap() {
-    const center = cats.length
-        ? [parseFloat(cats[0].gps_lat), parseFloat(cats[0].gps_lng)]
-        : [3.139, 101.687];
+                const marker = L.marker([cat.gps_lat, cat.gps_lng], { icon }).addTo(this.map);
+                
+                const popupContent = `
+                    <div class="text-center p-3 min-w-[160px]">
+                        <div class="w-16 h-16 rounded-full overflow-hidden mx-auto mb-3 border-2 shadow-sm" style="border-color: ${colorCode}">
+                            <img src="${cat.image_url}" class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="font-serif font-bold text-lg text-gray-800 leading-tight mb-1">${cat.name}</h3>
+                        ${cat.gps_live ? '<span class="inline-block px-2 py-0.5 bg-red-100 text-red-600 text-[9px] font-bold uppercase rounded-full mb-2 animate-pulse">🔴 LIVE GPS</span>' : ''}
+                        <div class="mb-2">
+                            <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide text-white" style="background-color: ${colorCode}">${cat.status || 'Available'}</span>
+                        </div>
+                        ${cat.gps_battery ? `<div class="text-xs text-gray-600 mt-1 font-bold">🔋 Battery: ${cat.gps_battery}%</div>` : ''}
+                        <div class="text-[10px] text-gray-500 mt-1">Last seen: ${this.formatDate(cat.updated_at)}</div>
+                        <div class="mt-3">
+                            <a href="/admin/cats/${cat.id}" class="inline-block w-full py-1.5 bg-gray-800 hover:bg-amber-600 text-white text-[10px] font-bold rounded-lg transition-colors">View Details</a>
+                        </div>
+                    </div>
+                `;
+                
+                marker.bindPopup(popupContent, { closeButton: false, className: 'rounded-xl shadow-2xl overflow-hidden' });
+                this.markers.push(marker);
+            });
+        },
 
-    map = L.map('liveMap', { zoomControl: false }).setView(center, 14);
-    L.control.zoom({ position: 'bottomright' }).addTo(map);
+        focusCat(cat) {
+            this.map.flyTo([cat.gps_lat, cat.gps_lng], 17, { duration: 1.5 });
+            const marker = this.markers.find(m => m.getLatLng().lat == cat.gps_lat && m.getLatLng().lng == cat.gps_lng);
+            if (marker) marker.openPopup();
+        },
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap',
-        maxZoom: 19,
-    }).addTo(map);
+        locateMe() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(pos => {
+                    const { latitude, longitude } = pos.coords;
+                    this.map.flyTo([latitude, longitude], 15);
+                    L.marker([latitude, longitude]).addTo(this.map).bindPopup("You are here").openPopup();
+                });
+            }
+        },
 
-    cats.forEach(cat => {
-        const lat    = parseFloat(cat.gps_lat);
-        const lng    = parseFloat(cat.gps_lng);
-        const color  = colorFor(cat.health_status);
-        const icon   = L.divIcon({
-            className: '',
-            html: `<div style="width:14px;height:14px;border-radius:50%;background:${color};border:2.5px solid white;box-shadow:0 1px 4px rgba(0,0,0,.3)"></div>`,
-            iconSize: [14, 14],
-            iconAnchor: [7, 7],
-        });
-        const m = L.marker([lat, lng], { icon })
-            .addTo(map)
-            .bindPopup(`<strong>${cat.name}</strong><br>${cat.breed ?? ''}<br><span style="color:#6b7280;font-size:11px">${cat.health_status ?? 'Healthy'}</span>`);
-        m.catHealth = cat.health_status ?? 'Healthy';
-        markers.push(m);
-    });
-}
+        statusColor(status) {
+            if (status === 'Pending') return 'bg-orange-500';
+            if (status === 'Adopted') return 'bg-blue-500';
+            if (!['Available', 'Pending', 'Adopted'].includes(status)) return 'bg-red-500';
+            return 'bg-green-500';
+        },
 
-function focusCat(lat, lng) {
-    if (!map) return;
-    map.setView([lat, lng], 16);
-}
+        hexColor(name) {
+            const colors = {
+                'green': '#22c55e',
+                'orange': '#f97316',
+                'blue': '#3b82f6',
+                'red': '#ef4444'
+            };
+            return colors[name] || '#9ca3af';
+        },
 
-function locateMe() {
-    if (!map || !navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition(pos => {
-        map.setView([pos.coords.latitude, pos.coords.longitude], 15);
-        L.circleMarker([pos.coords.latitude, pos.coords.longitude], {
-            radius: 8, color: '#d97706', fillColor: '#f59e0b', fillOpacity: 0.8
-        }).addTo(map).bindPopup('You are here').openPopup();
-    });
-}
-
-function filterMapCats() {
-    const val   = document.getElementById('mapFilter').value;
-    const items = document.querySelectorAll('.map-cat-item');
-    let shown   = 0;
-    items.forEach(item => {
-        const match = !val || item.dataset.health === val;
-        item.style.display = match ? '' : 'none';
-        if (match) shown++;
-    });
-    document.getElementById('mapCatCount').textContent = `Showing ${shown} cats`;
-    if (map) {
-        markers.forEach(m => {
-            const match = !val || m.catHealth === val;
-            match ? map.addLayer(m) : map.removeLayer(m);
-        });
+        formatDate(dateString) {
+            if (!dateString) return 'Unknown';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ', ' +
+                date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+        }
     }
 }
 
-function setView(v) {
-    document.getElementById('btnList').className    = v === 'list'    ? 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#FAF8F0]0 text-white transition' : 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition';
-    document.getElementById('btnScanner').className = v === 'scanner' ? 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#FAF8F0]0 text-white transition' : 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition';
-}
+// ---------- Lost & Found filter ----------
+document.addEventListener('DOMContentLoaded', () => {
+    const lfFilter = document.getElementById('lfFilter');
+    const lfSearch = document.getElementById('lfSearch');
+    
+    if (lfFilter && lfSearch) {
+        const filterFn = () => {
+            const type   = lfFilter.value.toLowerCase();
+            const search = lfSearch.value.toLowerCase();
+            document.querySelectorAll('.lf-row').forEach(row => {
+                const matchType   = !type   || row.dataset.type.toLowerCase() === type;
+                const matchSearch = !search || row.dataset.search.includes(search);
+                row.style.display = matchType && matchSearch ? '' : 'none';
+            });
+        };
+        lfFilter.addEventListener('change', filterFn);
+        lfSearch.addEventListener('input', filterFn);
+    }
+});
 </script>
 
 </x-admin-layout>

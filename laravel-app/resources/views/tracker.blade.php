@@ -44,7 +44,7 @@
                             <!-- Floating Legend -->
                             <div
                                 class="absolute bottom-4 left-4 z-[400] bg-white/95 backdrop-blur-sm p-4 rounded-xl shadow-lg border border-boho-light">
-                                <p class="text-xs font-bold text-gray-400 uppercase mb-3 tracking-wider">Status Legend
+                                <p class="text-xs font-bold text-gray-400 uppercase mb-3 tracking-wider">Health Status Legend
                                 </p>
                                 <div class="space-y-2">
                                     <div class="flex items-center gap-2">
@@ -56,8 +56,12 @@
                                         <span class="text-xs font-bold text-gray-600">Recovering</span>
                                     </div>
                                     <div class="flex items-center gap-2">
+                                        <span class="w-3 h-3 rounded-full bg-blue-500 shadow-sm"></span>
+                                        <span class="text-xs font-bold text-gray-600">Treated</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
                                         <span class="w-3 h-3 rounded-full bg-red-500 shadow-sm"></span>
-                                        <span class="text-xs font-bold text-gray-600">Attention Needed</span>
+                                        <span class="text-xs font-bold text-gray-600">Under Observation</span>
                                     </div>
                                 </div>
                             </div>
@@ -91,10 +95,11 @@
                             <div class="space-y-3">
                                 <select x-model="filterStatus"
                                     class="w-full px-4 py-3 bg-boho-light border-transparent rounded-xl text-sm font-bold text-gray-700 focus:border-boho-brown focus:ring-0 cursor-pointer">
-                                    <option value="all">All Statuses</option>
-                                    <option value="Available">Available (Healthy)</option>
-                                    <option value="Adopted">Adopted</option>
-                                    <option value="Pending">Pending (Recovering)</option>
+                                    <option value="all">All Health Statuses</option>
+                                    <option value="Healthy">Healthy</option>
+                                    <option value="Recovering">Recovering</option>
+                                    <option value="Treated">Treated</option>
+                                    <option value="Under Observation">Under Observation</option>
                                 </select>
                                 <div class="text-xs text-center text-gray-400 font-medium">
                                     Showing <span x-text="filteredCats.length"></span> cats
@@ -113,10 +118,10 @@
                                             class="w-full h-full object-cover rounded-xl shadow-sm">
                                         <div class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white"
                                             :class="{
-                                                'bg-green-500': cat.status === 'Available',
-                                                'bg-orange-500': cat.status === 'Pending',
-                                                'bg-blue-500': cat.status === 'Adopted',
-                                                'bg-red-500': !['Available', 'Pending', 'Adopted'].includes(cat.status)
+                                                'bg-green-500': (!cat.health_status || cat.health_status === 'Healthy'),
+                                                'bg-orange-500': cat.health_status === 'Recovering',
+                                                'bg-blue-500': cat.health_status === 'Treated',
+                                                'bg-red-500': cat.health_status === 'Under Observation' || (!['Healthy', 'Recovering', 'Treated'].includes(cat.health_status) && cat.health_status)
                                              }"></div>
                                     </div>
 
@@ -218,7 +223,7 @@
                     if (this.filterStatus === 'all') {
                         return this.cats;
                     }
-                    return this.cats.filter(cat => cat.status === this.filterStatus);
+                    return this.cats.filter(cat => (cat.health_status || 'Healthy') === this.filterStatus);
                 },
 
                 initMap() {
@@ -275,10 +280,12 @@
 
                     this.filteredCats.forEach(cat => {
                         if (cat.gps_lat && cat.gps_lng) {
-                            var color = 'green'; // Available / Healthy
-                            if (cat.status === 'Pending') color = 'orange'; // Recovering
-                            if (cat.status === 'Adopted') color = 'blue';
-                            if (!['Available', 'Pending', 'Adopted'].includes(cat.status)) color = 'red';
+                            var health = cat.health_status || 'Healthy';
+                            var color = 'green'; // Healthy
+                            if (health === 'Recovering') color = 'orange';
+                            if (health === 'Treated') color = 'blue';
+                            if (health === 'Under Observation') color = 'red';
+                            if (!['Healthy', 'Recovering', 'Treated', 'Under Observation'].includes(health)) color = 'red';
 
                             var markerHtmlStyles = `
                                 background-color: ${this.getColorCode(color)};
@@ -312,7 +319,7 @@
                                     </div>
                                     <h3 class="font-serif font-bold text-lg text-gray-800 leading-tight mb-1">${cat.name}</h3>
                                     ${cat.gps_live ? '<span class="inline-block px-2 py-0.5 bg-red-100 text-red-600 text-[9px] font-bold uppercase rounded-full mb-2">🔴 LIVE GPS</span>' : ''}
-                                    <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide text-white" style="background-color: ${this.getColorCode(color)}">${cat.status}</span>
+                                    <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide text-white" style="background-color: ${this.getColorCode(color)}">${health}</span>
                                     ${cat.gps_battery ? '<div class="text-xs text-gray-600 mt-1">🔋 Battery: ' + cat.gps_battery + '%</div>' : ''}
                                     <div class="text-xs text-gray-500 mt-1">${cat.gps_timestamp ? new Date(cat.gps_timestamp).toLocaleTimeString() : 'Unknown time'}</div>
                                     <div class="mt-3">

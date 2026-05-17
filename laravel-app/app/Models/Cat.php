@@ -46,10 +46,15 @@ class Cat extends Model
         'gps_lat',
         'gps_lng',
         'ai_match_score',
+        'ai_profile',
+        'temperament_score',
+        'ideal_adopters',
+        'care_notes',
         'location_name',
         'vaccinated',
         'health_status',
         'personality',
+        'behavior_notes',
         'weight',
     ];
 

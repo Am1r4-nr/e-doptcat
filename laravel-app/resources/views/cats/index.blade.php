@@ -34,97 +34,97 @@
                     <form id="aiQuestionnaireForm" class="space-y-6 hidden" method="POST" action="{{ route('cats.ai-preferences') }}">
                         @csrf
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Lifestyle Question -->
+                            <!-- Energy Level Question -->
                             <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                                <label class="block text-sm font-bold text-gray-700 mb-4">🏃 How active is your lifestyle?</label>
+                                <label class="block text-sm font-bold text-gray-700 mb-4">⚡ On a scale of 1 to 5, what energy level are you looking for in a cat?</label>
                                 <div class="space-y-3">
                                     <label class="flex items-center cursor-pointer">
-                                        <input type="radio" name="lifestyle" value="sedentary" class="form-radio h-4 w-4 text-orange-500" required>
-                                        <span class="ml-3 text-gray-700">Sedentary (Prefer quiet time)</span>
+                                        <input type="radio" name="energy_level" value="1" class="form-radio h-4 w-4 text-orange-500" required>
+                                        <span class="ml-3 text-gray-700">1 - A 'chill' couch potato</span>
                                     </label>
                                     <label class="flex items-center cursor-pointer">
-                                        <input type="radio" name="lifestyle" value="moderate" class="form-radio h-4 w-4 text-orange-500">
-                                        <span class="ml-3 text-gray-700">Moderate (Balanced lifestyle)</span>
+                                        <input type="radio" name="energy_level" value="2" class="form-radio h-4 w-4 text-orange-500">
+                                        <span class="ml-3 text-gray-700">2 - Mostly relaxed</span>
                                     </label>
                                     <label class="flex items-center cursor-pointer">
-                                        <input type="radio" name="lifestyle" value="active" class="form-radio h-4 w-4 text-orange-500">
-                                        <span class="ml-3 text-gray-700">Very Active (Always on the go)</span>
+                                        <input type="radio" name="energy_level" value="3" class="form-radio h-4 w-4 text-orange-500">
+                                        <span class="ml-3 text-gray-700">3 - Balanced energy</span>
+                                    </label>
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="radio" name="energy_level" value="4" class="form-radio h-4 w-4 text-orange-500">
+                                        <span class="ml-3 text-gray-700">4 - Quite playful</span>
+                                    </label>
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="radio" name="energy_level" value="5" class="form-radio h-4 w-4 text-orange-500">
+                                        <span class="ml-3 text-gray-700">5 - High-energy explorer who loves to climb and play</span>
                                     </label>
                                 </div>
                             </div>
 
-                            <!-- Budget Question -->
+                            <!-- Ideal Bond Question -->
                             <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                                <label class="block text-sm font-bold text-gray-700 mb-4">💰 What's your monthly budget for cat care?</label>
+                                <label class="block text-sm font-bold text-gray-700 mb-4">💕 How would you describe your ideal bond?</label>
                                 <div class="space-y-3">
                                     <label class="flex items-center cursor-pointer">
-                                        <input type="radio" name="budget" value="limited" class="form-radio h-4 w-4 text-orange-500" required>
-                                        <span class="ml-3 text-gray-700">Limited ($50 or less)</span>
+                                        <input type="radio" name="ideal_bond" value="velcro" class="form-radio h-4 w-4 text-orange-500" required>
+                                        <span class="ml-3 text-gray-700">I want a 'velcro' cat that follows me everywhere</span>
                                     </label>
                                     <label class="flex items-center cursor-pointer">
-                                        <input type="radio" name="budget" value="moderate" class="form-radio h-4 w-4 text-orange-500">
-                                        <span class="ml-3 text-gray-700">Moderate ($50-150)</span>
+                                        <input type="radio" name="ideal_bond" value="independent" class="form-radio h-4 w-4 text-orange-500">
+                                        <span class="ml-3 text-gray-700">I prefer a cat that is independent but enjoys occasional chin rubs</span>
                                     </label>
                                     <label class="flex items-center cursor-pointer">
-                                        <input type="radio" name="budget" value="generous" class="form-radio h-4 w-4 text-orange-500">
-                                        <span class="ml-3 text-gray-700">No Limit (Best care possible)</span>
+                                        <input type="radio" name="ideal_bond" value="challenge" class="form-radio h-4 w-4 text-orange-500">
+                                        <span class="ml-3 text-gray-700">I enjoy the challenge of winning over a cautious cat</span>
                                     </label>
                                 </div>
                             </div>
 
-                            <!-- Home Environment Question -->
+                            <!-- Talkative Cat Question -->
                             <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                                <label class="block text-sm font-bold text-gray-700 mb-4">🏠 What type of home do you have?</label>
+                                <label class="block text-sm font-bold text-gray-700 mb-4">🗣️ How do you feel about a 'talkative' cat?</label>
                                 <div class="space-y-3">
                                     <label class="flex items-center cursor-pointer">
-                                        <input type="radio" name="home_env" value="apartment" class="form-radio h-4 w-4 text-orange-500" required>
-                                        <span class="ml-3 text-gray-700">Apartment (Limited space)</span>
+                                        <input type="radio" name="talkative_preference" value="loves_vocal" class="form-radio h-4 w-4 text-orange-500" required>
+                                        <span class="ml-3 text-gray-700">I love a cat that communicates and meows frequently</span>
                                     </label>
                                     <label class="flex items-center cursor-pointer">
-                                        <input type="radio" name="home_env" value="house" class="form-radio h-4 w-4 text-orange-500">
-                                        <span class="ml-3 text-gray-700">House (Medium space)</span>
-                                    </label>
-                                    <label class="flex items-center cursor-pointer">
-                                        <input type="radio" name="home_env" value="large_house" class="form-radio h-4 w-4 text-orange-500">
-                                        <span class="ml-3 text-gray-700">Large House (Spacious)</span>
+                                        <input type="radio" name="talkative_preference" value="quiet" class="form-radio h-4 w-4 text-orange-500">
+                                        <span class="ml-3 text-gray-700">I prefer a quiet companion who stays silent</span>
                                     </label>
                                 </div>
                             </div>
 
-                            <!-- Activity/Playtime Question -->
+                            <!-- Other Pets Question -->
                             <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                                <label class="block text-sm font-bold text-gray-700 mb-4">🎾 How much time for playtime daily?</label>
+                                <label class="block text-sm font-bold text-gray-700 mb-4">🐕 Does your household have other pets?</label>
                                 <div class="space-y-3">
                                     <label class="flex items-center cursor-pointer">
-                                        <input type="radio" name="activity" value="little" class="form-radio h-4 w-4 text-orange-500" required>
-                                        <span class="ml-3 text-gray-700">Little (Less than 1 hour)</span>
+                                        <input type="radio" name="other_pets" value="yes_seeking_feline_friends" class="form-radio h-4 w-4 text-orange-500" required>
+                                        <span class="ml-3 text-gray-700">Yes, and I'm looking for a cat that proactively seeks out feline friends</span>
                                     </label>
                                     <label class="flex items-center cursor-pointer">
-                                        <input type="radio" name="activity" value="moderate" class="form-radio h-4 w-4 text-orange-500">
-                                        <span class="ml-3 text-gray-700">Moderate (1-3 hours)</span>
+                                        <input type="radio" name="other_pets" value="yes_independent" class="form-radio h-4 w-4 text-orange-500">
+                                        <span class="ml-3 text-gray-700">Yes, but I need a cat that's comfortable being independent</span>
                                     </label>
                                     <label class="flex items-center cursor-pointer">
-                                        <input type="radio" name="activity" value="lots" class="form-radio h-4 w-4 text-orange-500">
-                                        <span class="ml-3 text-gray-700">Lots (3+ hours)</span>
+                                        <input type="radio" name="other_pets" value="no" class="form-radio h-4 w-4 text-orange-500">
+                                        <span class="ml-3 text-gray-700">No, this will be my only pet</span>
                                     </label>
                                 </div>
                             </div>
 
-                            <!-- Experience Question -->
+                            <!-- Medication & Personality Question -->
                             <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm md:col-span-2">
-                                <label class="block text-sm font-bold text-gray-700 mb-4">🐱 How experienced are you with cats?</label>
+                                <label class="block text-sm font-bold text-gray-700 mb-4">💊 Are you comfortable administering medication or handling a cat with a 'strong' personality?</label>
                                 <div class="space-y-3">
                                     <label class="flex items-center cursor-pointer">
-                                        <input type="radio" name="experience" value="first_time" class="form-radio h-4 w-4 text-orange-500" required>
-                                        <span class="ml-3 text-gray-700">First time (Never had a cat before)</span>
+                                        <input type="radio" name="medication_comfort" value="yes_experienced" class="form-radio h-4 w-4 text-orange-500" required>
+                                        <span class="ml-3 text-gray-700">Yes, I can handle a cat with an attitude</span>
                                     </label>
                                     <label class="flex items-center cursor-pointer">
-                                        <input type="radio" name="experience" value="some" class="form-radio h-4 w-4 text-orange-500">
-                                        <span class="ml-3 text-gray-700">Some experience (Had cats in the past)</span>
-                                    </label>
-                                    <label class="flex items-center cursor-pointer">
-                                        <input type="radio" name="experience" value="experienced" class="form-radio h-4 w-4 text-orange-500">
-                                        <span class="ml-3 text-gray-700">Very experienced (Cat expert)</span>
+                                        <input type="radio" name="medication_comfort" value="no_docile" class="form-radio h-4 w-4 text-orange-500">
+                                        <span class="ml-3 text-gray-700">No, I need a cat that is very docile and easy-going</span>
                                     </label>
                                 </div>
                             </div>
@@ -279,6 +279,19 @@
                             </div>
                             
                             <div class="space-y-4 flex-grow">
+                                <!-- Temperament Score -->
+                                @if($cat->temperament_score)
+                                    <div class="bg-gradient-to-r from-purple-100 to-pink-100 p-3 rounded-lg border border-purple-200">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm font-semibold text-purple-900">Temperament</span>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-2xl font-bold text-purple-600">{{ $cat->temperament_score }}</span>
+                                                <span class="text-sm text-purple-700">/10</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+
                                 <!-- Age -->
                                 <p class="text-gray-600 font-medium text-base">
                                     Age: <span class="font-semibold">{{ $cat->age }}</span>
@@ -355,22 +368,15 @@
             }
         }
 
-        // Handle form submission
+        // Handle form submission - allow normal submission to server
         document.getElementById('aiQuestionnaireForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Collect form data
+            // Store preferences in session storage for reference
             const formData = new FormData(this);
             const data = Object.fromEntries(formData);
-            
-            // Store preferences in session storage
             sessionStorage.setItem('aiPreferences', JSON.stringify(data));
             
-            // Hide form and show recommendations
-            document.getElementById('aiQuestionnaireForm').classList.add('hidden');
-            
-            // Reload page or filter to show recommended cats
-            window.location.href = window.location.pathname + '?recommended=true';
+            // Let the form submit normally to the server
+            // The server will process it and redirect to cats.index with recommended=true
         });
     </script>
 </x-app-layout>

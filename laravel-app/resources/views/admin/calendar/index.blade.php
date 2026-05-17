@@ -1,4 +1,4 @@
-﻿<x-admin-layout>
+<x-admin-layout>
 
 <!-- FullCalendar CSS -->
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">

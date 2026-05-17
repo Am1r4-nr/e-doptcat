@@ -813,6 +813,13 @@
 </div>
 
 <script>
+const _csrf = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
+const _api  = (url, method, body) => fetch(url, {
+    method,
+    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': _csrf },
+    body: body ? JSON.stringify(body) : undefined,
+}).then(r => r.json());
+
 function volunteerApp() {
     return {
         open: false,
@@ -835,12 +842,13 @@ function volunteerApp() {
         ],
         allAvailabilities: ['Weekdays', 'Weekends', 'Flexible'],
         allPrograms: ['Semester Break Cat Care', 'Weekend Foster Care', 'Medical Assistance', 'Events & Adoption Drive', 'Social Media & Outreach'],
+        volunteers: @json($volunteers),
         get filteredVolunteers() {
             return this.volunteers.filter(v => {
                 const skillMatch = this.selectedSkills.length === 0 ||
-                    this.selectedSkills.every(s => v.skills.some(sk => sk.label.toLowerCase() === s.toLowerCase()));
+                    this.selectedSkills.every(s => (v.skills||[]).some(sk => sk.label?.toLowerCase() === s.toLowerCase()));
                 const availMatch = !this.selectedAvailability ||
-                    v.availability.toLowerCase() === this.selectedAvailability.toLowerCase();
+                    (v.availability||'').toLowerCase() === this.selectedAvailability.toLowerCase();
                 const programMatch = !this.selectedProgram || v.program === this.selectedProgram;
                 return skillMatch && availMatch && programMatch;
             });
@@ -866,21 +874,12 @@ function volunteerApp() {
                 alert('Please fill in Program Name and Availability.');
                 return;
             }
-            const fmt = t => {
-                if (!t) return '';
-                const [h, m] = t.split(':');
-                const hr = +h, ampm = hr >= 12 ? 'PM' : 'AM';
-                return (hr % 12 || 12) + ':' + m + ' ' + ampm;
-            };
-            const timeStr = this.newOpening.startTime && this.newOpening.endTime
-                ? fmt(this.newOpening.startTime) + ' – ' + fmt(this.newOpening.endTime) : '';
             if (!this.allPrograms.includes(this.newOpening.program)) {
                 this.allPrograms.push(this.newOpening.program);
             }
             this.showNewOpening = false;
             alert('Opening "' + this.newOpening.program + '" created successfully!');
         },
-        volunteers: [],
         addSkill() {
             const skill = this.newSkillInput.trim();
             if (!skill) return;
@@ -898,16 +897,12 @@ function volunteerApp() {
             this.editing = false;
             this.open = true;
         },
-        updateStatus(status) {
-            const statusMap = {
-                'APPROVED':    'bg-green-50 text-green-600 border border-green-100',
-                'PENDING':     'bg-cyan-50 text-cyan-600 border border-cyan-100',
-                'INTERVIEWING':'bg-[#FAF8F0] text-[#C9A84C] border border-[#E8E2D8]',
-                'REJECTED':    'bg-red-50 text-red-500 border border-red-100',
-            };
+        async updateStatus(status) {
+            const res = await _api(`/admin/volunteers/${this.selected.id}/status`, 'PATCH', { status });
+            if (!res.success) return;
             const idx = this.volunteers.findIndex(v => v.id === this.selected.id);
             if (idx !== -1) {
-                const updated = { ...this.volunteers[idx], status, statusClass: statusMap[status] };
+                const updated = { ...this.volunteers[idx], status, statusClass: res.statusClass };
                 this.volunteers[idx] = updated;
                 this.selected = updated;
             }
@@ -920,25 +915,28 @@ function volunteerApp() {
                 phone:        this.selected.phone,
                 program:      this.selected.program,
                 availability: this.selected.availability,
-                availTime:    this.selected.availTime,
+                avail_time:   this.selected.availTime,
                 status:       this.selected.status,
             };
             this.editing = true;
         },
-        saveVolunteerEdit() {
+        async saveVolunteerEdit() {
             if (!this.editForm.name.trim()) { alert('Name is required.'); return; }
-            const statusMap = {
-                'APPROVED':    'bg-green-50 text-green-600 border border-green-100',
-                'PENDING':     'bg-cyan-50 text-cyan-600 border border-cyan-100',
-                'INTERVIEWING':'bg-[#FAF8F0] text-[#C9A84C] border border-[#E8E2D8]',
-                'REJECTED':    'bg-red-50 text-red-500 border border-red-100',
-            };
+            const res = await _api(`/admin/volunteers/${this.selected.id}`, 'PATCH', this.editForm);
+            if (!res.success) return;
             const idx = this.volunteers.findIndex(v => v.id === this.selected.id);
             if (idx !== -1) {
                 const updated = {
                     ...this.volunteers[idx],
-                    ...this.editForm,
-                    statusClass: statusMap[this.editForm.status] || statusMap['PENDING'],
+                    name:         this.editForm.name,
+                    matric:       this.editForm.matric,
+                    email:        this.editForm.email,
+                    phone:        this.editForm.phone,
+                    program:      this.editForm.program,
+                    availability: this.editForm.availability,
+                    availTime:    this.editForm.avail_time,
+                    status:       this.editForm.status,
+                    statusClass:  res.statusClass,
                 };
                 this.volunteers[idx] = updated;
                 this.selected = updated;
@@ -949,13 +947,12 @@ function volunteerApp() {
             const file = event.target.files[0];
             if (!file) return;
             const reader = new FileReader();
-            reader.onload = (e) => {
+            reader.onload = async (e) => {
                 const data = new Uint8Array(e.target.result);
                 const workbook = XLSX.read(data, { type: 'array' });
                 const sheet = workbook.Sheets[workbook.SheetNames[0]];
                 const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
 
-                // Case-insensitive column finder — tries each candidate key in order
                 const col = (row, ...candidates) => {
                     const keys = Object.keys(row);
                     for (const c of candidates) {
@@ -965,40 +962,31 @@ function volunteerApp() {
                     return '';
                 };
 
-                const statusMap = {
-                    'APPROVED':    'bg-green-50 text-green-600 border border-green-100',
-                    'PENDING':     'bg-cyan-50 text-cyan-600 border border-cyan-100',
-                    'INTERVIEWING':'bg-[#FAF8F0] text-[#C9A84C] border border-[#E8E2D8]',
-                };
-                let added = 0;
+                const payload = [];
                 rows.forEach(row => {
                     const name = col(row, 'Name', 'Full Name', 'FULL NAME', 'Nama', 'Nama Penuh');
                     if (!name) return;
                     const statusRaw = (col(row, 'Status', 'STATUS') || 'PENDING').toUpperCase();
-                    const resolvedStatus = statusMap[statusRaw] ? statusRaw : 'PENDING';
-                    this.volunteers.push({
-                        id: Date.now() + Math.random(),
+                    payload.push({
                         name,
-                        matric: col(row, 'Matric', 'Matric No', 'Matric No.', 'Matric Number', 'MATRIC', 'No Matrik', 'No. Matrik', 'Nombor Matrik', 'matric_no'),
-                        avatar: '',
-                        applied: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
-                        email: col(row, 'email', 'Email', 'E-mail', 'EMAIL', 'Email Address', 'Emel'),
-                        phone: col(row, 'phone number', 'Phone Number', 'Phone', 'Phone No', 'Phone No.', 'No Phone', 'No. Phone', 'Tel', 'Telephone', 'PHONE', 'Telefon'),
-                        location: '',
+                        matric:       col(row, 'Matric', 'Matric No', 'Matric No.', 'Matric Number', 'MATRIC', 'No Matrik', 'No. Matrik', 'Nombor Matrik', 'matric_no'),
+                        email:        col(row, 'email', 'Email', 'E-mail', 'EMAIL', 'Email Address', 'Emel'),
+                        phone:        col(row, 'phone number', 'Phone Number', 'Phone', 'Phone No', 'Phone No.', 'No Phone', 'No. Phone', 'Tel', 'Telephone', 'PHONE', 'Telefon'),
                         availability: col(row, 'Availability', 'Available', 'AVAILABILITY', 'Ketersediaan'),
-                        availTime: col(row, 'Time', 'Time Range', 'Available Time', 'TIME'),
-                        status: resolvedStatus,
-                        statusClass: statusMap[resolvedStatus],
-                        program: col(row, 'Program', 'Programme', 'Volunteer Program', 'PROGRAM', 'Program Sukarela'),
-                        skills: [],
-                        bio: '',
-                        experience: '',
+                        availTime:    col(row, 'Time', 'Time Range', 'Available Time', 'TIME'),
+                        program:      col(row, 'Program', 'Programme', 'Volunteer Program', 'PROGRAM', 'Program Sukarela'),
+                        status:       ['APPROVED','INTERVIEWING','REJECTED'].includes(statusRaw) ? statusRaw : 'PENDING',
                     });
-                    added++;
                 });
+
                 event.target.value = '';
-                if (added > 0) alert(added + ' volunteer(s) imported successfully.');
-                else alert('No valid rows found. Make sure your Excel has a "Name" column.');
+                if (!payload.length) { alert('No valid rows found. Make sure your Excel has a "Name" column.'); return; }
+
+                const res = await _api('{{ route('admin.volunteers.import') }}', 'POST', { volunteers: payload });
+                if (res.volunteers) {
+                    this.volunteers.push(...res.volunteers);
+                    alert(res.imported + ' volunteer(s) imported and saved to database.');
+                }
             };
             reader.readAsArrayBuffer(file);
         },
