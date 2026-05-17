@@ -1,90 +1,103 @@
 ﻿<x-admin-layout>
+<div class="px-8 py-6 max-w-7xl mx-auto">
+
     <!-- Page Header -->
-    <div class="flex items-start justify-between mb-8">
+    <div class="flex items-start justify-between mb-10 border-b pb-8 border-[#E8E2D8]/50">
         <div>
-            <h1 class="text-3xl font-cabinet font-semibold text-gray-800">Cat Directory</h1>
-            <p class="text-sm text-gray-400 mt-1">Managing the life-cycle and care records of our feline residents<br>with boutique precision and digital transparency.</p>
+            <h1 class="text-[32px] font-bold text-gray-900 tracking-tight">Cat Directory</h1>
+            <p class="text-[15px] font-medium text-gray-500 mt-1 max-w-2xl">Managing the life-cycle and care records of our feline residents with boutique precision and digital transparency.</p>
         </div>
-        <div class="flex items-center gap-3">
-            <div class="text-center bg-white rounded-2xl px-5 py-3 shadow-sm border border-[#E8E2D8]">
-                <p class="text-2xl font-bold text-gray-800">{{ $cats->total() }}</p>
-                <p class="text-[10px] tracking-widest text-[#C9A84C] uppercase font-semibold">In Care</p>
+        <a href="{{ route('admin.cats.create') }}"
+           class="px-6 py-2.5 rounded-full bg-[#C9A84C] text-white text-sm font-bold shadow-md shadow-amber-600/20 hover:bg-[#b8963e] transition flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+            Add New Cat
+        </a>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <div class="bg-white rounded-[28px] p-7 flex items-center justify-between shadow-[0_2px_15px_-5px_rgba(0,0,0,0.05)] border border-[#F0EBE3]">
+            <div>
+                <div class="text-[12px] font-bold text-gray-500 tracking-widest mb-1 uppercase">Total In Care</div>
+                <div class="text-4xl font-bold text-gray-900">{{ $cats->total() }}</div>
             </div>
-            <div class="text-center bg-[#C9A84C] rounded-2xl px-5 py-3 shadow-sm">
-                <p class="text-2xl font-bold text-white">{{ $cats->where('status', 'Available')->count() }}</p>
-                <p class="text-[10px] tracking-widest text-[#E8D5A0] uppercase font-semibold">Available</p>
+            <div class="w-14 h-14 rounded-full bg-[#FAF6F0] flex items-center justify-center text-[#C9A84C]">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/><path d="M8.5 6.5c.83 0 1.5-.67 1.5-1.5S9.33 3.5 8.5 3.5 7 4.17 7 5s.67 1.5 1.5 1.5zm7 0c.83 0 1.5-.67 1.5-1.5S16.33 3.5 15.5 3.5 14 4.17 14 5s.67 1.5 1.5 1.5zM12 8c-2.33 0-7 1.17-7 3.5V13h14v-1.5C19 9.17 14.33 8 12 8z"/></svg>
+            </div>
+        </div>
+        <div class="bg-white rounded-[28px] p-7 flex items-center justify-between shadow-[0_2px_15px_-5px_rgba(0,0,0,0.05)] border border-[#F0EBE3]">
+            <div>
+                <div class="text-[12px] font-bold text-gray-500 tracking-widest mb-1 uppercase">Available</div>
+                <div class="text-4xl font-bold text-[#C9A84C]">{{ $cats->getCollection()->where('status', 'Available')->count() }}</div>
+            </div>
+            <div class="w-14 h-14 rounded-full bg-[#FAF6F0] flex items-center justify-center text-[#C9A84C]">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+        </div>
+        <div class="bg-white rounded-[28px] p-7 flex items-center justify-between shadow-[0_2px_15px_-5px_rgba(0,0,0,0.05)] border border-[#F0EBE3]">
+            <div>
+                <div class="text-[12px] font-bold text-gray-500 tracking-widest mb-1 uppercase">Adopted</div>
+                <div class="text-4xl font-bold text-gray-900">{{ $cats->getCollection()->where('status', 'Adopted')->count() }}</div>
+            </div>
+            <div class="w-14 h-14 rounded-full bg-[#FAF6F0] flex items-center justify-center text-[#C9A84C]">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg>
             </div>
         </div>
     </div>
 
     <!-- Filter Bar -->
     <form method="GET" action="{{ route('admin.cats.index') }}"
-          class="bg-[#3D3D3D] rounded-2xl shadow-sm px-6 py-4 mb-6 flex flex-wrap items-end gap-4">
-        <div class="flex flex-col gap-1 min-w-[180px]">
-            <label class="text-[10px] font-semibold tracking-widest text-[#9A9A9A] uppercase">Cat Breed</label>
-            <select name="breed"
-                    class="px-3 py-2 text-sm bg-white border border-[#555555] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#C9A84C] text-gray-800">
-                <option value="">All Breeds</option>
-                <option value="unknown" {{ request('breed') === 'unknown' ? 'selected' : '' }}>Unknown Breed</option>
-                @foreach($breeds as $breed)
-                    <option value="{{ $breed }}" {{ request('breed') === $breed ? 'selected' : '' }}>{{ $breed }}</option>
-                @endforeach
-            </select>
-        </div>
+          class="flex items-center gap-4 mb-6 px-1 flex-wrap">
 
-        <div class="flex flex-col gap-1 min-w-[160px]">
-            <label class="text-[10px] font-semibold tracking-widest text-[#9A9A9A] uppercase">Status</label>
-            <select name="status"
-                    class="px-3 py-2 text-sm bg-white border border-[#555555] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#C9A84C] text-gray-800">
-                <option value="">All Statuses</option>
-                @foreach(['Available','Adopted','Lost'] as $s)
-                    <option value="{{ $s }}" {{ request('status') === $s ? 'selected' : '' }}>{{ $s }}</option>
-                @endforeach
-            </select>
-        </div>
+        <select name="breed"
+                onchange="this.form.submit()"
+                class="pl-4 pr-8 py-2 rounded-full text-[13px] font-bold border-0 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]/40 transition cursor-pointer appearance-none {{ request('breed') ? 'bg-[#C9A84C] text-white' : 'bg-[#EBE5DA] text-gray-700' }}">
+            <option value="">All Breeds</option>
+            <option value="unknown" {{ request('breed') === 'unknown' ? 'selected' : '' }}>Unknown Breed</option>
+            @foreach($breeds as $breed)
+                <option value="{{ $breed }}" {{ request('breed') === $breed ? 'selected' : '' }}>{{ $breed }}</option>
+            @endforeach
+        </select>
 
-        <div class="flex flex-col gap-1 min-w-[140px]">
-            <label class="text-[10px] font-semibold tracking-widest text-[#9A9A9A] uppercase">Age</label>
-            <select name="age"
-                    class="px-3 py-2 text-sm bg-white border border-[#555555] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#C9A84C] text-gray-800">
-                <option value="">All Ages</option>
-                <option value="unknown" {{ request('age') === 'unknown' ? 'selected' : '' }}>Unknown Age</option>
-                <option value="kitten"  {{ request('age') === 'kitten'  ? 'selected' : '' }}>Kitten (&lt; 1 yr)</option>
-                <option value="young"   {{ request('age') === 'young'   ? 'selected' : '' }}>Young (1–3 yrs)</option>
-                <option value="adult"   {{ request('age') === 'adult'   ? 'selected' : '' }}>Adult (4–7 yrs)</option>
-                <option value="senior"  {{ request('age') === 'senior'  ? 'selected' : '' }}>Senior (8+ yrs)</option>
-            </select>
-        </div>
+        <select name="status"
+                onchange="this.form.submit()"
+                class="pl-4 pr-8 py-2 rounded-full text-[13px] font-bold border-0 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]/40 transition cursor-pointer appearance-none {{ request('status') ? 'bg-[#C9A84C] text-white' : 'bg-[#EBE5DA] text-gray-700' }}">
+            <option value="">All Statuses</option>
+            @foreach(['Available','Adopted','Lost'] as $s)
+                <option value="{{ $s }}" {{ request('status') === $s ? 'selected' : '' }}>{{ $s }}</option>
+            @endforeach
+        </select>
 
-        <div class="flex items-end gap-2 pb-0.5">
-            <button type="submit"
-                    class="px-5 py-2 bg-[#C9A84C] hover:bg-[#b8963e] text-white text-sm font-semibold rounded-xl transition">
-                Apply
-            </button>
-            @if(request('breed') || request('status') || request('age'))
-                <a href="{{ route('admin.cats.index') }}"
-                   class="px-4 py-2 text-sm text-white font-semibold border border-white rounded-xl hover:bg-white hover:text-[#3D3D3D] transition">
-                    Reset
-                </a>
-            @endif
-        </div>
+        <select name="age"
+                onchange="this.form.submit()"
+                class="pl-4 pr-8 py-2 rounded-full text-[13px] font-bold border-0 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]/40 transition cursor-pointer appearance-none {{ request('age') ? 'bg-[#C9A84C] text-white' : 'bg-[#EBE5DA] text-gray-700' }}">
+            <option value="">All Ages</option>
+            <option value="unknown" {{ request('age') === 'unknown' ? 'selected' : '' }}>Unknown Age</option>
+            <option value="kitten"  {{ request('age') === 'kitten'  ? 'selected' : '' }}>Kitten (&lt; 1 yr)</option>
+            <option value="young"   {{ request('age') === 'young'   ? 'selected' : '' }}>Young (1–3 yrs)</option>
+            <option value="adult"   {{ request('age') === 'adult'   ? 'selected' : '' }}>Adult (4–7 yrs)</option>
+            <option value="senior"  {{ request('age') === 'senior'  ? 'selected' : '' }}>Senior (8+ yrs)</option>
+        </select>
 
-        <div class="flex flex-col gap-1 ml-auto">
-            <label class="text-[10px] font-semibold tracking-widest text-[#9A9A9A] uppercase opacity-0 select-none">Search</label>
-            <div class="flex items-center gap-2">
-                <div class="relative">
-                    <input type="text" id="catSearch" name="search" value="{{ request('search') }}"
-                           placeholder="Search cat registry..."
-                           class="pl-8 pr-4 py-2 text-sm bg-white border border-[#555555] rounded-xl focus:outline-none focus:ring-1 focus:ring-[#C9A84C] text-gray-800 placeholder-gray-400 w-52">
-                    <svg class="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-[#9A9A9A]" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
-                    </svg>
-                </div>
-                <a href="{{ route('admin.cats.create') }}"
-                   class="px-4 py-2 bg-[#C9A84C] hover:bg-[#b8963e] text-white text-sm font-semibold rounded-xl transition whitespace-nowrap">
-                    + Add New
-                </a>
+        @if(request('breed') || request('status') || request('age') || request('search'))
+            <a href="{{ route('admin.cats.index') }}"
+               class="text-[12px] font-bold text-gray-400 hover:text-gray-600 underline underline-offset-2">
+                Clear all
+            </a>
+        @endif
+
+        <div class="ml-auto flex items-center gap-3">
+            <div class="relative">
+                <input type="text" name="search" value="{{ request('search') }}"
+                       placeholder="Search cat registry..."
+                       class="pl-9 pr-4 py-2 rounded-full text-[13px] bg-white border border-[#E8E2D8] text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]/40 focus:border-[#C9A84C] w-52 transition">
+                <svg class="absolute left-3 top-2.5 w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+                </svg>
             </div>
+            <button type="submit" class="px-5 py-2 rounded-full bg-[#C9A84C] hover:bg-[#b8963e] text-white text-[13px] font-bold transition shadow-md shadow-amber-600/20">
+                Search
+            </button>
         </div>
     </form>
 
@@ -182,12 +195,6 @@
         @endif
     </div>
 
-<script>
-document.getElementById('catSearch').addEventListener('input', function () {
-    const q = this.value.toLowerCase();
-    document.querySelectorAll('tbody tr').forEach(row => {
-        row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
-    });
-});
-</script>
+
+</div>{{-- end max-w-7xl --}}
 </x-admin-layout>
