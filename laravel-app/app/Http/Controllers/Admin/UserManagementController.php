@@ -18,16 +18,27 @@ class UserManagementController extends Controller
             'members' => User::where('role', 'user')->count(),
         ];
         $volunteers = Volunteer::orderBy('created_at', 'desc')->get()
-            ->map(fn($v) => [
-                'id'           => $v->id,
-                'name'         => $v->name,
-                'matric'       => $v->matric ?? '',
-                'email'        => $v->email ?? '',
-                'phone'        => $v->phone ?? '',
-                'program'      => $v->program ?? '',
-                'availability' => $v->availability ?? '',
-                'status'       => $v->status,
-            ]);
+            ->map(function ($v) {
+                $statusClass = match($v->status) {
+                    'APPROVED'     => 'bg-green-50 text-green-600 border border-green-100',
+                    'INTERVIEWING' => 'bg-[#FAF8F0] text-[#C9A84C] border border-[#E8E2D8]',
+                    'REJECTED'     => 'bg-red-50 text-red-500 border border-red-100',
+                    default        => 'bg-cyan-50 text-cyan-600 border border-cyan-100',
+                };
+                return [
+                    'id'           => $v->id,
+                    'name'         => $v->name,
+                    'matric'       => $v->matric ?? '',
+                    'email'        => $v->email ?? '',
+                    'phone'        => $v->phone ?? '',
+                    'program'      => $v->program ?? '',
+                    'availability' => $v->availability ?? '',
+                    'skills'       => $v->skills ?? [],
+                    'status'       => $v->status,
+                    'statusClass'  => $statusClass,
+                    'applied'      => $v->applied_at ? $v->applied_at->format('M d, Y') : $v->created_at->format('M d, Y'),
+                ];
+            });
         return view('admin.users.index', compact('users', 'stats', 'volunteers'));
     }
 

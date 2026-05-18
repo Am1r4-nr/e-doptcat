@@ -192,42 +192,45 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-[1.5fr_0.9fr_1.4fr_1.4fr_0.9fr_0.9fr_0.8fr] gap-4 mb-3 px-8 text-[11px] font-bold text-gray-400 uppercase tracking-widest">
-            <div>Volunteer</div>
-            <div>Matric No.</div>
-            <div>Program</div>
-            <div>Email</div>
-            <div>Phone</div>
-            <div>Availability</div>
-            <div class="text-right">Status</div>
-        </div>
+        <div class="bg-white rounded-[20px] border border-[#F0EBE3] overflow-hidden shadow-[0_2px_15px_-5px_rgba(0,0,0,0.05)]">
+            <!-- Table Header -->
+            <div class="grid grid-cols-[2.5fr_1fr_1.5fr_1.5fr_1fr_0.9fr] bg-gray-900 text-white text-[11px] font-bold uppercase tracking-widest px-6 py-4">
+                <div>Applicant Profile</div>
+                <div>Matric No.</div>
+                <div>Expertise & Skills</div>
+                <div>Volunteer Program</div>
+                <div>Availability</div>
+                <div class="text-right">Status</div>
+            </div>
 
-        <div class="space-y-3">
+            <!-- Empty State -->
             <template x-if="volunteers.length === 0">
-                <div class="bg-white rounded-[20px] py-14 flex flex-col items-center text-center border border-[#F0EBE3]">
+                <div class="py-14 flex flex-col items-center text-center">
                     <svg class="w-10 h-10 text-gray-200 mb-3" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
                     <p class="text-gray-400 font-semibold text-sm">No volunteers yet.</p>
                     <p class="text-gray-400 text-[12px] mt-1">Add manually or upload an Excel file.</p>
                 </div>
             </template>
-            <template x-for="v in volunteers" :key="v.id">
-                <div class="bg-white rounded-full grid grid-cols-[1.5fr_0.9fr_1.4fr_1.4fr_0.9fr_0.9fr_0.8fr] items-center gap-4 px-6 py-4 shadow-[0_2px_15px_-5px_rgba(0,0,0,0.05)] border border-[#F0EBE3]">
+
+            <!-- Rows -->
+            <template x-for="(v, i) in volunteers" :key="v.id">
+                <div class="grid grid-cols-[2.5fr_1fr_1.5fr_1.5fr_1fr_0.9fr] items-center px-6 py-4 hover:bg-[#FAF6F0] transition"
+                     :class="i < volunteers.length - 1 ? 'border-b border-[#F0EBE3]' : ''">
                     <div class="min-w-0">
-                        <div class="font-bold text-[14px] text-gray-900 truncate" x-text="v.name"></div>
-                        <div class="flex flex-wrap gap-1 mt-1">
-                            <template x-for="sk in v.skills" :key="sk.label">
-                                <span class="px-2 py-0.5 bg-[#F2EDE4] text-gray-600 text-[9px] font-bold rounded-md uppercase tracking-wider" x-text="sk.label"></span>
-                            </template>
-                        </div>
+                        <div class="font-semibold text-[14px] text-gray-900 truncate" x-text="v.name"></div>
+                        <div class="text-[12px] text-gray-400 mt-0.5" x-text="'Applied ' + (v.applied || '—')"></div>
                     </div>
-                    <div class="text-[13px] font-semibold text-gray-600 truncate" x-text="v.matric || '—'"></div>
-                    <div class="text-[13px] text-gray-700 truncate" x-text="v.program || '—'"></div>
-                    <div class="text-[13px] text-gray-600 truncate" x-text="v.email || '—'"></div>
-                    <div class="text-[13px] text-gray-600 truncate" x-text="v.phone || '—'"></div>
-                    <div>
-                        <div class="text-[13px] font-bold text-gray-700" x-text="v.availability || '—'"></div>
-                        <div class="text-[11px] text-gray-400 font-medium" x-text="v.availTime"></div>
+                    <div class="text-[13px] text-gray-600 truncate" x-text="v.matric || '—'"></div>
+                    <div class="flex flex-wrap gap-1">
+                        <template x-if="!v.skills || v.skills.length === 0">
+                            <span class="text-[13px] text-gray-400">—</span>
+                        </template>
+                        <template x-for="sk in (v.skills || [])" :key="sk">
+                            <span class="px-2 py-0.5 bg-[#F2EDE4] text-gray-600 text-[10px] font-bold rounded-md uppercase tracking-wider" x-text="sk"></span>
+                        </template>
                     </div>
+                    <div class="text-[13px] text-gray-600 truncate" x-text="v.program || '—'"></div>
+                    <div class="text-[13px] text-gray-600 truncate" x-text="v.availability || '—'"></div>
                     <div class="flex justify-end">
                         <span class="px-2.5 py-1 text-[10px] font-bold rounded-full uppercase tracking-wider"
                               :class="v.statusClass" x-text="v.status"></span>
