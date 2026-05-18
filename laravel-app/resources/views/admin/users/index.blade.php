@@ -9,10 +9,10 @@
                 Club advisors, high committee members, and active volunteers of AHC.
             </p>
         </div>
-        <button @click="activeTab === 'volunteers' ? openAddVolunteer() : openAddStaff()"
+        <button x-show="activeTab === 'staff'" @click="openAddStaff()"
                 class="px-6 py-2.5 rounded-full bg-[#C9A84C] text-white text-sm font-bold shadow-md shadow-amber-600/20 hover:bg-[#b8963e] transition flex items-center gap-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-            <span x-text="activeTab === 'volunteers' ? 'Add Volunteer' : 'Add Staff'"></span>
+            Add Staff
         </button>
     </div>
 
