@@ -63,6 +63,7 @@ Route::middleware('auth')->group(function () {
 
         // Adopter Management
         Route::get('adopters', [AdopterController::class, 'index'])->name('adopters.index');
+        Route::get('adopters/{user}', [AdopterController::class, 'show'])->name('adopters.show');
 
         // Adoption Management
         Route::get('adoptions/pipeline', [AdoptionManagementController::class, 'pipeline'])->name('adoptions.pipeline');

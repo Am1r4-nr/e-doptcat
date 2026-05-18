@@ -160,7 +160,7 @@
                         </td>
 
                         <td class="py-5 px-6 text-right">
-                            <a href="{{ route('admin.users.show', $user) }}"
+                            <a href="{{ route('admin.adopters.show', $user) }}"
                                class="inline-flex items-center gap-1 text-xs font-bold text-[#C9A84C] hover:text-[#7A5320] transition">
                                 View Profile
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">

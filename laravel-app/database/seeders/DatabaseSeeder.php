@@ -38,6 +38,9 @@ class DatabaseSeeder extends Seeder
         // Seed volunteers
         $this->call(VolunteerSeeder::class);
 
+        // Seed mock adoption applications
+        $this->call(AdoptionSeeder::class);
+
         // Event::factory(10)->create();
 
         // Create reports tied to random users

@@ -44,6 +44,7 @@ class UserManagementController extends Controller
 
     public function show(User $user)
     {
+        $user->load(['adoptions.cat']);
         return view('admin.users.show', compact('user'));
     }
 

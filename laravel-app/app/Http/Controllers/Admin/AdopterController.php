@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class AdopterController extends Controller
 {
@@ -30,5 +31,11 @@ class AdopterController extends Controller
             'approvedAdopters',
             'pendingAdopters',
         ));
+    }
+
+    public function show(User $user)
+    {
+        $user->load(['adoptions.cat']);
+        return view('admin.adopters.show', compact('user'));
     }
 }
