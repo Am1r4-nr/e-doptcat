@@ -194,7 +194,7 @@
 
         <div class="bg-white rounded-[20px] border border-[#F0EBE3] overflow-hidden shadow-[0_2px_15px_-5px_rgba(0,0,0,0.05)]">
             <!-- Table Header -->
-            <div class="grid grid-cols-[2.5fr_1fr_1.5fr_1.5fr_1fr_0.9fr] bg-gray-900 text-white text-[11px] font-bold uppercase tracking-widest px-6 py-4">
+            <div class="grid grid-cols-[2.5fr_1fr_1.5fr_1.5fr_1fr_0.9fr] gap-x-4 bg-gray-900 text-white text-[11px] font-bold uppercase tracking-widest px-6 py-4">
                 <div>Applicant Profile</div>
                 <div>Matric No.</div>
                 <div>Expertise & Skills</div>
@@ -214,7 +214,7 @@
 
             <!-- Rows -->
             <template x-for="(v, i) in volunteers" :key="v.id">
-                <div class="grid grid-cols-[2.5fr_1fr_1.5fr_1.5fr_1fr_0.9fr] items-center px-6 py-4 hover:bg-[#FAF6F0] transition"
+                <div class="grid grid-cols-[2.5fr_1fr_1.5fr_1.5fr_1fr_0.9fr] gap-x-4 items-center px-6 py-4 hover:bg-[#FAF6F0] transition"
                      :class="i < volunteers.length - 1 ? 'border-b border-[#F0EBE3]' : ''">
                     <div class="min-w-0">
                         <div class="font-semibold text-[14px] text-gray-900 truncate capitalize" style="text-transform: capitalize" x-text="v.name.toLowerCase()"></div>
