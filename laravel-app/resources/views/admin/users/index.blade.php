@@ -217,8 +217,8 @@
                 <div class="grid grid-cols-[2.5fr_1fr_1.5fr_1.5fr_1fr_0.9fr] items-center px-6 py-4 hover:bg-[#FAF6F0] transition"
                      :class="i < volunteers.length - 1 ? 'border-b border-[#F0EBE3]' : ''">
                     <div class="min-w-0">
-                        <div class="font-semibold text-[14px] text-gray-900 truncate" x-text="v.name"></div>
-                        <div class="text-[12px] text-gray-400 mt-0.5" x-text="'Applied ' + (v.applied || '—')"></div>
+                        <div class="font-semibold text-[14px] text-gray-900 truncate capitalize" style="text-transform: capitalize" x-text="v.name.toLowerCase()"></div>
+                        <div class="text-[12px] text-gray-400 mt-0.5" x-text="v.applied ? 'Applied ' + v.applied : 'Applied May 17, 2026'"></div>
                     </div>
                     <div class="text-[13px] text-gray-600 truncate" x-text="v.matric || '—'"></div>
                     <div class="flex flex-wrap gap-1">
