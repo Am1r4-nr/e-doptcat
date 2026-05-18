@@ -7,8 +7,7 @@
     <title>Admin · {{ config('app.name', 'e-Doptcat') }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-    <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,700,600,500,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -17,15 +16,18 @@
             theme: {
                 extend: {
                     colors: {
-                        cream: '#EDE8DE',
-                        'cream-dark': '#E0D8C8',
+                        cream: '#F2EDE3',
+                        'cream-dark': '#E8E0D0',
                         gold: '#C9A84C',
-                        amber: { 850: '#92400e' }
+                        'gold-dim': 'rgba(201,168,76,0.12)',
                     },
                     fontFamily: {
-                        serif: ['Playfair Display', 'serif'],
-                        sans: ['Lato', 'sans-serif'],
-                        cabinet: ['Cabinet Grotesk', 'sans-serif'],
+                        sans:    ['Lato', 'sans-serif'],
+                        jakarta: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        card:       '0 2px 12px rgba(0,0,0,0.06)',
+                        'card-lg':  '0 6px 24px rgba(0,0,0,0.10)',
                     }
                 }
             }
@@ -33,37 +35,62 @@
     </script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
-        body { font-family: 'Lato', sans-serif; }
-        .font-serif   { font-family: 'Playfair Display', serif; }
-        .font-cabinet { font-family: 'Cabinet Grotesk', sans-serif; }
+        body { font-family: 'Lato', sans-serif; background-color: #F2EDE3; }
+        .font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif; }
 
-        /* Sidebar slides width only — no global transition-all */
+        /* Sidebar slides width only */
         #admin-sidebar {
             transition: width 280ms cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Text labels collapse in-place: opacity + max-width together */
+        /* Text labels collapse in-place */
         .nav-label {
             overflow: hidden;
             white-space: nowrap;
             transition: max-width 250ms cubic-bezier(0.4, 0, 0.2, 1),
                         opacity     200ms ease;
         }
-        .nav-label.open  { max-width: 200px; opacity: 1; transition-delay: 80ms; }
-        .nav-label.closed { max-width: 0;    opacity: 0; transition-delay: 0ms; }
+        .nav-label.open   { max-width: 200px; opacity: 1; transition-delay: 80ms; }
+        .nav-label.closed { max-width: 0;     opacity: 0; transition-delay: 0ms; }
 
         /* Nav item padding shifts smoothly */
         .nav-item {
             transition: padding 280ms cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Suppress ALL transitions on first render to prevent load-glitch */
+        /* Suppress ALL transitions on first render */
         .no-transition, .no-transition * {
             transition: none !important;
         }
+
+        /* Active nav: gold pill with slight glow */
+        .nav-active {
+            background: #C9A84C;
+            color: #fff;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(201,168,76,0.30);
+        }
+
+        /* Card global style */
+        .card {
+            background: #fff;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            transition: box-shadow 200ms ease;
+        }
+        .card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.10); }
+        .card-sm {
+            background: #fff;
+            border-radius: 1rem;
+            padding: 1.25rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            transition: box-shadow 200ms ease;
+        }
+        .card-sm:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.10); }
     </style>
 </head>
-<body class="antialiased bg-[#EDE8DE]">
+<body class="antialiased">
 
 @php
     $initialMenu = match(true) {
@@ -90,15 +117,17 @@
     <!-- Sidebar -->
     <aside id="admin-sidebar"
            :class="sidebarOpen ? 'w-60' : 'w-[64px]'"
-           class="bg-[#2A2A2A] flex flex-col flex-shrink-0 overflow-hidden">
+           class="bg-[#252525] flex flex-col flex-shrink-0 overflow-hidden">
 
         <!-- Logo -->
-        <div class="nav-item h-[72px] flex items-center border-b border-[#3A3A3A] overflow-hidden"
+        <div class="nav-item h-[72px] flex items-center border-b border-[#303030] overflow-hidden"
              :class="sidebarOpen ? 'px-4 gap-3' : 'px-[14px]'">
             <img src="{{ asset('images/logo.jpg') }}" alt="e-Doptcat"
-                 class="w-9 h-9 rounded-full object-cover flex-shrink-0">
+                 class="w-9 h-9 rounded-full object-cover flex-shrink-0 ring-2 ring-[#C9A84C]/40">
             <span class="nav-label" :class="sidebarOpen ? 'open' : 'closed'">
-                <span class="text-[11px] font-semibold tracking-widest text-[#C9A84C] uppercase leading-tight">e-Doptcat Admin</span>
+                <span class="font-jakarta text-[12px] font-bold tracking-wide text-white leading-tight">e-Doptcat
+                    <span class="block text-[10px] font-medium text-[#C9A84C] tracking-widest uppercase">Admin Panel</span>
+                </span>
             </span>
         </div>
 
@@ -374,15 +403,15 @@
     <div class="flex-1 flex flex-col overflow-hidden">
 
         <!-- Top Bar -->
-        <header class="bg-white border-b border-[#E8E2D8] px-6 h-[72px] flex items-center justify-between flex-shrink-0 shadow-sm">
+        <header class="bg-white px-6 h-[72px] flex items-center justify-between flex-shrink-0" style="box-shadow:0 1px 0 rgba(0,0,0,0.06)">
             <div class="flex items-center gap-4">
                 <button @click="sidebarOpen = !sidebarOpen"
-                        class="text-gray-400 hover:text-[#C9A84C] transition-colors p-1.5 rounded-lg hover:bg-gray-50">
+                        class="text-gray-400 hover:text-[#C9A84C] transition-colors p-1.5 rounded-lg hover:bg-[#F2EDE3]">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5"/>
                     </svg>
                 </button>
-                <p class="text-sm tracking-widest text-[#C9A84C] uppercase font-semibold">Feline Management Console</p>
+                <p class="font-jakarta text-sm font-bold text-[#1C1A17] tracking-wide">Feline Management Console</p>
             </div>
             <div class="flex items-center gap-4">
                 <button class="relative text-gray-400 hover:text-[#C9A84C] transition-colors">
@@ -402,7 +431,7 @@
         </header>
 
         <!-- Page Content -->
-        <main class="flex-1 overflow-y-auto p-8">
+        <main class="flex-1 overflow-y-auto p-8" style="background:#F2EDE3">
             @if(session('success'))
                 <div class="mb-6 px-4 py-3 bg-green-50 border border-green-200 text-green-700 text-sm rounded-xl">
                     {{ session('success') }}
@@ -417,8 +446,8 @@
         </main>
 
         <!-- Footer -->
-        <footer class="px-8 py-3 border-t border-[#E8E2D8] bg-white">
-            <p class="text-[10px] text-gray-400 text-center">© {{ date('Y') }} e-Doptcat Administrative Atelier. All systems operational.</p>
+        <footer class="px-8 py-3 bg-white" style="border-top:1px solid rgba(0,0,0,0.06)">
+            <p class="text-[10px] text-gray-400 text-center">© {{ date('Y') }} e-Doptcat Administrative Atelier · All systems operational.</p>
         </footer>
     </div>
 </div>

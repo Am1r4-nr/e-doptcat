@@ -1,3 +1,139 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    :root {
+        --cream:       #F2EDE3;
+        --cream-card:  #FDFBF7;
+        --gold:        #C9A84C;
+        --gold-light:  #E8D5A0;
+        --gold-dim:    rgba(201,168,76,0.12);
+        --sidebar:     #252525;
+        --sidebar-hover: #333333;
+        --text-primary:   #1C1A17;
+        --text-secondary: #6B6560;
+        --text-muted:     #A09890;
+        --border-soft:    rgba(0,0,0,0.07);
+        --shadow-card:    0 2px 12px rgba(0,0,0,0.06);
+        --shadow-card-hover: 0 6px 24px rgba(0,0,0,0.10);
+    }
+
+    body {
+        background-color: var(--cream);
+        color: var(--text-primary);
+        -webkit-font-smoothing: antialiased;
+    }
+}
+
+@layer components {
+
+    /* ── Cards ─────────────────────────────────── */
+    .card {
+        @apply bg-white rounded-2xl p-6;
+        box-shadow: var(--shadow-card);
+        transition: box-shadow 200ms ease, transform 200ms ease;
+    }
+    .card:hover {
+        box-shadow: var(--shadow-card-hover);
+    }
+    .card-sm {
+        @apply bg-white rounded-2xl p-5;
+        box-shadow: var(--shadow-card);
+        transition: box-shadow 200ms ease, transform 200ms ease;
+    }
+    .card-sm:hover {
+        box-shadow: var(--shadow-card-hover);
+    }
+    .card-gold {
+        @apply rounded-2xl p-5 text-white;
+        background: linear-gradient(135deg, #C9A84C 0%, #a8872d 100%);
+        box-shadow: 0 4px 20px rgba(201,168,76,0.35);
+    }
+    .card-dark {
+        @apply bg-[#2A2A2A] rounded-2xl p-5 text-white;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+    }
+
+    /* ── Labels & Numbers ──────────────────────── */
+    .section-label {
+        @apply text-[10px] font-bold tracking-[0.12em] uppercase;
+        color: var(--gold);
+    }
+    .section-label-muted {
+        @apply text-[10px] font-semibold tracking-[0.12em] uppercase;
+        color: var(--text-muted);
+    }
+    .stat-number {
+        @apply text-4xl font-extrabold leading-none;
+        color: var(--text-primary);
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* ── Buttons ───────────────────────────────── */
+    .btn-gold {
+        @apply inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white transition-all duration-200;
+        background: var(--gold);
+        box-shadow: 0 2px 8px rgba(201,168,76,0.3);
+    }
+    .btn-gold:hover {
+        background: #b8932e;
+        box-shadow: 0 4px 16px rgba(201,168,76,0.45);
+        transform: translateY(-1px);
+    }
+    .btn-outline {
+        @apply inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 border;
+        color: var(--gold);
+        border-color: var(--gold);
+        background: transparent;
+    }
+    .btn-outline:hover {
+        background: var(--gold-dim);
+    }
+
+    /* ── Badges ────────────────────────────────── */
+    .badge {
+        @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold;
+    }
+    .badge-gold   { @apply badge; background: var(--gold-dim); color: #92702A; }
+    .badge-green  { @apply badge bg-green-50 text-green-700; }
+    .badge-red    { @apply badge bg-red-50 text-red-600; }
+    .badge-gray   { @apply badge bg-gray-100 text-gray-500; }
+
+    /* ── Tables ────────────────────────────────── */
+    .data-table {
+        @apply w-full text-sm;
+    }
+    .data-table thead th {
+        @apply py-3 px-4 text-left font-semibold text-[10px] tracking-widest uppercase;
+        color: var(--text-muted);
+        border-bottom: 1px solid var(--border-soft);
+    }
+    .data-table tbody td {
+        @apply py-3.5 px-4;
+        border-bottom: 1px solid rgba(0,0,0,0.04);
+        color: var(--text-primary);
+    }
+    .data-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+    .data-table tbody tr:hover td {
+        background: rgba(201,168,76,0.04);
+    }
+
+    /* ── Form Inputs ───────────────────────────── */
+    .form-input {
+        @apply w-full px-4 py-2.5 rounded-xl text-sm border transition-all duration-150 outline-none;
+        border-color: rgba(0,0,0,0.12);
+        background: white;
+        color: var(--text-primary);
+    }
+    .form-input:focus {
+        border-color: var(--gold);
+        box-shadow: 0 0 0 3px rgba(201,168,76,0.12);
+    }
+    .form-label {
+        @apply block text-xs font-semibold mb-1.5;
+        color: var(--text-secondary);
+    }
+}
