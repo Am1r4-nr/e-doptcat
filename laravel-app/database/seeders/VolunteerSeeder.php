@@ -33,6 +33,7 @@ class VolunteerSeeder extends Seeder
         ];
 
         foreach ($volunteers as $data) {
+            $data['name'] = ucwords(strtolower($data['name']));
             Volunteer::firstOrCreate(
                 ['matric' => $data['matric']],
                 array_merge($data, ['applied_at' => now()])

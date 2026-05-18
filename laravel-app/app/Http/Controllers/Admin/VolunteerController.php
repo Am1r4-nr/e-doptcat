@@ -61,6 +61,7 @@ class VolunteerController extends Controller
 
         $volunteer = Volunteer::create([
             ...$data,
+            'name'       => ucwords(strtolower($data['name'])),
             'status'     => $data['status'] ?? 'PENDING',
             'applied_at' => now(),
         ]);
@@ -105,6 +106,9 @@ class VolunteerController extends Controller
             'status'       => 'nullable|in:PENDING,INTERVIEWING,APPROVED,REJECTED',
         ]);
 
+        if (isset($data['name'])) {
+            $data['name'] = ucwords(strtolower($data['name']));
+        }
         $volunteer->update($data);
 
         $statusClass = match($volunteer->status) {
@@ -150,7 +154,7 @@ class VolunteerController extends Controller
                 : 'PENDING';
 
             $volunteer = Volunteer::create([
-                'name'         => $row['name'] ?? '',
+                'name'         => ucwords(strtolower($row['name'] ?? '')),
                 'matric'       => $row['matric'] ?? null,
                 'email'        => $row['email'] ?? null,
                 'phone'        => $row['phone'] ?? null,
