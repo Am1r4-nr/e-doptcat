@@ -162,6 +162,13 @@
                 </div>
             </div>
 
+            <!-- Clear All button -->
+            <button @click="selectedSkills = []; selectedAvailability = null; selectedProgram = null"
+                    class="px-4 py-2 rounded-full text-[13px] font-bold text-gray-500 hover:text-red-500 hover:bg-red-50 border border-[#E8E2D8] hover:border-red-200 transition flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                Clear
+            </button>
+
             <!-- Active filter tags -->
             <div class="flex items-center gap-2 flex-wrap" x-show="selectedSkills.length || selectedAvailability || selectedProgram">
                 <span class="text-[11px] font-bold text-gray-400 uppercase tracking-widest pl-2">ACTIVE FILTERS:</span>

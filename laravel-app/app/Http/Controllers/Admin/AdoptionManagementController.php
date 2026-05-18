@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Adoption;
-use Illuminate\Http\Request;
 
 class AdoptionManagementController extends Controller
 {
@@ -12,6 +11,18 @@ class AdoptionManagementController extends Controller
     {
         $adoptions = Adoption::with(['user', 'cat'])->paginate(15);
         return view('admin.adoptions.index', compact('adoptions'));
+    }
+
+    public function pipeline()
+    {
+        $columns = [
+            'Pending'  => Adoption::with(['user', 'cat'])->where('status', 'Pending')->latest()->get(),
+            'Approved' => Adoption::with(['user', 'cat'])->where('status', 'Approved')->latest()->get(),
+            'Rejected' => Adoption::with(['user', 'cat'])->where('status', 'Rejected')->latest()->get(),
+            'Archived' => Adoption::with(['user', 'cat'])->where('status', 'Archived')->latest()->get(),
+        ];
+        $recent = Adoption::with(['user', 'cat'])->latest()->take(6)->get();
+        return view('admin.adoptions.pipeline', compact('columns', 'recent'));
     }
 
     public function show(Adoption $adoption)

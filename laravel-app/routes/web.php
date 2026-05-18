@@ -65,6 +65,7 @@ Route::middleware('auth')->group(function () {
         Route::get('adopters', [AdopterController::class, 'index'])->name('adopters.index');
 
         // Adoption Management
+        Route::get('adoptions/pipeline', [AdoptionManagementController::class, 'pipeline'])->name('adoptions.pipeline');
         Route::resource('adoptions', AdoptionManagementController::class)->only(['index', 'show', 'destroy']);
         Route::patch('adoptions/{adoption}/approve', [AdoptionManagementController::class, 'approve'])->name('adoptions.approve');
         Route::patch('adoptions/{adoption}/reject', [AdoptionManagementController::class, 'reject'])->name('adoptions.reject');

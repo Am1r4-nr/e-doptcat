@@ -1,11 +1,20 @@
 ﻿<x-admin-layout>
     <div class="px-8 py-6 max-w-7xl mx-auto">
         <!-- Header Section -->
-        <div class="mb-10">
-            <h2 class="text-[32px] font-bold text-gray-900 tracking-tight">Adopter Applications</h2>
-            <p class="text-[15px] font-medium text-gray-500 mt-1 max-w-2xl">
-                Review and manage incoming feline adoption requests with the care and attention our residents deserve.
-            </p>
+        <div class="mb-10 flex items-start justify-between">
+            <div>
+                <h2 class="text-[32px] font-bold text-gray-900 tracking-tight">Adopter Applications</h2>
+                <p class="text-[15px] font-medium text-gray-500 mt-1 max-w-2xl">
+                    Review and manage incoming feline adoption requests with the care and attention our residents deserve.
+                </p>
+            </div>
+            <a href="{{ route('admin.adoptions.pipeline') }}"
+               class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#C9A84C] text-white text-[13px] font-bold hover:bg-[#b8973d] transition shadow-sm mt-1 whitespace-nowrap">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/>
+                </svg>
+                Adoption Pipeline
+            </a>
         </div>
 
         <!-- 3 Stats Cards -->

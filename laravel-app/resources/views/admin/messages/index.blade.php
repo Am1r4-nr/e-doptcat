@@ -1,5 +1,5 @@
 <x-admin-layout>
-<div x-data="chatApp()" class="flex -mx-8 -my-8 h-full gap-0 bg-[#FAF6F0] overflow-hidden border-t border-[#E8E2D8]">
+<div x-data="chatApp()" class="flex -mx-8 -my-8 gap-0 bg-[#FAF6F0] overflow-hidden border-t border-[#E8E2D8]" style="height: calc(100vh - 64px)">
 
     <!-- ─── LEFT PANEL ─── -->
     <div class="w-80 flex flex-col bg-white border-r border-[#E8E2D8] flex-shrink-0 min-h-0 overflow-hidden">
