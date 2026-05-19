@@ -111,12 +111,14 @@
                                 $environments = ['2BR Apt', 'Single Home', 'Studio', '3BR House'];
                                 $mockEnv = $environments[$adoption->id % count($environments)];
 
-                                $statusLabels = [
-                                    'Pending' => ['label' => 'Reviewing', 'dot' => 'bg-[#FAF8F0]0', 'text' => 'text-[#C9A84C]'],
-                                    'Approved' => ['label' => 'Home Visit Set', 'dot' => 'bg-teal-500', 'text' => 'text-teal-700'],
-                                    'Rejected' => ['label' => 'Waitlisted', 'dot' => 'bg-gray-400', 'text' => 'text-gray-500 italic']
+                                $stageLabels = [
+                                    'New'       => ['label' => 'New',       'dot' => 'bg-orange-400', 'text' => 'text-orange-600'],
+                                    'Inquiry'   => ['label' => 'Inquiry',   'dot' => 'bg-blue-400',   'text' => 'text-blue-600'],
+                                    'Screening' => ['label' => 'Screening', 'dot' => 'bg-[#C9A84C]',  'text' => 'text-[#C9A84C]'],
+                                    'Matching'  => ['label' => 'Matching',  'dot' => 'bg-purple-400', 'text' => 'text-purple-600'],
+                                    'Approved'  => ['label' => 'Approved',  'dot' => 'bg-teal-500',   'text' => 'text-teal-600'],
                                 ];
-                                $mappedStatus = $statusLabels[$adoption->status] ?? ['label' => $adoption->status, 'dot' => 'bg-gray-400', 'text' => 'text-gray-600'];
+                                $mappedStatus = $stageLabels[$adoption->pipeline_stage ?? 'New'] ?? ['label' => $adoption->pipeline_stage, 'dot' => 'bg-gray-400', 'text' => 'text-gray-600'];
 
                                 // A little randomization for the specific mock screenshot layout if needed, but we'll stick to logic above mostly
                             @endphp

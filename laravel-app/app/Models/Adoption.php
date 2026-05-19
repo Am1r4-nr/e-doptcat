@@ -26,6 +26,12 @@ class Adoption extends Model
     public static function defaultChecklist(): array
     {
         return [
+            'New' => [
+                'identity_confirmed'    => false,
+                'contact_verified'      => false,
+                'terms_acknowledged'    => false,
+                'profile_reviewed'      => false,
+            ],
             'Inquiry' => [
                 'enquiry_received'        => false,
                 'acknowledgement_sent'    => false,

@@ -16,7 +16,7 @@ class AdoptionManagementController extends Controller
 
     public function pipeline()
     {
-        $stages = ['Inquiry', 'Screening', 'Matching', 'Approved'];
+        $stages = ['New', 'Inquiry', 'Screening', 'Matching', 'Approved'];
         $columns = [];
         foreach ($stages as $stage) {
             $columns[$stage] = Adoption::with(['user', 'cat'])
@@ -43,7 +43,7 @@ class AdoptionManagementController extends Controller
 
     public function moveStage(Request $request, Adoption $adoption)
     {
-        $request->validate(['stage' => 'required|in:Inquiry,Screening,Matching,Approved']);
+        $request->validate(['stage' => 'required|in:New,Inquiry,Screening,Matching,Approved']);
         $adoption->update(['pipeline_stage' => $request->stage]);
         return response()->json(['success' => true]);
     }

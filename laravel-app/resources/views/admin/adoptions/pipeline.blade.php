@@ -3,13 +3,14 @@
 $total = collect($columns)->sum(fn($c) => $c->count());
 
 $colConfig = [
-    'Inquiry'   => ['dot' => 'bg-blue-400',    'count' => 'bg-blue-50 text-blue-600',   'bar' => 'bg-blue-400',   'tag' => 'bg-blue-100 text-blue-700'],
-    'Screening' => ['dot' => 'bg-[#C9A84C]',   'count' => 'bg-[#F5EDD8] text-[#C9A84C]','bar' => 'bg-[#C9A84C]', 'tag' => 'bg-amber-100 text-amber-700'],
-    'Matching'  => ['dot' => 'bg-purple-400',  'count' => 'bg-purple-50 text-purple-600','bar' => 'bg-purple-400', 'tag' => 'bg-purple-100 text-purple-700'],
-    'Approved'  => ['dot' => 'bg-teal-500',    'count' => 'bg-teal-50 text-teal-600',   'bar' => 'bg-teal-500',   'tag' => 'bg-teal-100 text-teal-700'],
+    'New'       => ['dot' => 'bg-orange-400',  'count' => 'bg-orange-50 text-orange-600', 'bar' => 'bg-orange-400',  'tag' => 'bg-orange-100 text-orange-700'],
+    'Inquiry'   => ['dot' => 'bg-blue-400',    'count' => 'bg-blue-50 text-blue-600',     'bar' => 'bg-blue-400',    'tag' => 'bg-blue-100 text-blue-700'],
+    'Screening' => ['dot' => 'bg-[#C9A84C]',   'count' => 'bg-[#F5EDD8] text-[#C9A84C]', 'bar' => 'bg-[#C9A84C]',  'tag' => 'bg-amber-100 text-amber-700'],
+    'Matching'  => ['dot' => 'bg-purple-400',  'count' => 'bg-purple-50 text-purple-600', 'bar' => 'bg-purple-400',  'tag' => 'bg-purple-100 text-purple-700'],
+    'Approved'  => ['dot' => 'bg-teal-500',    'count' => 'bg-teal-50 text-teal-600',     'bar' => 'bg-teal-500',    'tag' => 'bg-teal-100 text-teal-700'],
 ];
 
-$stageOrder  = ['Inquiry', 'Screening', 'Matching', 'Approved'];
+$stageOrder  = ['New', 'Inquiry', 'Screening', 'Matching', 'Approved'];
 $avatarColors = ['bg-purple-200 text-purple-700','bg-teal-200 text-teal-700','bg-amber-200 text-amber-700','bg-pink-200 text-pink-700','bg-blue-200 text-blue-700','bg-rose-200 text-rose-700'];
 @endphp
 
@@ -63,15 +64,39 @@ $avatarColors = ['bg-purple-200 text-purple-700','bg-teal-200 text-teal-700','bg
             {{-- Modal body --}}
             <div class="overflow-y-auto flex-1 px-8 py-6">
                 <p class="text-[14px] text-gray-600 mb-8 leading-relaxed">
-                    Each adoption application moves through <strong class="text-gray-800">4 stages</strong>. As the admin, your job is to complete every checklist item in the current stage before advancing the application to the next one. The progress bar on each card shows how far along you are.
+                    Each adoption application moves through <strong class="text-gray-800">5 stages</strong>. As the admin, your job is to complete every checklist item in the current stage before advancing the application to the next one. The progress bar on each card shows how far along you are.
                 </p>
 
                 <div class="flex flex-col gap-6">
 
-                    {{-- Stage 1: Inquiry --}}
+                    {{-- Stage 1: New --}}
+                    <div class="rounded-2xl border border-orange-100 bg-orange-50/40 p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-8 h-8 rounded-xl bg-orange-400 flex items-center justify-center text-white text-[13px] font-bold">1</div>
+                            <div>
+                                <h4 class="text-[15px] font-bold text-gray-800">New Application</h4>
+                                <p class="text-[12px] text-orange-600 font-medium">Credential review before inquiry begins</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            @foreach (['Identity Confirmed' => 'Verify the applicant\'s full name matches their submitted identification.', 'Contact Verified' => 'Confirm the phone number and email address are reachable and valid.', 'Terms Acknowledged' => 'Ensure the applicant has read and accepted the adoption terms and conditions.', 'Profile Reviewed' => 'Review the applicant\'s profile for completeness and any red flags before proceeding.'] as $item => $desc)
+                            <div class="flex items-start gap-2.5">
+                                <div class="w-5 h-5 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <svg class="w-3 h-3 text-orange-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                </div>
+                                <div>
+                                    <p class="text-[12px] font-bold text-gray-700">{{ $item }}</p>
+                                    <p class="text-[11px] text-gray-500 mt-0.5 leading-snug">{{ $desc }}</p>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    {{-- Stage 2: Inquiry --}}
                     <div class="rounded-2xl border border-blue-100 bg-blue-50/40 p-6">
                         <div class="flex items-center gap-3 mb-4">
-                            <div class="w-8 h-8 rounded-xl bg-blue-400 flex items-center justify-center text-white text-[13px] font-bold">1</div>
+                            <div class="w-8 h-8 rounded-xl bg-blue-400 flex items-center justify-center text-white text-[13px] font-bold">2</div>
                             <div>
                                 <h4 class="text-[15px] font-bold text-gray-800">Inquiry</h4>
                                 <p class="text-[12px] text-blue-600 font-medium">Initial contact & basic eligibility</p>
@@ -92,10 +117,10 @@ $avatarColors = ['bg-purple-200 text-purple-700','bg-teal-200 text-teal-700','bg
                         </div>
                     </div>
 
-                    {{-- Stage 2: Screening --}}
+                    {{-- Stage 3: Screening --}}
                     <div class="rounded-2xl border border-amber-100 bg-amber-50/40 p-6">
                         <div class="flex items-center gap-3 mb-4">
-                            <div class="w-8 h-8 rounded-xl bg-[#C9A84C] flex items-center justify-center text-white text-[13px] font-bold">2</div>
+                            <div class="w-8 h-8 rounded-xl bg-[#C9A84C] flex items-center justify-center text-white text-[13px] font-bold">3</div>
                             <div>
                                 <h4 class="text-[15px] font-bold text-gray-800">Screening</h4>
                                 <p class="text-[12px] text-[#C9A84C] font-medium">Documents, home visit & references</p>
@@ -119,7 +144,7 @@ $avatarColors = ['bg-purple-200 text-purple-700','bg-teal-200 text-teal-700','bg
                     {{-- Stage 3: Matching --}}
                     <div class="rounded-2xl border border-purple-100 bg-purple-50/40 p-6">
                         <div class="flex items-center gap-3 mb-4">
-                            <div class="w-8 h-8 rounded-xl bg-purple-400 flex items-center justify-center text-white text-[13px] font-bold">3</div>
+                            <div class="w-8 h-8 rounded-xl bg-purple-400 flex items-center justify-center text-white text-[13px] font-bold">4</div>
                             <div>
                                 <h4 class="text-[15px] font-bold text-gray-800">Matching</h4>
                                 <p class="text-[12px] text-purple-600 font-medium">Cat selection, meet & compatibility</p>
@@ -143,7 +168,7 @@ $avatarColors = ['bg-purple-200 text-purple-700','bg-teal-200 text-teal-700','bg
                     {{-- Stage 4: Approved --}}
                     <div class="rounded-2xl border border-teal-100 bg-teal-50/40 p-6">
                         <div class="flex items-center gap-3 mb-4">
-                            <div class="w-8 h-8 rounded-xl bg-teal-500 flex items-center justify-center text-white text-[13px] font-bold">4</div>
+                            <div class="w-8 h-8 rounded-xl bg-teal-500 flex items-center justify-center text-white text-[13px] font-bold">5</div>
                             <div>
                                 <h4 class="text-[15px] font-bold text-gray-800">Approved</h4>
                                 <p class="text-[12px] text-teal-600 font-medium">Agreement, handover & follow-up</p>
