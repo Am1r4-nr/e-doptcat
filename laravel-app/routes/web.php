@@ -70,6 +70,8 @@ Route::middleware('auth')->group(function () {
         Route::resource('adoptions', AdoptionManagementController::class)->only(['index', 'show', 'destroy']);
         Route::patch('adoptions/{adoption}/approve', [AdoptionManagementController::class, 'approve'])->name('adoptions.approve');
         Route::patch('adoptions/{adoption}/reject', [AdoptionManagementController::class, 'reject'])->name('adoptions.reject');
+        Route::patch('adoptions/{adoption}/checklist', [AdoptionManagementController::class, 'updateChecklist'])->name('adoptions.checklist');
+        Route::patch('adoptions/{adoption}/stage', [AdoptionManagementController::class, 'moveStage'])->name('adoptions.stage');
 
         // Volunteer Management
         Route::get('volunteers', [\App\Http\Controllers\Admin\VolunteerController::class, 'index'])->name('volunteers.index');

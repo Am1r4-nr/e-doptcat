@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Adoption;
+use Illuminate\Http\Request;
 
 class AdoptionManagementController extends Controller
 {
@@ -15,14 +16,36 @@ class AdoptionManagementController extends Controller
 
     public function pipeline()
     {
-        $columns = [
-            'Pending'  => Adoption::with(['user', 'cat'])->where('status', 'Pending')->latest()->get(),
-            'Approved' => Adoption::with(['user', 'cat'])->where('status', 'Approved')->latest()->get(),
-            'Rejected' => Adoption::with(['user', 'cat'])->where('status', 'Rejected')->latest()->get(),
-            'Archived' => Adoption::with(['user', 'cat'])->where('status', 'Archived')->latest()->get(),
-        ];
+        $stages = ['Inquiry', 'Screening', 'Matching', 'Approved'];
+        $columns = [];
+        foreach ($stages as $stage) {
+            $columns[$stage] = Adoption::with(['user', 'cat'])
+                ->where('pipeline_stage', $stage)
+                ->latest()
+                ->get()
+                ->map(function ($a) {
+                    $a->checklist = $a->checklist ?? Adoption::defaultChecklist();
+                    return $a;
+                });
+        }
         $recent = Adoption::with(['user', 'cat'])->latest()->take(6)->get();
         return view('admin.adoptions.pipeline', compact('columns', 'recent'));
+    }
+
+    public function updateChecklist(Request $request, Adoption $adoption)
+    {
+        $request->validate(['stage' => 'required|string', 'checklist' => 'required|array']);
+        $full = $adoption->checklist ?? Adoption::defaultChecklist();
+        $full[$request->stage] = $request->checklist;
+        $adoption->update(['checklist' => $full]);
+        return response()->json(['success' => true]);
+    }
+
+    public function moveStage(Request $request, Adoption $adoption)
+    {
+        $request->validate(['stage' => 'required|in:Inquiry,Screening,Matching,Approved']);
+        $adoption->update(['pipeline_stage' => $request->stage]);
+        return response()->json(['success' => true]);
     }
 
     public function show(Adoption $adoption)
