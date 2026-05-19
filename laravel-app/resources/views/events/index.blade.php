@@ -138,30 +138,30 @@
             <div x-show="activeTab === 'completed'" class="space-y-8" style="display: none;">
                 @forelse($completedEvents as $event)
                     <div
-                        class="bg-white/80 group overflow-hidden shadow-sm hover:shadow-md transition-shadow rounded-3xl border border-boho-light/70 p-6 flex flex-col md:flex-row items-center md:items-stretch gap-6 opacity-90">
-                        <!-- Image / Date Badge Section (Fixed 48x48 on desktop, Greyed/Muted) -->
-                        <div class="relative w-full h-48 md:w-48 md:h-48 flex-shrink-0 overflow-hidden rounded-2xl bg-gray-100 border border-boho-light/50 shadow-sm">
+                        class="bg-white group overflow-hidden shadow-sm hover:shadow-md transition-shadow rounded-3xl border border-boho-light/70 p-6 flex flex-col md:flex-row items-center md:items-stretch gap-6">
+                        <!-- Image / Date Badge Section (Fixed 48x48 on desktop) -->
+                        <div class="relative w-full h-48 md:w-48 md:h-48 flex-shrink-0 overflow-hidden rounded-2xl bg-boho-light/30 border border-boho-light/50 shadow-sm">
                             @if($event->image)
                                 <img src="{{ Storage::url($event->image) }}" alt="{{ $event->title }}"
-                                    class="w-full h-full object-cover filter grayscale opacity-60 transition-all duration-500 group-hover:grayscale-0 group-hover:opacity-80">
+                                    class="w-full h-full object-cover transition-all duration-500 group-hover:scale-105">
                                 <!-- Floating Date Badge over Image -->
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex flex-col items-start justify-end p-4">
-                                    <div class="bg-gray-100/90 backdrop-blur-sm rounded-xl px-3 py-1.5 text-center shadow-md">
-                                        <span class="block text-xl font-serif font-bold text-gray-500 leading-none">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col items-start justify-end p-4">
+                                    <div class="bg-white/95 backdrop-blur-sm rounded-xl px-3 py-1.5 text-center shadow-md">
+                                        <span class="block text-xl font-serif font-bold text-boho-brown leading-none">
                                             {{ $event->event_date->format('d') }}
                                         </span>
-                                        <span class="block text-[9px] font-bold text-gray-400 uppercase tracking-wider mt-0.5">
+                                        <span class="block text-[9px] font-bold text-boho-orange uppercase tracking-wider mt-0.5">
                                             {{ $event->event_date->format('M') }}
                                         </span>
                                     </div>
                                 </div>
                             @else
                                 <!-- Fallback Pure Date Badge (Exact same size) -->
-                                <div class="w-full h-full p-4 flex flex-col items-center justify-center text-center bg-gray-50 group-hover:bg-gray-100/50 transition-colors">
-                                    <span class="block text-4xl font-serif font-bold text-gray-500 mb-0.5">
+                                <div class="w-full h-full p-4 flex flex-col items-center justify-center text-center bg-boho-light/10 group-hover:bg-boho-cream transition-colors">
+                                    <span class="block text-4xl font-serif font-bold text-boho-brown mb-0.5">
                                         {{ $event->event_date->format('d') }}
                                     </span>
-                                    <span class="block text-sm font-bold text-gray-400 uppercase tracking-widest">
+                                    <span class="block text-sm font-bold text-boho-orange uppercase tracking-widest">
                                         {{ $event->event_date->format('M') }}
                                     </span>
                                     <span class="block text-xs text-gray-400 mt-1">
@@ -177,15 +177,15 @@
                                 <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-3">
                                     <div>
                                         <div class="flex items-center gap-2 mb-1">
-                                            <h3 class="text-2xl font-serif font-bold text-gray-600 line-through decoration-gray-400/50">
+                                            <h3 class="text-2xl font-serif font-bold text-gray-800 transition-colors group-hover:text-boho-brown">
                                                 {{ $event->title }}
                                             </h3>
                                             <span class="px-2.5 py-0.5 bg-gray-200 text-gray-600 text-[10px] font-bold uppercase rounded-full tracking-wider">
                                                 Ended
                                             </span>
                                         </div>
-                                        <div class="flex items-center text-gray-400 text-sm font-medium">
-                                            <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor"
+                                        <div class="flex items-center text-gray-500 text-sm font-medium">
+                                            <svg class="w-4 h-4 mr-2 text-boho-orange" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -197,7 +197,7 @@
                                     </div>
 
                                     <span
-                                        class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-500 border border-gray-200 self-start">
+                                        class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-boho-light text-boho-brown border border-boho-brown/10 self-start">
                                         <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -206,13 +206,13 @@
                                     </span>
                                 </div>
 
-                                <p class="text-gray-500 mb-6 leading-relaxed border-l-4 border-gray-300 pl-4 text-sm md:text-base">
+                                <p class="text-gray-600 mb-6 leading-relaxed border-l-4 border-boho-light pl-4 text-sm md:text-base">
                                     {{ $event->description }}
                                 </p>
                             </div>
 
                             <div class="pt-4 border-t border-gray-100 flex items-center justify-between">
-                                <span class="text-xs text-gray-400 font-medium italic">
+                                <span class="text-xs text-gray-500 font-medium italic">
                                     Hope you had a great time!
                                 </span>
                                 <button disabled
