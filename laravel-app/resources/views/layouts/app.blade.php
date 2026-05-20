@@ -12,11 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-<<<<<<< HEAD
         href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;600;700;800&display=swap"
-=======
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;600;700;800&family=Montserrat:wght@400;500;600;700;800;900&family=Dancing+Script:wght@400;600;700&display=swap"
->>>>>>> 0bb3cf11e6d92ef905b229714ead22ce22349a5c
         rel="stylesheet">
 
     <!-- Scripts -->
@@ -32,22 +28,13 @@
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 </head>
 
-<<<<<<< HEAD
 <body class="font-sans antialiased text-cozy-brown">
     <div class="min-h-screen bg-cozy-bg selection:bg-cozy-warm selection:text-cozy-brown">
-=======
-<body class="font-montserrat antialiased text-cozy-brown">
-    <div class="min-h-screen bg-cozy-bg selection:bg-cozy-light selection:text-cozy-brown">
->>>>>>> 0bb3cf11e6d92ef905b229714ead22ce22349a5c
         @include('layouts.navigation')
 
         <!-- Page Heading -->
         @isset($header)
-<<<<<<< HEAD
             <header class="bg-cozy-card/80 backdrop-blur-sm shadow-sm border-b border-cozy-warm/30 pt-20">
-=======
-            <header class="bg-white shadow pt-20">
->>>>>>> 0bb3cf11e6d92ef905b229714ead22ce22349a5c
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     {{ $header }}
                 </div>
