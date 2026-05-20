@@ -16,10 +16,10 @@
                         <!-- Avatar -->
                         @if (Auth::user()->avatar)
                             <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}"
-                                class="w-24 h-24 mx-auto rounded-full object-cover shadow-lg ring-4 ring-boho-orange/30 mb-4">
+                                class="w-24 h-24 mx-auto rounded-full object-cover shadow-lg ring-4 ring-p-olive/30 mb-4">
                         @else
                             <div
-                                class="w-24 h-24 mx-auto bg-gradient-to-br from-blue-400 to-boho-brown rounded-full flex items-center justify-center text-white text-2xl font-bold mb-4 shadow-lg">
+                                class="w-24 h-24 mx-auto bg-gradient-to-br from-blue-400 to-p-forest rounded-full flex items-center justify-center text-white text-2xl font-bold mb-4 shadow-lg">
                                 {{ substr(Auth::user()->name, 0, 2) }}
                             </div>
                         @endif
@@ -101,7 +101,7 @@
                         <!-- Tabs Header -->
                         <div class="bg-orange-50/50 p-2 flex flex-wrap gap-2 border-b border-orange-100">
                             <button @click="tab = 'profile'"
-                                :class="{'bg-white shadow-sm text-boho-brown': tab === 'profile', 'text-gray-500 hover:text-boho-brown': tab !== 'profile'}"
+                                :class="{'bg-white shadow-sm text-p-forest': tab === 'profile', 'text-gray-500 hover:text-p-forest': tab !== 'profile'}"
                                 class="px-6 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -110,7 +110,7 @@
                                 Profile
                             </button>
                             <button @click="tab = 'adoptions'"
-                                :class="{'bg-white shadow-sm text-boho-brown': tab === 'adoptions', 'text-gray-500 hover:text-boho-brown': tab !== 'adoptions'}"
+                                :class="{'bg-white shadow-sm text-p-forest': tab === 'adoptions', 'text-gray-500 hover:text-p-forest': tab !== 'adoptions'}"
                                 class="px-6 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -119,7 +119,7 @@
                                 Adoptions
                             </button>
                             <button @click="tab = 'donations'"
-                                :class="{'bg-white shadow-sm text-boho-brown': tab === 'donations', 'text-gray-500 hover:text-boho-brown': tab !== 'donations'}"
+                                :class="{'bg-white shadow-sm text-p-forest': tab === 'donations', 'text-gray-500 hover:text-p-forest': tab !== 'donations'}"
                                 class="px-6 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -128,7 +128,7 @@
                                 Donations
                             </button>
                             <button @click="tab = 'events'"
-                                :class="{'bg-white shadow-sm text-boho-brown': tab === 'events', 'text-gray-500 hover:text-boho-brown': tab !== 'events'}"
+                                :class="{'bg-white shadow-sm text-p-forest': tab === 'events', 'text-gray-500 hover:text-p-forest': tab !== 'events'}"
                                 class="px-6 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -156,10 +156,10 @@
                                             <div class="flex-shrink-0">
                                                 @if ($user->avatar)
                                                     <img src="{{ Storage::url($user->avatar) }}" alt="{{ $user->name }}"
-                                                        class="w-24 h-24 rounded-full object-cover ring-4 ring-boho-orange/30 shadow-lg">
+                                                        class="w-24 h-24 rounded-full object-cover ring-4 ring-p-olive/30 shadow-lg">
                                                 @else
                                                     <div
-                                                        class="w-24 h-24 rounded-full bg-gradient-to-br from-blue-400 to-boho-brown flex items-center justify-center text-white text-2xl font-bold ring-4 ring-gray-200">
+                                                        class="w-24 h-24 rounded-full bg-gradient-to-br from-blue-400 to-p-forest flex items-center justify-center text-white text-2xl font-bold ring-4 ring-gray-200">
                                                         {{ substr($user->name, 0, 1) }}
                                                     </div>
                                                 @endif
@@ -170,7 +170,7 @@
                                                     file:mr-4 file:py-2 file:px-4
                                                     file:rounded-lg file:border-0
                                                     file:text-sm file:font-bold
-                                                    file:bg-boho-orange file:text-white
+                                                    file:bg-p-olive file:text-white
                                                     hover:file:bg-orange-500
                                                     cursor-pointer" />
                                                 <p class="text-xs text-gray-500 mt-2">PNG, JPG, GIF up to 5MB</p>
@@ -210,13 +210,13 @@
                                         <x-input-label for="address" :value="__('Address')"
                                             class="text-gray-600 font-bold" />
                                         <textarea id="address" name="address" rows="3"
-                                            class="mt-1 block w-full bg-slate-50 border-gray-100 rounded-xl shadow-sm focus:border-boho-brown focus:ring-boho-brown">{{ old('address', $user->address) }}</textarea>
+                                            class="mt-1 block w-full bg-slate-50 border-gray-100 rounded-xl shadow-sm focus:border-p-forest focus:ring-p-forest">{{ old('address', $user->address) }}</textarea>
                                         <x-input-error class="mt-2" :messages="$errors->get('address')" />
                                     </div>
 
                                     <div class="flex items-center gap-4">
                                         <x-primary-button
-                                            class="bg-boho-brown hover:bg-boho-dark">{{ __('Save Changes') }}</x-primary-button>
+                                            class="bg-p-forest hover:bg-p-forest-d">{{ __('Save Changes') }}</x-primary-button>
                                         @if (session('status') === 'profile-updated')
                                             <p x-data="{ show: true }" x-show="show" x-transition
                                                 x-init="setTimeout(() => show = false, 2000)"

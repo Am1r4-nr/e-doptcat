@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="py-20 bg-boho-bg min-h-screen flex items-center justify-center">
+    <div class="py-20 bg-p-cream min-h-screen flex items-center justify-center">
         <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <!-- Animated Success Icon -->
             <div class="mb-8 relative">
@@ -12,19 +12,19 @@
             </div>
 
             <!-- Content -->
-            <h1 class="font-serif font-bold text-5xl text-boho-brown mb-6">
+            <h1 class="font-serif font-bold text-5xl text-p-forest mb-6">
                 Thank You for Your Support!
             </h1>
             
-            <div class="w-24 h-1 bg-boho-orange mx-auto rounded-full mb-8"></div>
+            <div class="w-24 h-1 bg-p-olive mx-auto rounded-full mb-8"></div>
 
             <p class="text-xl text-gray-600 mb-10 leading-relaxed">
-                Your generous donation of <span class="font-bold text-boho-brown text-2xl">RM {{ $amount }}</span> has been received successfully. 
+                Your generous donation of <span class="font-bold text-p-forest text-2xl">RM {{ $amount }}</span> has been received successfully. 
                 Because of you, we can continue providing a safe haven for cats in need.
             </p>
 
             <!-- Donation Details Card -->
-            <div class="bg-white rounded-3xl shadow-xl p-8 border border-boho-light mb-12 transform transition hover:scale-[1.02]">
+            <div class="bg-white rounded-3xl shadow-xl p-8 border border-p-warm mb-12 transform transition hover:scale-[1.02]">
                 <div class="grid grid-cols-2 gap-4 text-left">
                     <div>
                         <p class="text-xs text-gray-400 uppercase tracking-widest mb-1">Transaction ID</p>
@@ -46,14 +46,14 @@
             <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
                 <a href="{{ route('cats.index') }}" 
-                   class="inline-flex items-center justify-center px-8 py-4 bg-boho-orange hover:bg-orange-600 text-white font-bold rounded-2xl shadow-lg transform transition hover:-translate-y-1 hover:shadow-xl text-lg">
+                   class="inline-flex items-center justify-center px-8 py-4 bg-p-olive hover:bg-orange-600 text-white font-bold rounded-2xl shadow-lg transform transition hover:-translate-y-1 hover:shadow-xl text-lg">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                     Meet More Cats
                 </a>
                 <a href="{{ route('home') }}" 
-                   class="inline-flex items-center justify-center px-8 py-4 bg-white border-2 border-boho-light hover:border-boho-brown text-boho-brown font-bold rounded-2xl transition-all hover:bg-boho-light/10">
+                   class="inline-flex items-center justify-center px-8 py-4 bg-white border-2 border-p-warm hover:border-p-forest text-p-forest font-bold rounded-2xl transition-all hover:bg-p-warm/10">
                     Go to Dashboard
                 </a>
             </div>

@@ -1,13 +1,13 @@
 <x-app-layout>
-    <div class="bg-boho-bg h-screen overflow-hidden flex flex-col" x-data="trackerApp()">
+    <div class="bg-cozy-bg h-screen overflow-hidden flex flex-col pt-24 pb-6 font-montserrat" x-data="trackerApp()">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full overflow-hidden flex flex-col">
             <!-- Header -->
             <div class="text-center py-6 flex-shrink-0">
-                <h2 class="font-serif font-bold text-4xl text-boho-brown mb-4">
+                <h2 class="font-script font-bold text-5xl text-cozy-brown mb-4">
                     {{ __('Cat Tracker') }}
                 </h2>
-                <div class="w-24 h-1 bg-boho-orange mx-auto rounded-full"></div>
-                <p class="mt-4 text-gray-600 max-w-2xl mx-auto">
+                <div class="w-24 h-1.5 bg-[#F5DEB3] mx-auto rounded-full"></div>
+                <p class="mt-4 text-cozy-brown/80 font-medium max-w-2xl mx-auto text-lg">
                     Real-time GPS tracking of cats in our care. Monitor their location and status.
                 </p>
             </div>
@@ -16,18 +16,17 @@
                 <!-- Map Section (Takes up 2 cols on large screens) -->
                 <div class="lg:col-span-2 space-y-6 flex flex-col overflow-hidden">
                     <!-- Interactive Map Card -->
-                    <div class="bg-white rounded-3xl shadow-sm border border-boho-light p-6 relative flex-1 flex flex-col overflow-hidden">
+                    <div class="bg-cozy-card rounded-[2.5rem] shadow-sm border border-cozy-brown/30 p-6 relative flex-1 flex flex-col overflow-hidden">
                         <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-serif font-bold text-xl text-boho-brown flex items-center gap-2">
-                                <svg class="w-6 h-6 text-boho-orange" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            <h3 class="font-script font-bold text-2xl text-cozy-brown flex items-center gap-2">
+                                <svg class="w-7 h-7 text-cozy-brown" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                         d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                                 </svg>
                                 Live Map
                             </h3>
                             <button @click="locateMe"
-                                class="flex items-center gap-2 px-4 py-2 bg-boho-light text-boho-brown font-bold text-sm rounded-xl hover:bg-boho-cream transition-colors">
+                                class="flex items-center gap-2 px-5 py-2.5 bg-[#F5DEB3]/20 text-cozy-brown font-bold text-sm rounded-full hover:bg-[#F5DEB3]/40 transition-colors">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
@@ -38,30 +37,30 @@
 
                         <!-- Map Container -->
                         <div
-                            class="relative flex-1 w-full rounded-2xl overflow-hidden shadow-inner border border-gray-100">
+                            class="relative flex-1 w-full rounded-3xl overflow-hidden shadow-inner border border-gray-100">
                             <div id="tracker-map" class="w-full h-full z-0"></div>
 
                             <!-- Floating Legend -->
                             <div
-                                class="absolute bottom-4 left-4 z-[400] bg-white/95 backdrop-blur-sm p-4 rounded-xl shadow-lg border border-boho-light">
-                                <p class="text-xs font-bold text-gray-400 uppercase mb-3 tracking-wider">Health Status Legend
+                                class="absolute bottom-4 left-4 z-[400] bg-cozy-card/90 backdrop-blur-md p-4 rounded-2xl shadow-lg border border-cozy-brown/20">
+                                <p class="text-xs font-bold text-cozy-brown/50 uppercase mb-3 tracking-wider">Health Status Legend
                                 </p>
                                 <div class="space-y-2">
                                     <div class="flex items-center gap-2">
                                         <span class="w-3 h-3 rounded-full bg-green-500 shadow-sm"></span>
-                                        <span class="text-xs font-bold text-gray-600">Healthy</span>
+                                        <span class="text-xs font-bold text-cozy-brown">Healthy</span>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <span class="w-3 h-3 rounded-full bg-orange-500 shadow-sm"></span>
-                                        <span class="text-xs font-bold text-gray-600">Recovering</span>
+                                        <span class="text-xs font-bold text-cozy-brown">Recovering</span>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <span class="w-3 h-3 rounded-full bg-blue-500 shadow-sm"></span>
-                                        <span class="text-xs font-bold text-gray-600">Treated</span>
+                                        <span class="text-xs font-bold text-cozy-brown">Treated</span>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <span class="w-3 h-3 rounded-full bg-red-500 shadow-sm"></span>
-                                        <span class="text-xs font-bold text-gray-600">Under Observation</span>
+                                        <span class="text-xs font-bold text-cozy-brown">Under Observation</span>
                                     </div>
                                 </div>
                             </div>
@@ -72,12 +71,12 @@
                 <!-- Sidebar List Section -->
                 <div class="lg:col-span-1 space-y-6 flex flex-col overflow-hidden">
                     <!-- Tab Toggle -->
-                    <div class="bg-white rounded-3xl shadow-sm border border-boho-light p-4 flex-shrink-0">
+                    <div class="bg-cozy-card rounded-[2rem] shadow-sm border border-cozy-brown/30 p-3 flex-shrink-0">
                         <div class="flex gap-2">
-                            <button @click="viewMode = 'list'" :class="viewMode === 'list' ? 'bg-orange-500 text-white' : 'bg-gray-100 text-gray-700'" class="flex-1 py-2 rounded-lg font-bold transition-all text-sm">
+                            <button @click="viewMode = 'list'" :class="viewMode === 'list' ? 'bg-u-dark text-u-cream' : 'bg-cozy-bg/50 text-cozy-brown/70 hover:bg-cozy-bg'" class="flex-1 py-3 rounded-2xl font-bold transition-all text-sm">
                                 📋 List
                             </button>
-                            <button @click="viewMode = 'scanner'" :class="viewMode === 'scanner' ? 'bg-orange-500 text-white' : 'bg-gray-100 text-gray-700'" class="flex-1 py-2 rounded-lg font-bold transition-all text-sm">
+                            <button @click="viewMode = 'scanner'" :class="viewMode === 'scanner' ? 'bg-u-dark text-u-cream' : 'bg-cozy-bg/50 text-cozy-brown/70 hover:bg-cozy-bg'" class="flex-1 py-3 rounded-2xl font-bold transition-all text-sm">
                                 📸 Scanner
                             </button>
                         </div>
@@ -86,22 +85,22 @@
                     <!-- List View -->
                     <div x-show="viewMode === 'list'" class="space-y-6 flex-1 flex flex-col overflow-hidden">
                         <!-- Filters -->
-                        <div class="bg-white rounded-3xl shadow-sm border border-boho-light p-6 flex-shrink-0">
+                        <div class="bg-cozy-card rounded-[2rem] shadow-sm border border-cozy-brown/30 p-6 flex-shrink-0">
                             <div class="flex justify-between items-center mb-4">
-                                <h3 class="font-serif font-bold text-lg text-boho-brown">Filter Cats</h3>
+                                <h3 class="font-script font-bold text-xl text-cozy-brown">Filter Cats</h3>
                                 <button @click="resetFilters"
-                                    class="text-xs text-boho-orange font-bold hover:underline">Reset</button>
+                                    class="text-sm text-cozy-brown/50 font-bold hover:text-cozy-brown transition-colors">Reset</button>
                             </div>
                             <div class="space-y-3">
                                 <select x-model="filterStatus"
-                                    class="w-full px-4 py-3 bg-boho-light border-transparent rounded-xl text-sm font-bold text-gray-700 focus:border-boho-brown focus:ring-0 cursor-pointer">
+                                    class="w-full px-4 py-3 bg-cozy-bg/50 border-transparent rounded-2xl text-sm font-bold text-cozy-brown focus:border-u-dark focus:ring-0 cursor-pointer transition-colors">
                                     <option value="all">All Health Statuses</option>
                                     <option value="Healthy">Healthy</option>
                                     <option value="Recovering">Recovering</option>
                                     <option value="Treated">Treated</option>
                                     <option value="Under Observation">Under Observation</option>
                                 </select>
-                                <div class="text-xs text-center text-gray-400 font-medium">
+                                <div class="text-xs text-center text-cozy-brown/50 font-bold">
                                     Showing <span x-text="filteredCats.length"></span> cats
                                 </div>
                             </div>
@@ -111,11 +110,11 @@
                         <div class="space-y-4 flex-1 overflow-y-auto pr-2 custom-scrollbar">
                             <template x-for="cat in filteredCats" :key="cat.id">
                                 <div @click="focusCat(cat)"
-                                    class="bg-white group rounded-2xl shadow-sm border border-boho-light p-4 flex gap-4 cursor-pointer hover:border-boho-orange hover:shadow-md transition-all transform hover:-translate-x-1">
+                                    class="bg-cozy-card group rounded-3xl shadow-sm border border-cozy-brown/30 p-4 flex gap-4 cursor-pointer hover:border-u-dark hover:shadow-md transition-all transform hover:-translate-x-1">
 
                                     <div class="relative w-16 h-16 flex-shrink-0">
                                         <img :src="cat.image || 'https://via.placeholder.com/150'"
-                                            class="w-full h-full object-cover rounded-xl shadow-sm">
+                                            class="w-full h-full object-cover rounded-2xl shadow-sm">
                                         <div class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white"
                                             :class="{
                                                 'bg-green-500': (!cat.health_status || cat.health_status === 'Healthy'),
@@ -127,13 +126,13 @@
 
                                     <div class="flex-1 min-w-0">
                                         <div class="flex justify-between items-start">
-                                            <h4 class="text-lg font-serif font-bold text-gray-800 truncate group-hover:text-boho-orange transition-colors"
+                                            <h4 class="text-lg font-script font-bold text-cozy-brown truncate group-hover:text-cozy-brown transition-colors"
                                                 x-text="cat.name"></h4>
                                             <div class="flex gap-1 items-center">
                                                 <template x-if="cat.gps_live">
                                                     <span class="inline-block px-2 py-0.5 bg-red-100 text-red-600 text-[9px] font-bold uppercase rounded-full animate-pulse">🔴 LIVE</span>
                                                 </template>
-                                                <button class="text-gray-300 hover:text-boho-brown transition-colors">
+                                                <button class="text-cozy-brown/30 hover:text-cozy-brown transition-colors">
                                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                             d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -143,11 +142,11 @@
                                                 </button>
                                             </div>
                                         </div>
-                                        <p class="text-xs text-gray-500 mb-2 truncate" x-text="cat.breed"></p>
+                                        <p class="text-xs text-cozy-brown/60 font-medium mb-2 truncate" x-text="cat.breed"></p>
 
                                         <div class="flex items-center justify-between mt-2">
                                             <div
-                                                class="flex items-center gap-1 text-[10px] text-gray-400 font-bold uppercase tracking-wide">
+                                                class="flex items-center gap-1 text-[10px] text-cozy-brown/50 font-bold uppercase tracking-wider">
                                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                         d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -159,7 +158,7 @@
                                 </div>
                             </template>
 
-                            <div x-show="filteredCats.length === 0" class="text-center py-8 text-gray-500">
+                            <div x-show="filteredCats.length === 0" class="text-center py-8 text-cozy-brown/50 font-medium">
                                 <p>No cats found matching filtering.</p>
                             </div>
                         </div>
@@ -167,10 +166,10 @@
 
                     <!-- QR Scanner View -->
                     <div x-show="viewMode === 'scanner'" class="space-y-6 flex-1 flex flex-col overflow-hidden">
-                        <div class="bg-white rounded-3xl shadow-sm border border-boho-light p-6 flex flex-col items-center flex-1 overflow-y-auto">
-                            <div id="reader" style="width: 100%; max-width: 400px; margin-bottom: 1.5rem;"></div>
-                            <div id="result" class="mt-2 font-bold text-lg text-boho-brown text-center min-h-6"></div>
-                            <p class="mt-3 text-sm text-gray-500 text-center">Ensure good lighting and hold the camera steady.</p>
+                        <div class="bg-cozy-card rounded-[2.5rem] shadow-sm border border-cozy-brown/30 p-6 flex flex-col items-center flex-1 overflow-y-auto">
+                            <div id="reader" style="width: 100%; max-width: 400px; margin-bottom: 1.5rem; border-radius: 1.5rem; overflow: hidden; border: 2px solid #EADFC5;"></div>
+                            <div id="result" class="mt-2 font-bold text-lg text-cozy-brown text-center min-h-6"></div>
+                            <p class="mt-3 text-sm text-cozy-brown/60 font-medium text-center">Ensure good lighting and hold the camera steady.</p>
                         </div>
                     </div>
                 </div>
@@ -184,17 +183,17 @@
         }
 
         .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 4px;
+            background: rgba(234, 223, 197, 0.3); /* u-cream with opacity */
+            border-radius: 10px;
         }
 
         .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #d1d5db;
-            border-radius: 4px;
+            background: rgba(168, 185, 129, 0.5); /* u-light with opacity */
+            border-radius: 10px;
         }
 
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #9ca3af;
+            background: rgba(54, 64, 37, 0.5); /* u-dark with opacity */
         }
     </style>
 
@@ -313,24 +312,24 @@
                             }).addTo(this.map);
 
                             const popupContent = `
-                                <div class="text-center p-3 min-w-[150px]">
-                                    <div class="w-16 h-16 rounded-full overflow-hidden mx-auto mb-3 border-2 border-[${this.getColorCode(color)}] shadow-sm">
+                                <div class="text-center p-4 min-w-[160px]">
+                                    <div class="w-16 h-16 rounded-2xl overflow-hidden mx-auto mb-3 border-2 border-[${this.getColorCode(color)}] shadow-sm">
                                         <img src="${cat.image || 'https://via.placeholder.com/150'}" class="w-full h-full object-cover">
                                     </div>
-                                    <h3 class="font-serif font-bold text-lg text-gray-800 leading-tight mb-1">${cat.name}</h3>
+                                    <h3 class="font-script font-bold text-xl text-[#364025] leading-tight mb-1">${cat.name}</h3>
                                     ${cat.gps_live ? '<span class="inline-block px-2 py-0.5 bg-red-100 text-red-600 text-[9px] font-bold uppercase rounded-full mb-2">🔴 LIVE GPS</span>' : ''}
-                                    <span class="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide text-white" style="background-color: ${this.getColorCode(color)}">${health}</span>
-                                    ${cat.gps_battery ? '<div class="text-xs text-gray-600 mt-1">🔋 Battery: ' + cat.gps_battery + '%</div>' : ''}
-                                    <div class="text-xs text-gray-500 mt-1">${cat.gps_timestamp ? new Date(cat.gps_timestamp).toLocaleTimeString() : 'Unknown time'}</div>
-                                    <div class="mt-3">
-                                        <a href="/cats/${cat.id}" class="inline-block w-full py-1.5 bg-boho-brown hover:bg-boho-orange text-white text-xs font-bold rounded-lg transition-colors">View Profile</a>
+                                    <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide text-white" style="background-color: ${this.getColorCode(color)}">${health}</span>
+                                    ${cat.gps_battery ? '<div class="text-xs text-[#364025]/70 font-medium mt-2">🔋 Battery: ' + cat.gps_battery + '%</div>' : ''}
+                                    <div class="text-xs text-[#364025]/50 font-medium mt-1">${cat.gps_timestamp ? new Date(cat.gps_timestamp).toLocaleTimeString() : 'Unknown time'}</div>
+                                    <div class="mt-4">
+                                        <a href="/cats/${cat.id}" class="inline-block w-full py-2 bg-[#A8B981] hover:bg-[#364025] text-[#364025] hover:text-[#EADFC5] text-xs font-bold rounded-xl transition-colors">View Profile</a>
                                     </div>
                                 </div>
                             `;
 
                             marker.bindPopup(popupContent, {
                                 closeButton: false,
-                                className: 'rounded-xl shadow-xl border-none'
+                                className: 'rounded-2xl shadow-2xl border-none font-montserrat'
                             });
                             this.markers.push(marker);
                         }
