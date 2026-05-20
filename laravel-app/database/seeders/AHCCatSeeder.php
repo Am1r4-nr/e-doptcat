@@ -23,6 +23,7 @@ class AHCCatSeeder extends Seeder
                 'personality'    => null,
                 'health_status'  => 'Recovering',
                 'status'         => 'Available',
+                'image'          => 'cats/bits.jpg',
                 'vaccinated'     => false,
                 'location_name'  => 'Shelter Aminah, Left Compartment',
             ],

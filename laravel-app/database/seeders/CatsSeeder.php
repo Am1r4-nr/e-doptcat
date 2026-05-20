@@ -22,6 +22,7 @@ class CatsSeeder extends Seeder
                 'color' => 'Domestic short hair',
                 'description' => 'Domestic short hair - Found near KICT',
                 'medical_history' => 'Visited vet due to incomplete birth (suspected kitten still in stomach), so she received injection to induce delivery. No improvement; remained weak after several days. Follow-up scan revealed maggot infection, later underwent surgery for maggot removal. Blood test confirmed anemia (required transfusion; developed jaundice). Doctor suspected FIP, Bits started on medication, though Post-FIPV test showed low/negative indication. Blood condition also improved.',
+                'image' => 'cats/bits.jpg',
                 'status' => 'Available',
             ],
             [
