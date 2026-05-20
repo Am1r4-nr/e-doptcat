@@ -78,4 +78,12 @@ class Cat extends Model
     {
         return $this->hasOne(GpsDevice::class);
     }
+
+    /**
+     * Accessor for image_url which maps to the image attribute.
+     */
+    public function getImageUrlAttribute()
+    {
+        return $this->image;
+    }
 }
