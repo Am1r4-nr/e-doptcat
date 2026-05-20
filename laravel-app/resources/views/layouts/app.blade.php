@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'e-Doptcat') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;600;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;600;700;800&display=swap"
         rel="stylesheet">
 
     <!-- Scripts -->
@@ -28,13 +28,13 @@
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 </head>
 
-<body class="font-sans antialiased">
-    <div class="min-h-screen bg-boho-bg">
+<body class="font-sans antialiased text-cozy-brown">
+    <div class="min-h-screen bg-cozy-bg selection:bg-cozy-warm selection:text-cozy-brown">
         @include('layouts.navigation')
 
         <!-- Page Heading -->
         @isset($header)
-            <header class="bg-white shadow">
+            <header class="bg-cozy-card/80 backdrop-blur-sm shadow-sm border-b border-cozy-warm/30 pt-20">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     {{ $header }}
                 </div>

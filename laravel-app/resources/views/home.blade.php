@@ -1,442 +1,338 @@
 <x-app-layout>
-    <!-- Background Texture/Overlay -->
-    <div class="fixed inset-0 pointer-events-none z-0 opacity-20"
-        style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23d4a373\' fill-opacity=\'0.1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');">
-    </div>
+<style>
+    @keyframes blobPulse {
+        0%,100% { border-radius: 60% 40% 70% 30% / 50% 60% 40% 70%; }
+        50%      { border-radius: 40% 60% 30% 70% / 60% 40% 70% 50%; }
+    }
+    @keyframes floatY {
+        0%,100% { transform: translateY(0px); }
+        50%      { transform: translateY(-12px); }
+    }
+    @keyframes floatY2 {
+        0%,100% { transform: translateY(0px) rotate(2deg); }
+        50%      { transform: translateY(-8px) rotate(-1deg); }
+    }
+    .blob-anim { animation: blobPulse 12s ease-in-out infinite; }
+    .float-1   { animation: floatY  7s  ease-in-out infinite; }
+    .float-2   { animation: floatY2 9s  ease-in-out 1s infinite; }
+    .float-3   { animation: floatY  11s ease-in-out 2s infinite; }
+    .scroll-reveal { opacity:0; transform:translateY(28px); transition: opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1); }
+    .scroll-reveal.visible { opacity:1; transform:translateY(0); }
+</style>
 
-    <div class="relative w-full z-10">
-        <!-- User Greeting Section -->
-        @auth
-        <div class="relative bg-gradient-to-r from-boho-orange/10 to-boho-brown/5 pt-6 pb-6">
-            <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-4">
-                        @if (Auth::user()->avatar)
-                            <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}"
-                                class="w-12 h-12 rounded-full object-cover ring-2 ring-boho-orange/50 shadow-md">
-                        @else
-                            <div
-                                class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-boho-brown flex items-center justify-center text-white text-sm font-bold">
-                                {{ substr(Auth::user()->name, 0, 1) }}
-                            </div>
-                        @endif
-                        <div>
-                            <p class="text-sm text-gray-600">Welcome back 👋</p>
-                            <p class="text-lg sm:text-xl font-bold text-boho-brown">{{ Auth::user()->name }}</p>
-                        </div>
+{{-- ═══════════════════════ HERO ═══════════════════════ --}}
+<section class="relative min-h-screen bg-white overflow-hidden flex items-center">
+
+    {{-- Primary tan blob — the dominant visual --}}
+    <div class="absolute top-0 left-0 w-[68%] h-[95%] bg-cozy-bg blob-anim pointer-events-none"
+         style="border-radius:0 55% 45% 0/0 45% 55% 0; animation-duration:14s;"></div>
+
+    {{-- Secondary accent blob --}}
+    <div class="absolute bottom-[-8%] right-[-5%] w-[38%] h-[55%] bg-cozy-warm/70 blob-anim pointer-events-none"
+         style="animation-delay:-6s; animation-duration:18s;"></div>
+
+    {{-- Dot pattern on blob --}}
+    <div class="absolute inset-0 pointer-events-none opacity-[0.035]"
+         style="background-image:radial-gradient(circle,#3C2415 1px,transparent 1px);background-size:24px 24px;"></div>
+
+    <div class="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-10 pt-28 pb-16 flex flex-col lg:flex-row items-center gap-8 lg:gap-0">
+
+        {{-- ── Left: text ── --}}
+        <div class="lg:w-[52%] scroll-reveal">
+            <p class="font-script text-3xl md:text-4xl text-cozy-accent mb-1 leading-none">Abu Hurairah Club</p>
+            <h1 class="font-serif font-bold text-6xl md:text-8xl text-cozy-brown leading-[1.02] mb-6">
+                Adopt,<br>
+                <em class="not-italic text-cozy-accent">Don't Shop</em>
+            </h1>
+            <p class="text-cozy-brown/60 text-lg md:text-xl font-light leading-relaxed max-w-md mb-10">
+                Rescue, rehabilitate, and rehome stray cats.<br>
+                Real-time adoption at your fingertips.
+            </p>
+            <div class="flex flex-wrap gap-4">
+                <a href="{{ route('cats.index') }}"
+                   class="inline-flex items-center gap-2 px-8 py-4 bg-cozy-brown text-cozy-light font-bold rounded-2xl shadow-xl hover:bg-cozy-accent hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 text-[15px]">
+                    Find a Companion
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                </a>
+                <a href="{{ route('donations.index') }}"
+                   class="inline-flex items-center gap-2 px-8 py-4 bg-transparent border-2 border-cozy-brown text-cozy-brown font-bold rounded-2xl hover:bg-cozy-brown hover:text-cozy-light transition-all duration-300 text-[15px]">
+                    Make a Donation
+                </a>
+            </div>
+
+            {{-- Floating mini stat cards --}}
+            <div class="mt-14 flex flex-wrap gap-4">
+                @foreach([['🐾','200+','Cats Adopted'],['🏠','50+','Happy Homes'],['❤️','94%','Success Rate']] as $s)
+                <div class="bg-cozy-card/90 backdrop-blur-sm border border-cozy-warm/60 rounded-2xl px-5 py-3 shadow-md flex items-center gap-3 float-{{ ['1','2','3'][array_search($s, [['🐾','200+','Cats Adopted'],['🏠','50+','Happy Homes'],['❤️','94%','Success Rate']])] }}">
+                    <span class="text-2xl">{{ $s[0] }}</span>
+                    <div>
+                        <p class="text-xl font-serif font-bold text-cozy-brown leading-none">{{ $s[1] }}</p>
+                        <p class="text-[11px] text-cozy-brown/50 uppercase tracking-wider font-semibold">{{ $s[2] }}</p>
                     </div>
-                    @if(Auth::user()->role === 'admin')
-                        <a href="{{ route('admin.dashboard') }}"
-                            class="text-sm font-bold text-boho-orange hover:text-orange-600 transition-colors">
-                            Admin Panel
+                </div>
+                @endforeach
+            </div>
+        </div>
+
+        {{-- ── Right: overlapping image ── --}}
+        <div class="lg:w-[48%] relative flex justify-center lg:justify-end scroll-reveal" style="transition-delay:.15s">
+
+            {{-- Decorative ring --}}
+            <div class="absolute top-1/2 right-4 -translate-y-1/2 w-[90%] h-[90%] border-[3px] border-cozy-warm/50 rounded-[3rem] pointer-events-none" style="transform:translateY(-48%) rotate(4deg);"></div>
+
+            {{-- Main cat image --}}
+            <div class="relative w-full max-w-sm lg:max-w-none lg:w-[88%] rounded-[2.5rem] overflow-hidden shadow-2xl border-[5px] border-cozy-card float-2">
+                <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=900&q=80"
+                     alt="Rescue cat" class="w-full h-[460px] object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+
+                {{-- Live rescue badge --}}
+                <div class="absolute bottom-5 left-5 bg-cozy-card/95 backdrop-blur-md rounded-2xl px-4 py-3 shadow-lg flex items-center gap-3 border border-cozy-warm/50">
+                    <div class="relative">
+                        <span class="block w-3 h-3 bg-green-500 rounded-full"></span>
+                        <span class="block w-3 h-3 bg-green-400 rounded-full absolute inset-0 animate-ping"></span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-cozy-brown/50 uppercase tracking-widest">Just Rescued</p>
+                        <p class="font-bold text-cozy-brown text-sm">Whiskers</p>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Floating secondary card --}}
+            <div class="absolute -bottom-6 -left-6 bg-cozy-warm rounded-3xl p-4 shadow-xl w-36 float-3 border border-cozy-warm/80">
+                <p class="font-script text-cozy-brown text-xl mb-1">Meet</p>
+                <img src="https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&w=200&q=80"
+                     class="w-full h-20 object-cover rounded-2xl mb-2" alt="cat">
+                <p class="text-[11px] font-bold text-cozy-brown uppercase tracking-wider">Our Cats →</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- ═══════════════════════ STATS STRIP ═══════════════════════ --}}
+<section class="relative bg-cozy-brown py-14 overflow-hidden">
+    <div class="absolute inset-0 opacity-[0.06]"
+         style="background-image:radial-gradient(#fff 1px,transparent 1px);background-size:20px 20px;"></div>
+    <div class="relative z-10 max-w-5xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        @php $stats = [
+            ['value'=>$impact['adopted'], 'label'=>'Cats Adopted',  'icon'=>'🐾'],
+            ['value'=>$impact['rescued'], 'label'=>'Cats Rescued',  'icon'=>'🏠'],
+            ['value'=>'RM '.number_format($impact['raised']), 'label'=>'Donations Raised', 'icon'=>'💛'],
+            ['value'=>'94%',              'label'=>'Success Rate',  'icon'=>'✅'],
+        ]; @endphp
+        @foreach($stats as $s)
+        <div class="scroll-reveal">
+            <p class="text-3xl mb-1">{{ $s['icon'] }}</p>
+            <p class="font-serif font-bold text-4xl text-cozy-light">{{ $s['value'] }}</p>
+            <p class="text-cozy-warm/70 text-xs uppercase tracking-wider font-semibold mt-1">{{ $s['label'] }}</p>
+        </div>
+        @endforeach
+    </div>
+</section>
+
+{{-- ═══════════════════════ WHO WE ARE ═══════════════════════ --}}
+<section class="relative py-28 overflow-hidden bg-white">
+    {{-- Blob left --}}
+    <div class="absolute top-0 left-0 w-[45%] h-full bg-cozy-bg/80 blob-anim pointer-events-none"
+         style="border-radius:0 60% 40% 0/0 50% 50% 0; animation-duration:16s; animation-delay:-3s;"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+        {{-- Image side --}}
+        <div class="relative scroll-reveal">
+            <div class="relative rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-cozy-card w-full max-w-md mx-auto float-1">
+                <img src="https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&w=700&q=80"
+                     alt="Team" class="w-full h-80 object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-cozy-brown/30 to-transparent"></div>
+            </div>
+            {{-- Floating quote card --}}
+            <div class="absolute -bottom-6 -right-4 bg-cozy-card rounded-2xl p-4 shadow-xl border border-cozy-warm/50 max-w-[180px] float-2">
+                <p class="font-script text-cozy-accent text-lg mb-1">Our mission</p>
+                <p class="text-xs text-cozy-brown/60 leading-relaxed">Every cat deserves a loving home</p>
+            </div>
+        </div>
+
+        {{-- Text side --}}
+        <div class="scroll-reveal" style="transition-delay:.1s">
+            <p class="font-script text-3xl text-cozy-accent mb-2">Our Story</p>
+            <h2 class="font-serif font-bold text-4xl md:text-5xl text-cozy-brown mb-6 leading-tight">
+                Abu Hurairah Club
+            </h2>
+            <div class="w-16 h-1 bg-cozy-accent rounded-full mb-6"></div>
+            <p class="text-cozy-brown/60 text-lg leading-relaxed mb-8">
+                A student-led initiative combining modern technology with compassionate care — dedicated to rescuing, rehabilitating, and rehoming stray cats across campus.
+            </p>
+            <div class="space-y-4 mb-8">
+                @foreach([
+                    ['🐱','Rescue & Rehome','We rescue strays and find them loving permanent homes.'],
+                    ['💉','Medical Care','Every cat gets vaccinations and full health checks.'],
+                    ['🌿','SDG 15 Aligned','Supporting Life on Land through ethical population control.'],
+                ] as $item)
+                <div class="flex items-start gap-4 bg-cozy-light rounded-2xl p-4 border border-cozy-warm/30">
+                    <span class="text-2xl">{{ $item[0] }}</span>
+                    <div>
+                        <h4 class="font-bold text-cozy-brown text-sm">{{ $item[1] }}</h4>
+                        <p class="text-xs text-cozy-brown/50 mt-0.5">{{ $item[2] }}</p>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+            <a href="{{ route('about') }}"
+               class="inline-flex items-center gap-2 px-7 py-3.5 border-2 border-cozy-brown text-cozy-brown font-bold rounded-xl hover:bg-cozy-brown hover:text-cozy-light transition-all">
+                Meet the Team
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
+        </div>
+    </div>
+</section>
+
+{{-- ═══════════════════════ CATS SHOWCASE ═══════════════════════ --}}
+<section class="relative py-24 bg-cozy-bg overflow-hidden">
+    {{-- Blob right --}}
+    <div class="absolute bottom-0 right-0 w-[40%] h-[70%] bg-cozy-warm/60 blob-anim pointer-events-none"
+         style="border-radius:60% 0 0 40%/50% 0 0 50%; animation-duration:15s; animation-delay:-7s;"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-10">
+        <div class="text-center mb-14 scroll-reveal">
+            <p class="font-script text-3xl text-cozy-accent mb-1">Looking for love</p>
+            <h2 class="font-serif font-bold text-4xl md:text-5xl text-cozy-brown mb-3">Meet Our Cats</h2>
+            <div class="w-20 h-1 bg-cozy-accent/60 mx-auto rounded-full"></div>
+        </div>
+
+        {{-- Organic card layout --}}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            @php
+            $featuredCats = isset($cats) ? $cats->take(3) : collect();
+            $placeholders = [
+                ['name'=>'Luna','age'=>'2 years','tag'=>'Playful & Sweet','img'=>'https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&w=400&q=80'],
+                ['name'=>'Simba','age'=>'1 year','tag'=>'Energetic & Bold','img'=>'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=400&q=80'],
+                ['name'=>'Bella','age'=>'3 years','tag'=>'Calm & Cuddly','img'=>'https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&w=400&q=80'],
+            ];
+            @endphp
+            @if($featuredCats->count() > 0)
+                @foreach($featuredCats as $i => $cat)
+                <div class="group bg-cozy-card rounded-[2rem] overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 border border-cozy-warm/40 scroll-reveal {{ $i === 1 ? 'lg:mt-8' : '' }}" style="transition-delay:{{ $i * 100 }}ms">
+                    <div class="relative h-60 overflow-hidden">
+                        <img src="{{ $cat->image }}" alt="{{ $cat->name }}"
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-cozy-brown/50 to-transparent"></div>
+                        <span class="absolute top-4 right-4 bg-cozy-accent text-cozy-light text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full">
+                            {{ $cat->status ?? 'Available' }}
+                        </span>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-serif font-bold text-2xl text-cozy-brown mb-1">{{ $cat->name }}</h3>
+                        <p class="text-cozy-brown/50 text-sm mb-4">{{ $cat->age }} · {{ $cat->breed ?? 'Mixed Breed' }}</p>
+                        <a href="{{ route('cats.show', $cat) }}"
+                           class="w-full inline-flex justify-center items-center gap-2 py-3 bg-cozy-brown text-cozy-light font-bold rounded-xl hover:bg-cozy-accent transition-colors text-sm">
+                            Meet {{ $cat->name }}
                         </a>
-                    @else
-                        <a href="{{ route('profile.edit') }}"
-                            class="text-sm font-bold text-boho-orange hover:text-orange-600 transition-colors">
-                            Edit Profile
+                    </div>
+                </div>
+                @endforeach
+            @else
+                @foreach($placeholders as $i => $p)
+                <div class="group bg-cozy-card rounded-[2rem] overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 border border-cozy-warm/40 scroll-reveal {{ $i === 1 ? 'lg:mt-8' : '' }}" style="transition-delay:{{ $i * 100 }}ms">
+                    <div class="relative h-60 overflow-hidden">
+                        <img src="{{ $p['img'] }}" alt="{{ $p['name'] }}"
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-cozy-brown/50 to-transparent"></div>
+                        <span class="absolute top-4 right-4 bg-cozy-accent text-cozy-light text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full">Available</span>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-serif font-bold text-2xl text-cozy-brown mb-1">{{ $p['name'] }}</h3>
+                        <p class="text-cozy-brown/50 text-sm mb-4">{{ $p['age'] }} · {{ $p['tag'] }}</p>
+                        <a href="{{ route('cats.index') }}"
+                           class="w-full inline-flex justify-center items-center gap-2 py-3 bg-cozy-brown text-cozy-light font-bold rounded-xl hover:bg-cozy-accent transition-colors text-sm">
+                            Meet {{ $p['name'] }}
                         </a>
-                    @endif
-                </div>
-            </div>
-        </div>
-        @endauth
-
-        <!-- Hero Section -->
-        <div class="relative bg-boho-bg overflow-hidden pt-12 pb-24 sm:pt-24 sm:pb-32">
-            <!-- Organic Blobs Background -->
-            <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
-                <svg class="absolute -top-24 -left-24 w-96 h-96 text-boho-brown/5 opacity-50 blur-3xl animate-blob"
-                    fill="currentColor" viewBox="0 0 200 200">
-                    <path
-                        d="M44.7,-76.4C58.9,-69.2,71.8,-59.1,79.6,-46.9C87.4,-34.7,90.1,-20.4,85.8,-7.1C81.5,6.2,70.2,18.5,59.6,29.1C49,39.7,39.1,48.6,27.9,56.6C16.7,64.7,4.2,71.9,-7.4,70.6C-19,69.3,-29.7,59.5,-39.5,49.8C-49.3,40.1,-58.2,30.5,-64.3,19.2C-70.4,7.9,-73.7,-5.1,-70.5,-16.6C-67.3,-28.1,-57.6,-38.1,-46.6,-46.3C-35.6,-54.5,-23.3,-60.9,-10.8,-62.7C1.7,-64.5,14.2,-61.7,26.7,-58.9"
-                        transform="translate(100 100)" />
-                </svg>
-                <svg class="absolute top-1/2 right-0 w-[500px] h-[500px] text-boho-orange/5 opacity-40 blur-3xl animate-blob animation-delay-2000"
-                    fill="currentColor" viewBox="0 0 200 200">
-                    <path
-                        d="M41.7,-72.1C53.6,-66.2,62.8,-55.3,69.5,-43.6C76.2,-31.9,80.4,-19.4,79.8,-7.2C79.2,5,73.8,16.8,66,27.1C58.2,37.4,48,46.2,37.1,52.8C26.2,59.4,14.6,63.8,2.7,59.1C-9.2,54.4,-21.4,40.6,-32.1,28.8C-42.8,17,-52,7.2,-55.1,-4.5C-58.2,-16.2,-55.2,-29.8,-46.7,-40.3C-38.2,-50.8,-24.2,-58.2,-10.7,-60.4C2.8,-62.6,16.3,-59.6,29.8,-56.6"
-                        transform="translate(100 100)" />
-                </svg>
-            </div>
-
-            <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col pt-10 md:flex-row items-center gap-12 relative z-10">
-            <!-- Text Content -->
-            <div
-                class="md:w-1/2 text-left z-10 scroll-animate opacity-0 translate-y-10 transition-all duration-1000 ease-out">
-                <h1 class="text-5xl md:text-7xl font-serif font-bold text-boho-brown mb-6 leading-tight">
-                    Adopt, <span class="italic text-boho-orange relative inline-block">
-                        Don't Shop
-                        <svg class="absolute w-full h-3 -bottom-1 left-0 text-boho-orange opacity-40"
-                            viewBox="0 0 100 10" preserveAspectRatio="none">
-                            <path d="M0 5 Q 50 10 100 5 L 100 8 Q 50 13 0 8 Z" fill="currentColor" />
-                        </svg>
-                    </span>
-                </h1>
-                <p class="text-xl md:text-2xl text-gray-600 mb-8 font-light leading-relaxed">
-                    Join <span class="font-semibold text-boho-brown">Abu Hurairah Club</span> in our mission to rescue,
-                    rehabilitate, and rehome stray cats.
-                    <br class="hidden md:block">Real-time adoption at your fingertips.
-                </p>
-
-                <div class="flex flex-col sm:flex-row gap-5">
-                    <a href="{{ route('cats.index') }}"
-                        class="group inline-flex justify-center items-center px-8 py-4 bg-boho-brown text-white text-lg font-bold rounded-2xl shadow-lg hover:bg-boho-dark hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                        Find a Companion
-                        <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                        </svg>
-                    </a>
-                    <a href="{{ route('donations.index') }}"
-                        class="inline-flex justify-center items-center px-8 py-4 bg-white text-boho-brown border-2 border-boho-brown/20 text-lg font-bold rounded-2xl shadow-sm hover:border-boho-brown hover:bg-boho-light/20 transition-all duration-300">
-                        Make a Donation
-                    </a>
-                </div>
-            </div>
-
-            <!-- Hero Image -->
-            <div
-                class="md:w-1/2 relative w-full scroll-animate opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-200">
-                <!-- Decorative Elements behind image -->
-                <div class="absolute -top-8 -right-8 w-32 h-32 bg-boho-orange/20 rounded-full blur-2xl animate-pulse">
-                </div>
-                <div class="absolute -bottom-8 -left-8 w-40 h-40 bg-boho-brown/10 rounded-full blur-2xl"></div>
-
-                <div
-                    class="relative rounded-[3rem] overflow-hidden shadow-2xl border-[6px] border-white transform rotate-2 hover:rotate-0 transition-all duration-700 group">
-                    <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
-                        alt="Rescue Cat"
-                        class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-1000">
-
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60"></div>
-
-                    <!-- Latest Rescue Badge -->
-                    <div
-                        class="absolute bottom-6 left-6 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-lg flex items-center gap-4 max-w-xs border border-white/50">
-                        <div class="bg-green-100 p-2.5 rounded-full relative">
-                            <span
-                                class="block w-2.5 h-2.5 bg-green-500 rounded-full animate-ping absolute top-0 right-0 -mt-1 -mr-1"></span>
-                            <span class="block w-2.5 h-2.5 bg-green-500 rounded-full"></span>
-                        </div>
-                        <div>
-                            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Just Rescued</p>
-                            <p class="text-base font-bold text-boho-brown">Whiskers</p>
-                        </div>
                     </div>
                 </div>
-            </div>
+                @endforeach
+            @endif
+        </div>
+
+        <div class="text-center mt-12 scroll-reveal">
+            <a href="{{ route('cats.index') }}"
+               class="inline-flex items-center gap-2 px-8 py-4 bg-cozy-brown text-cozy-light font-bold rounded-2xl shadow-lg hover:bg-cozy-accent transition-all hover:-translate-y-1">
+                See All Cats
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
         </div>
     </div>
+</section>
 
-    <!-- SDG 15 & About Section -->
-    <div class="bg-boho-light/30 py-24 relative z-10">
-        <!-- Wave Divider Top -->
-        <div class="absolute top-0 left-0 w-full overflow-hidden leading-none transform rotate-180">
-            <svg class="relative block w-full h-[50px]" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 1200 120" preserveAspectRatio="none">
-                <path d="M1200 120L0 16.48 0 0 1200 0 1200 120z" class="fill-white"></path>
-            </svg>
+{{-- ═══════════════════════ TESTIMONIALS ═══════════════════════ --}}
+<section class="relative py-24 bg-white overflow-hidden">
+    {{-- Big blob top-right --}}
+    <div class="absolute top-0 right-0 w-[50%] h-[80%] bg-cozy-bg blob-anim pointer-events-none"
+         style="border-radius:60% 0 0 50%/50% 0 0 60%; animation-duration:13s; animation-delay:-4s;"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-10">
+        <div class="mb-14 scroll-reveal">
+            <p class="font-script text-3xl text-cozy-accent mb-1">Happy Tails</p>
+            <h2 class="font-serif font-bold text-4xl md:text-5xl text-cozy-brown">Success Stories</h2>
         </div>
-
-        <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-                <!-- SDG 15 Info -->
-                <div
-                    class="order-2 md:order-1 scroll-animate opacity-0 translate-y-10 transition-all duration-1000 ease-out">
-                    <span class="text-boho-orange font-bold tracking-widest uppercase text-sm mb-2 block">Global
-                        Goals</span>
-                    <h2 class="text-4xl font-bold text-boho-brown mb-6 font-serif">
-                        Supporting SDG 15: <br><span class="text-boho-orange">Life on Land</span>
-                    </h2>
-                    <p class="text-gray-600 mb-8 leading-relaxed text-lg">
-                        Our mission aligns with the United Nations Sustainable Development Goal 15. We work tirelessly
-                        to protect terrestrial ecosystems by managing stray populations securely and humanely.
-                    </p>
-
-                    <div class="space-y-6">
-                        <div
-                            class="flex items-start gap-4 p-4 bg-white rounded-2xl shadow-sm border border-boho-light/50">
-                            <div class="bg-boho-light p-3 rounded-xl text-boho-brown shrink-0">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-gray-800">Population Control</h4>
-                                <p class="text-sm text-gray-600 mt-1">Reducing stray cat populations through ethical
-                                    adoption and sterilization programs.</p>
-                            </div>
-                        </div>
-
-                        <div
-                            class="flex items-start gap-4 p-4 bg-white rounded-2xl shadow-sm border border-boho-light/50">
-                            <div class="bg-boho-light p-3 rounded-xl text-boho-brown shrink-0">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-gray-800">Ecosystem Balance</h4>
-                                <p class="text-sm text-gray-600 mt-1">Protecting local biodiversity by managing
-                                    uncontrolled feral cat colonies.</p>
-                            </div>
-                        </div>
-                    </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            @php $testimonials = [
+                ['quote'=>'Adopting Luna was the best decision I made. She brings so much joy to my daily life!','name'=>'Ahmad Ali','role'=>'Engineering Student'],
+                ['quote'=>'The adoption process was seamless. The team cares so much about these cats.','name'=>'Sarah Lee','role'=>'Staff Member'],
+                ['quote'=>'Thank you Abu Hurairah Club for saving Oyen. He\'s now the king of my house.','name'=>'John Doe','role'=>'Alumni'],
+            ]; @endphp
+            @foreach($testimonials as $i => $t)
+            <div class="bg-cozy-card p-8 rounded-3xl shadow-sm border border-cozy-warm/40 relative scroll-reveal {{ $i === 1 ? 'md:mt-8' : '' }}" style="transition-delay:{{ $i * 120 }}ms">
+                <div class="absolute -top-5 left-8 bg-cozy-accent text-cozy-light p-3 rounded-xl shadow-md">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-3a2.017 2.017 0 012-2h3a1 1 0 001-1V9a1 1 0 00-1-1h-4a1 1 0 00-1 1v2a1 1 0 01-1 1h-1V5h10v10a6 6 0 01-6 6h-2zm-9 0v-3a2 2 0 012-2h3a1 1 0 001-1V9a1 1 0 00-1-1H6a1 1 0 00-1 1v2a1 1 0 01-1 1H3V5h10v10a6 6 0 01-6 6H5z"/></svg>
                 </div>
-
-                <!-- About AHC -->
-                <div
-                    class="order-1 md:order-2 scroll-animate opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-200">
-                    <div
-                        class="bg-white p-10 rounded-[3rem] shadow-xl border border-boho-light relative overflow-hidden group hover:shadow-2xl transition-all duration-500">
-                        <div
-                            class="absolute top-0 right-0 w-40 h-40 bg-boho-light rounded-bl-[100px] opacity-50 transition-transform group-hover:scale-110 duration-700">
-                        </div>
-                        <div
-                            class="absolute bottom-0 left-0 w-24 h-24 bg-boho-orange/10 rounded-tr-[80px] opacity-50 transition-transform group-hover:scale-125 duration-700">
-                        </div>
-
-                        <h2 class="text-3xl font-serif font-bold text-boho-brown mb-6 text-center relative z-10">
-                            Who We Are
-                        </h2>
-
-                        <div class="w-16 h-1 bg-boho-orange mx-auto rounded-full mb-8"></div>
-
-                        <p class="text-gray-600 mb-8 leading-relaxed text-center relative z-10 font-light text-lg">
-                            <span class="font-bold text-boho-brown">Abu Hurairah Club</span> combines modern technology
-                            with compassionate care. We are a student-led initiative dedicated to creating a safer,
-                            kinder campus for our feline friends.
-                        </p>
-                        <div class="text-center relative z-10">
-                            <a href="{{ route('about') }}"
-                                class="inline-block px-8 py-3 border-2 border-boho-brown text-boho-brown font-bold rounded-xl hover:bg-boho-brown hover:text-white transition-all transform hover:-translate-y-1">
-                                Meet The Team
-                            </a>
-                        </div>
+                <p class="text-cozy-brown/60 italic mb-6 pt-4 text-[15px] leading-relaxed">"{{ $t['quote'] }}"</p>
+                <div class="flex items-center gap-3">
+                    <img src="https://ui-avatars.com/api/?name={{ urlencode($t['name']) }}&background=E8C9A0&color=3C2415" class="w-11 h-11 rounded-full" alt="{{ $t['name'] }}">
+                    <div>
+                        <h4 class="font-bold text-cozy-brown text-sm">{{ $t['name'] }}</h4>
+                        <p class="text-xs text-cozy-brown/50">{{ $t['role'] }}</p>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Wave Divider Bottom -->
-        <div class="absolute bottom-0 left-0 w-full overflow-hidden leading-none">
-            <svg class="relative block w-full h-[60px]" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 1200 120" preserveAspectRatio="none">
-                <path
-                    d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z"
-                    class="fill-white"></path>
-            </svg>
+            @endforeach
         </div>
     </div>
+</section>
 
-    <!-- Our Impact -->
-    <div class="py-24 bg-white z-10 relative">
-        <div class="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div
-                class="text-center mb-16 scroll-animate opacity-0 translate-y-10 transition-all duration-1000 ease-out">
-                <h2 class="text-4xl font-serif font-bold text-boho-brown mb-4">Our Impact</h2>
-                <div class="w-24 h-1 bg-boho-orange mx-auto rounded-full mb-4"></div>
-                <p class="text-xl text-gray-500">Making a difference, one cat at a time</p>
-            </div>
+{{-- ═══════════════════════ NEWSLETTER ═══════════════════════ --}}
+<section class="bg-cozy-brown py-20 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-[0.06]"
+         style="background-image:radial-gradient(#fff 1px,transparent 1px);background-size:22px 22px;"></div>
+    <div class="absolute top-0 left-0 w-64 h-64 bg-cozy-accent/30 blob-anim pointer-events-none" style="animation-delay:-2s;"></div>
+    <div class="absolute bottom-0 right-0 w-48 h-48 bg-cozy-warm/20 blob-anim pointer-events-none" style="animation-delay:-8s;"></div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Stat Card 1 -->
-                <div class="bg-boho-bg p-8 rounded-[2rem] border border-boho-light flex flex-col items-center justify-center transform hover:-translate-y-2 hover:shadow-xl transition-all duration-300 group scroll-animate opacity-0 translate-y-10 ease-out delay-0"
-                    style="transition-duration: 1000ms;">
-                    <div
-                        class="mb-4 bg-white p-4 rounded-full shadow-sm text-boho-brown group-hover:scale-110 transition-transform group-hover:bg-boho-brown group-hover:text-white">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                        </svg>
-                    </div>
-                    <div class="text-4xl font-serif font-bold text-gray-800 mb-2">{{ $impact['adopted'] }}</div>
-                    <div class="text-gray-500 font-bold uppercase text-xs tracking-wider">Cats Adopted</div>
-                </div>
-
-                <!-- Stat Card 2 -->
-                <div class="bg-boho-bg p-8 rounded-[2rem] border border-boho-light flex flex-col items-center justify-center transform hover:-translate-y-2 hover:shadow-xl transition-all duration-300 group scroll-animate opacity-0 translate-y-10 ease-out delay-150"
-                    style="transition-duration: 1000ms;">
-                    <div
-                        class="mb-4 bg-white p-4 rounded-full shadow-sm text-boho-orange group-hover:scale-110 transition-transform group-hover:bg-boho-orange group-hover:text-white">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                        </svg>
-                    </div>
-                    <div class="text-4xl font-serif font-bold text-gray-800 mb-2">{{ $impact['rescued'] }}</div>
-                    <div class="text-gray-500 font-bold uppercase text-xs tracking-wider">Cats Rescued</div>
-                </div>
-
-                <!-- Stat Card 3 -->
-                <div class="bg-boho-bg p-8 rounded-[2rem] border border-boho-light flex flex-col items-center justify-center transform hover:-translate-y-2 hover:shadow-xl transition-all duration-300 group scroll-animate opacity-0 translate-y-10 ease-out delay-300"
-                    style="transition-duration: 1000ms;">
-                    <div
-                        class="mb-4 bg-white p-4 rounded-full shadow-sm text-green-600 group-hover:scale-110 transition-transform group-hover:bg-green-600 group-hover:text-white">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    <div class="text-4xl font-serif font-bold text-gray-800 mb-2">RM
-                        {{ number_format($impact['raised']) }}</div>
-                    <div class="text-gray-500 font-bold uppercase text-xs tracking-wider">Donations</div>
-                </div>
-
-                <!-- Stat Card 4 -->
-                <div class="bg-boho-bg p-8 rounded-[2rem] border border-boho-light flex flex-col items-center justify-center transform hover:-translate-y-2 hover:shadow-xl transition-all duration-300 group scroll-animate opacity-0 translate-y-10 ease-out delay-450"
-                    style="transition-duration: 1000ms;">
-                    <div
-                        class="mb-4 bg-white p-4 rounded-full shadow-sm text-purple-500 group-hover:scale-110 transition-transform group-hover:bg-purple-500 group-hover:text-white">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138z" />
-                        </svg>
-                    </div>
-                    <div class="text-4xl font-serif font-bold text-gray-800 mb-2">94%</div>
-                    <div class="text-gray-500 font-bold uppercase text-xs tracking-wider">Success Rate</div>
-                </div>
-            </div>
-        </div>
+    <div class="relative z-10 max-w-2xl mx-auto px-6 text-center scroll-reveal">
+        <p class="font-script text-3xl text-cozy-warm mb-2">Join our community</p>
+        <h2 class="font-serif font-bold text-4xl text-white mb-4">Stay Updated</h2>
+        <div class="w-16 h-1 bg-cozy-accent mx-auto rounded-full mb-6"></div>
+        <p class="text-cozy-warm/70 text-lg mb-8 leading-relaxed">
+            Latest rescues, adoption events, and happy endings — straight to your inbox.
+        </p>
+        <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+            <input type="email" placeholder="your@email.com"
+                   class="flex-1 px-5 py-4 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-cozy-accent/60" required>
+            <button type="submit"
+                    class="px-7 py-4 bg-cozy-accent hover:bg-cozy-gold text-white font-bold rounded-xl shadow-lg hover:-translate-y-0.5 transition-all">
+                Subscribe
+            </button>
+        </form>
+        <p class="text-white/30 text-xs mt-4">Unsubscribe at any time.</p>
     </div>
+</section>
 
-    <!-- Success Stories (Testimonials) Section (NEW) -->
-    <div class="py-24 bg-boho-light/30 relative z-10">
-        <div class="absolute top-0 left-0 w-full overflow-hidden leading-none transform">
-            <svg class="relative block w-full h-[60px]" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 1200 120" preserveAspectRatio="none">
-                <path d="M1200 120L0 16.48 0 0 1200 0 1200 120z" class="fill-white"></path>
-            </svg>
-        </div>
-
-        <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
-            <div
-                class="text-center mb-16 scroll-animate opacity-0 translate-y-10 transition-all duration-1000 ease-out">
-                <span class="text-boho-orange font-bold tracking-widest uppercase text-sm mb-2 block">Happy Tails</span>
-                <h2 class="text-4xl font-serif font-bold text-boho-brown mb-4">Success Stories</h2>
-                <div class="w-16 h-1 bg-boho-orange mx-auto rounded-full mb-8"></div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Testimonial 1 -->
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-boho-light relative scroll-animate opacity-0 translate-y-10 ease-out delay-0"
-                    style="transition-duration: 1000ms;">
-                    <div class="absolute -top-5 left-8 bg-boho-orange text-white p-3 rounded-xl shadow-md">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H15.017C14.4647 8 14.017 8.44772 14.017 9V11C14.017 11.5523 13.5693 12 13.017 12H12.017V5H22.017V15C22.017 18.3137 19.3307 21 16.017 21H14.017ZM5.0166 21L5.0166 18C5.0166 16.8954 5.91203 16 7.0166 16H10.0166C10.5689 16 11.0166 15.5523 11.0166 15V9C11.0166 8.44772 10.5689 8 10.0166 8H6.0166C5.46432 8 5.0166 8.44772 5.0166 9V11C5.0166 11.5523 4.56889 12 4.0166 12H3.0166V5H13.0166V15C13.0166 18.3137 10.3303 21 7.0166 21H5.0166Z">
-                            </path>
-                        </svg>
-                    </div>
-                    <p class="text-gray-600 italic mb-6 pt-4 text-lg">"Adopting Luna was the best decision I made in
-                        University. She brings so much joy to my daily life!"</p>
-                    <div class="flex items-center gap-4">
-                        <img src="https://ui-avatars.com/api/?name=Ahmad+Ali&background=random"
-                            class="w-12 h-12 rounded-full" alt="User">
-                        <div>
-                            <h4 class="font-bold text-gray-800">Ahmad Ali</h4>
-                            <p class="text-sm text-gray-500">Engineering Student</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Testimonial 2 -->
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-boho-light relative scroll-animate opacity-0 translate-y-10 ease-out delay-150"
-                    style="transition-duration: 1000ms;">
-                    <div class="absolute -top-5 left-8 bg-boho-orange text-white p-3 rounded-xl shadow-md">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H15.017C14.4647 8 14.017 8.44772 14.017 9V11C14.017 11.5523 13.5693 12 13.017 12H12.017V5H22.017V15C22.017 18.3137 19.3307 21 16.017 21H14.017ZM5.0166 21L5.0166 18C5.0166 16.8954 5.91203 16 7.0166 16H10.0166C10.5689 16 11.0166 15.5523 11.0166 15V9C11.0166 8.44772 10.5689 8 10.0166 8H6.0166C5.46432 8 5.0166 8.44772 5.0166 9V11C5.0166 11.5523 4.56889 12 4.0166 12H3.0166V5H13.0166V15C13.0166 18.3137 10.3303 21 7.0166 21H5.0166Z">
-                            </path>
-                        </svg>
-                    </div>
-                    <p class="text-gray-600 italic mb-6 pt-4 text-lg">"The adoption process was seamless. The team cares
-                        so much about these cats. Highly recommended!"</p>
-                    <div class="flex items-center gap-4">
-                        <img src="https://ui-avatars.com/api/?name=Sarah+Lee&background=random"
-                            class="w-12 h-12 rounded-full" alt="User">
-                        <div>
-                            <h4 class="font-bold text-gray-800">Sarah Lee</h4>
-                            <p class="text-sm text-gray-500">Staff Member</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Testimonial 3 -->
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-boho-light relative scroll-animate opacity-0 translate-y-10 ease-out delay-300"
-                    style="transition-duration: 1000ms;">
-                    <div class="absolute -top-5 left-8 bg-boho-orange text-white p-3 rounded-xl shadow-md">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H15.017C14.4647 8 14.017 8.44772 14.017 9V11C14.017 11.5523 13.5693 12 13.017 12H12.017V5H22.017V15C22.017 18.3137 19.3307 21 16.017 21H14.017ZM5.0166 21L5.0166 18C5.0166 16.8954 5.91203 16 7.0166 16H10.0166C10.5689 16 11.0166 15.5523 11.0166 15V9C11.0166 8.44772 10.5689 8 10.0166 8H6.0166C5.46432 8 5.0166 8.44772 5.0166 9V11C5.0166 11.5523 4.56889 12 4.0166 12H3.0166V5H13.0166V15C13.0166 18.3137 10.3303 21 7.0166 21H5.0166Z">
-                            </path>
-                        </svg>
-                    </div>
-                    <p class="text-gray-600 italic mb-6 pt-4 text-lg">"Thank you Abu Hurairah Club for saving Oyen. He's
-                        recovered fully and is now the king of my house."</p>
-                    <div class="flex items-center gap-4">
-                        <img src="https://ui-avatars.com/api/?name=John+Doe&background=random"
-                            class="w-12 h-12 rounded-full" alt="User">
-                        <div>
-                            <h4 class="font-bold text-gray-800">John Doe</h4>
-                            <p class="text-sm text-gray-500">Alumni</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Newsletter Section (NEW) -->
-    <div class="bg-boho-brown py-20 relative overflow-hidden text-white">
-        <div class="absolute inset-0 opacity-10"
-            style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 20px 20px;"></div>
-
-        <div
-            class="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center scroll-animate opacity-0 translate-y-10 transition-all duration-1000 ease-out">
-            <h2 class="text-4xl font-serif font-bold mb-4">Stay Updated</h2>
-            <p class="text-boho-bg/80 text-lg mb-8 max-w-2xl mx-auto">Get the latest updates on rescues, adoption
-                events, and happy endings delivered straight to your inbox.</p>
-
-            <form class="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
-                <input type="email" placeholder="Your email address"
-                    class="flex-1 px-6 py-4 rounded-xl border-none text-gray-800 focus:ring-4 focus:ring-boho-orange/50 shadow-lg"
-                    required>
-                <button type="submit"
-                    class="px-8 py-4 bg-boho-orange hover:bg-orange-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
-                    Subscribe
-                </button>
-            </form>
-            <p class="text-sm text-white/40 mt-4">We respect your privacy. Unsubscribe at any time.</p>
-        </div>
-    </div>
-
-    <!-- Scroll Animation Script -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const observerOptions = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.1
-            };
-
-            const observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.remove('opacity-0', 'translate-y-10');
-                        entry.target.classList.add('opacity-100', 'translate-y-0');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, observerOptions);
-
-            const animatedElements = document.querySelectorAll('.scroll-animate');
-            animatedElements.forEach((el) => {
-                observer.observe(el);
-            });
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
         });
-    </script>
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.scroll-reveal').forEach(el => io.observe(el));
+});
+</script>
 </x-app-layout>

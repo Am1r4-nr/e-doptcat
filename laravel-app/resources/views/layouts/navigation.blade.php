@@ -1,35 +1,56 @@
-<nav x-data="{ open: false }" class="sticky top-0 bg-white border-b border-gray-100 relative z-50">
+<nav x-data="{ open: false, scrolled: false }"
+     x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 60 })"
+     :class="scrolled ? 'bg-cozy-bg/95 backdrop-blur-xl shadow-md py-2' : 'bg-cozy-card py-4'"
+     class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 border-b border-cozy-warm/20">
+
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('home') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                    <a href="{{ route('home') }}" class="flex items-center gap-3 group">
+                        @if(file_exists(public_path('images/logo.jpg')))
+                            <img src="{{ asset('images/logo.jpg') }}" alt="e-Doptcat" class="h-10 w-10 rounded-full object-cover shadow-sm ring-2 ring-cozy-warm/50 group-hover:ring-cozy-accent transition-all">
+                        @else
+                            <div class="h-10 w-10 rounded-full bg-cozy-brown flex items-center justify-center text-white font-bold text-sm shadow-sm">🐱</div>
+                        @endif
+                        <span class="font-script text-2xl text-cozy-brown group-hover:text-cozy-accent transition-colors hidden sm:block">e-Doptcat</span>
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
+                <div class="hidden space-x-1 sm:-my-px sm:ms-8 sm:flex">
+                    <a href="{{ route('home') }}"
+                       class="inline-flex items-center px-4 py-2 text-sm font-semibold rounded-xl transition-all duration-200
+                              {{ request()->routeIs('home') ? 'text-cozy-brown bg-cozy-warm/40' : 'text-cozy-brown/70 hover:text-cozy-brown hover:bg-cozy-warm/20' }}">
                         {{ __('Home') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('about')" :active="request()->routeIs('about')">
+                    </a>
+                    <a href="{{ route('about') }}"
+                       class="inline-flex items-center px-4 py-2 text-sm font-semibold rounded-xl transition-all duration-200
+                              {{ request()->routeIs('about') ? 'text-cozy-brown bg-cozy-warm/40' : 'text-cozy-brown/70 hover:text-cozy-brown hover:bg-cozy-warm/20' }}">
                         {{ __('About') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('cats.index')" :active="request()->routeIs('cats.*')">
-                        {{ __('View Cats') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('tracker')" :active="request()->routeIs('tracker')">
-                        {{ __('Map Tracker') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('events.index')" :active="request()->routeIs('events.*')">
+                    </a>
+                    <a href="{{ route('cats.index') }}"
+                       class="inline-flex items-center px-4 py-2 text-sm font-semibold rounded-xl transition-all duration-200
+                              {{ request()->routeIs('cats.*') ? 'text-cozy-brown bg-cozy-warm/40' : 'text-cozy-brown/70 hover:text-cozy-brown hover:bg-cozy-warm/20' }}">
+                        {{ __('Our Cats') }}
+                    </a>
+                    <a href="{{ route('tracker') }}"
+                       class="inline-flex items-center px-4 py-2 text-sm font-semibold rounded-xl transition-all duration-200
+                              {{ request()->routeIs('tracker') ? 'text-cozy-brown bg-cozy-warm/40' : 'text-cozy-brown/70 hover:text-cozy-brown hover:bg-cozy-warm/20' }}">
+                        {{ __('Tracker') }}
+                    </a>
+                    <a href="{{ route('events.index') }}"
+                       class="inline-flex items-center px-4 py-2 text-sm font-semibold rounded-xl transition-all duration-200
+                              {{ request()->routeIs('events.*') ? 'text-cozy-brown bg-cozy-warm/40' : 'text-cozy-brown/70 hover:text-cozy-brown hover:bg-cozy-warm/20' }}">
                         {{ __('Events') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('donations.index')" :active="request()->routeIs('donations.*')">
+                    </a>
+                    <a href="{{ route('donations.index') }}"
+                       class="inline-flex items-center px-4 py-2 text-sm font-semibold rounded-xl transition-all duration-200
+                              {{ request()->routeIs('donations.*') ? 'text-cozy-brown bg-cozy-warm/40' : 'text-cozy-brown/70 hover:text-cozy-brown hover:bg-cozy-warm/20' }}">
                         {{ __('Donate') }}
-                    </x-nav-link>
+                    </a>
                 </div>
             </div>
 
@@ -39,20 +60,20 @@
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             <button
-                                class="inline-flex items-center px-3 py-2 text-sm leading-4 font-medium rounded-lg hover:bg-gray-100 focus:outline-none transition ease-in-out duration-150 gap-3 group">
+                                class="inline-flex items-center px-3 py-2 text-sm leading-4 font-semibold rounded-xl hover:bg-cozy-warm/20 focus:outline-none transition ease-in-out duration-200 gap-3 group">
                                 @if (Auth::user()->avatar)
                                     <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}"
-                                        class="w-8 h-8 rounded-full object-cover ring-2 ring-boho-orange/30 shadow-sm group-hover:ring-boho-orange">
+                                        class="w-8 h-8 rounded-full object-cover ring-2 ring-cozy-accent/40 shadow-sm group-hover:ring-cozy-accent transition-all">
                                 @else
                                     <div
-                                        class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-boho-brown flex items-center justify-center text-white text-xs font-bold">
+                                        class="w-8 h-8 rounded-full bg-gradient-to-br from-cozy-accent to-cozy-brown flex items-center justify-center text-white text-xs font-bold shadow-sm">
                                         {{ substr(Auth::user()->name, 0, 1) }}
                                     </div>
                                 @endif
-                                <div class="text-gray-600 group-hover:text-gray-900">{{ Auth::user()->name }}</div>
+                                <div class="text-cozy-brown/80 group-hover:text-cozy-brown transition-colors">{{ Auth::user()->name }}</div>
 
                                 <div class="ms-1">
-                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                    <svg class="fill-current h-4 w-4 text-cozy-brown/50" xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
                                             d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
@@ -85,11 +106,11 @@
                         </x-slot>
                     </x-dropdown>
                 @else
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-3">
                         <a href="{{ route('login') }}"
-                            class="text-sm font-bold text-gray-600 hover:text-gray-900 transition-colors">Log in</a>
+                            class="text-sm font-semibold text-cozy-brown/70 hover:text-cozy-brown px-4 py-2 rounded-xl hover:bg-cozy-warm/20 transition-all">Log in</a>
                         <a href="{{ route('register') }}"
-                            class="px-5 py-2.5 text-sm font-bold text-white bg-blue-500 rounded-full hover:bg-blue-600 shadow-md shadow-blue-500/20 transition-all">Register</a>
+                            class="px-5 py-2.5 text-sm font-bold text-white bg-cozy-brown rounded-full hover:bg-cozy-brown/90 shadow-md shadow-cozy-brown/20 hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5">Register</a>
                     </div>
                 @endauth
             </div>
@@ -97,7 +118,7 @@
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
                 <button @click="open = ! open"
-                    class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
+                    class="inline-flex items-center justify-center p-2 rounded-xl text-cozy-brown/60 hover:text-cozy-brown hover:bg-cozy-warm/20 focus:outline-none transition duration-200">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex"
                             stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -111,76 +132,75 @@
     </div>
 
     <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')">
+    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden bg-cozy-card/95 backdrop-blur-xl border-t border-cozy-warm/20">
+        <div class="pt-2 pb-3 space-y-1 px-4">
+            <a href="{{ route('home') }}" class="block px-4 py-3 text-sm font-semibold rounded-xl {{ request()->routeIs('home') ? 'text-cozy-brown bg-cozy-warm/30' : 'text-cozy-brown/70 hover:bg-cozy-warm/20' }}">
                 {{ __('Home') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('about')" :active="request()->routeIs('about')">
+            </a>
+            <a href="{{ route('about') }}" class="block px-4 py-3 text-sm font-semibold rounded-xl {{ request()->routeIs('about') ? 'text-cozy-brown bg-cozy-warm/30' : 'text-cozy-brown/70 hover:bg-cozy-warm/20' }}">
                 {{ __('About') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('cats.index')" :active="request()->routeIs('cats.*')">
-                {{ __('Cats') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('tracker')" :active="request()->routeIs('tracker')">
-                {{ __('Map Tracker') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('events.index')" :active="request()->routeIs('events.*')">
+            </a>
+            <a href="{{ route('cats.index') }}" class="block px-4 py-3 text-sm font-semibold rounded-xl {{ request()->routeIs('cats.*') ? 'text-cozy-brown bg-cozy-warm/30' : 'text-cozy-brown/70 hover:bg-cozy-warm/20' }}">
+                {{ __('Our Cats') }}
+            </a>
+            <a href="{{ route('tracker') }}" class="block px-4 py-3 text-sm font-semibold rounded-xl {{ request()->routeIs('tracker') ? 'text-cozy-brown bg-cozy-warm/30' : 'text-cozy-brown/70 hover:bg-cozy-warm/20' }}">
+                {{ __('Tracker') }}
+            </a>
+            <a href="{{ route('events.index') }}" class="block px-4 py-3 text-sm font-semibold rounded-xl {{ request()->routeIs('events.*') ? 'text-cozy-brown bg-cozy-warm/30' : 'text-cozy-brown/70 hover:bg-cozy-warm/20' }}">
                 {{ __('Events') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('donations.index')" :active="request()->routeIs('donations.*')">
+            </a>
+            <a href="{{ route('donations.index') }}" class="block px-4 py-3 text-sm font-semibold rounded-xl {{ request()->routeIs('donations.*') ? 'text-cozy-brown bg-cozy-warm/30' : 'text-cozy-brown/70 hover:bg-cozy-warm/20' }}">
                 {{ __('Donate') }}
-            </x-responsive-nav-link>
+            </a>
         </div>
 
         <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
+        <div class="pt-4 pb-1 border-t border-cozy-warm/20 px-4">
             @auth
                 <div class="px-4 flex items-center gap-3 mb-4">
                     @if (Auth::user()->avatar)
                         <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}"
-                            class="w-10 h-10 rounded-full object-cover ring-2 ring-boho-orange/30 shadow-sm">
+                            class="w-10 h-10 rounded-full object-cover ring-2 ring-cozy-accent/30 shadow-sm">
                     @else
                         <div
-                            class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-boho-brown flex items-center justify-center text-white text-sm font-bold">
+                            class="w-10 h-10 rounded-full bg-gradient-to-br from-cozy-accent to-cozy-brown flex items-center justify-center text-white text-sm font-bold">
                             {{ substr(Auth::user()->name, 0, 1) }}
                         </div>
                     @endif
                     <div>
-                        <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                        <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                        <div class="font-semibold text-base text-cozy-brown">{{ Auth::user()->name }}</div>
+                        <div class="font-medium text-sm text-cozy-brown/50">{{ Auth::user()->email }}</div>
                     </div>
                 </div>
 
                 <div class="mt-3 space-y-1">
-                    <x-responsive-nav-link :href="route('profile.edit')">
+                    <a href="{{ route('profile.edit') }}" class="block px-4 py-3 text-sm font-semibold rounded-xl text-cozy-brown/70 hover:bg-cozy-warm/20">
                         {{ __('Profile') }}
-                    </x-responsive-nav-link>
+                    </a>
 
                     @if(Auth::user()->role === 'admin')
-                        <x-responsive-nav-link :href="route('admin.dashboard')">
+                        <a href="{{ route('admin.dashboard') }}" class="block px-4 py-3 text-sm font-semibold rounded-xl text-cozy-brown/70 hover:bg-cozy-warm/20">
                             {{ __('Admin Panel') }}
-                        </x-responsive-nav-link>
+                        </a>
                     @endif
 
                     <!-- Authentication -->
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-
-                        <x-responsive-nav-link :href="route('logout')" onclick="event.preventDefault();
-                                                                        this.closest('form').submit();">
+                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();"
+                           class="block px-4 py-3 text-sm font-semibold rounded-xl text-cozy-brown/70 hover:bg-cozy-warm/20">
                             {{ __('Log Out') }}
-                        </x-responsive-nav-link>
+                        </a>
                     </form>
                 </div>
             @else
-                <div class="mt-3 space-y-1">
-                    <x-responsive-nav-link :href="route('login')">
+                <div class="mt-3 space-y-1 pb-4">
+                    <a href="{{ route('login') }}" class="block px-4 py-3 text-sm font-semibold rounded-xl text-cozy-brown/70 hover:bg-cozy-warm/20">
                         {{ __('Log in') }}
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('register')">
+                    </a>
+                    <a href="{{ route('register') }}" class="block px-4 py-3 text-sm font-bold rounded-xl text-white bg-cozy-brown text-center">
                         {{ __('Register') }}
-                    </x-responsive-nav-link>
+                    </a>
                 </div>
             @endauth
         </div>
