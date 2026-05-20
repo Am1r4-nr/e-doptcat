@@ -34,7 +34,7 @@ class CatController extends Controller
             $query->where('location_name', $request->input('location'));
         }
 
-        $cats = $query->where('status', 'Available')->get();
+        $cats = $query->where('status', 'Available')->paginate(12);
         
         Log::info('Cats index called', [
             'total_cats' => $cats->count(),

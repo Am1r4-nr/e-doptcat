@@ -1,90 +1,76 @@
 <x-app-layout>
 <style>
-    @keyframes blobPulse {
-        0%,100% { border-radius: 60% 40% 70% 30% / 50% 60% 40% 70%; }
-        50%      { border-radius: 40% 60% 30% 70% / 60% 40% 70% 50%; }
-    }
-    .blob { animation: blobPulse 10s ease-in-out infinite; }
+  @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap');
+  .font-pinterest-script { font-family: 'Great Vibes', cursive; }
+  .font-pinterest-serif { font-family: 'Playfair Display', serif; }
+  .font-pinterest-sans { font-family: 'Poppins', sans-serif; }
+  .blob-1 { border-radius: 41% 59% 41% 59% / 46% 38% 62% 54%; }
+  .blob-2 { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  .blob-3 { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+  .bg-pinterest-base { background-color: #d1a568; }
+  .bg-pinterest-brown { background-color: #5c3516; }
+  .bg-pinterest-card { background-color: #f7ead4; }
+  .text-pinterest-brown { color: #5c3516; }
+  .text-pinterest-card { color: #f7ead4; }
+  .fill-sparkle { fill: #f3da74; }
 </style>
 
-    <!-- Hero Section -->
-    <div class="relative bg-cozy-brown overflow-hidden">
-        <div class="absolute inset-0">
-            <div class="absolute inset-0 bg-cozy-brown opacity-90 z-10"></div>
-            <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-1.2.1&auto=format&fit=crop&w=1927&q=80"
-                class="w-full h-full object-cover opacity-20 mix-blend-overlay" alt="Cat background">
-        </div>
-        <div class="relative max-w-7xl mx-auto py-32 pt-40 px-4 sm:px-6 lg:px-8 z-20 text-center">
-            <p class="font-script text-2xl text-cozy-warm mb-4">Our Story</p>
-            <h1 class="text-4xl font-serif font-bold tracking-tight text-white sm:text-5xl lg:text-6xl mb-6">
-                About Abu Hurairah Club
-            </h1>
-            <p class="mt-4 text-xl text-cozy-warm/80 max-w-3xl mx-auto font-light leading-relaxed">
-                Champions for Compassion, Guardians of Life. Dedicated to the well-being and protection of our feline friends.
+<div class="bg-pinterest-base min-h-screen font-pinterest-sans overflow-hidden relative pb-32">
+    <div class="absolute top-[-10%] right-[-10%] w-[800px] h-[800px] bg-pinterest-card blob-2 opacity-50 z-0"></div>
+    <div class="absolute top-[40%] left-[-20%] w-[600px] h-[600px] bg-pinterest-brown blob-3 opacity-90 z-0"></div>
+
+    <div class="relative z-10 max-w-6xl mx-auto px-6 pt-24 text-center">
+        <h1 class="font-pinterest-script text-7xl md:text-9xl text-pinterest-brown mb-4 z-20 relative mix-blend-color-burn">About Us</h1>
+        <p class="font-pinterest-serif text-pinterest-brown/90 text-xl md:text-3xl max-w-3xl mx-auto mb-16 font-medium">
+            Champions for Compassion, Guardians of Life. Dedicated to the well-being and protection of our feline friends.
+        </p>
+        
+        <div class="bg-pinterest-card rounded-[3rem] p-12 max-w-4xl mx-auto shadow-2xl border-8 border-white/40 relative">
+            <svg class="absolute -top-6 -right-6 w-12 h-12 fill-sparkle animate-pulse" viewBox="0 0 24 24"><path d="M12 0l2 8 8 2-8 2-2 8-2-8-8-2 8-2z"/></svg>
+
+            <h2 class="font-pinterest-script text-6xl text-pinterest-brown mb-6">Our Mission</h2>
+            <p class="text-pinterest-brown/90 font-pinterest-sans leading-relaxed text-lg mb-10">
+                Our primary mission is to rescue, rehabilitate, and rehome stray and abandoned cats. We believe every feline deserves a loving home and a chance at a dignified life. We strive to reduce the stray population through Trap-Neuter-Return (TNR) programs and public education.
             </p>
-        </div>
-    </div>
 
-    <!-- Mission & Vision -->
-    <div class="py-20 bg-cozy-bg overflow-hidden relative">
-        <div class="absolute top-0 right-0 w-72 h-72 bg-cozy-warm/40 rounded-full blur-3xl translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
-        <div class="absolute bottom-0 left-0 w-56 h-56 bg-cozy-accent/15 rounded-full blur-3xl -translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
-                <div class="mb-12 lg:mb-0">
-                    <h2 class="text-3xl font-serif font-bold text-cozy-brown mb-6 relative inline-block">
-                        Our Mission
-                        <span class="absolute bottom-1 left-0 w-full h-2 bg-cozy-accent/30 -z-10 transform -rotate-1 rounded-full"></span>
-                    </h2>
-                    <p class="text-lg text-cozy-brown/70 leading-relaxed mb-8 text-pretty">
-                        Our primary mission is to rescue, rehabilitate, and rehome stray and abandoned cats. We believe
-                        every feline deserves a loving home and a chance at a dignified life. We strive to reduce the
-                        stray population through Trap-Neuter-Return (TNR) programs and public education.
-                    </p>
-                    <h3 class="text-xl font-serif font-bold text-cozy-brown mb-6">Core Values</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        @foreach([['icon'=>'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z','label'=>'Compassion for all'],['icon'=>'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z','label'=>'Transparency'],['icon'=>'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z','label'=>'Community'],['icon'=>'M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z','label'=>'SDG 15 Commit']] as $v)
-                        <div class="bg-cozy-card p-4 rounded-xl shadow-sm border border-cozy-warm/30 flex items-start gap-3">
-                            <div class="bg-cozy-warm/40 p-2 rounded-lg text-cozy-brown">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $v['icon'] }}"/></svg>
-                            </div>
-                            <span class="text-sm font-bold text-cozy-brown/80 mt-1">{{ $v['label'] }}</span>
-                        </div>
-                        @endforeach
-                    </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-pinterest-brown">
+                <div class="p-6 bg-white/40 rounded-[2rem] blob-1 shadow-md hover:scale-105 transition-transform duration-500">
+                    <div class="text-4xl mb-3">❤️</div>
+                    <h3 class="font-pinterest-serif text-xl font-bold mb-2">Compassion</h3>
+                    <p class="text-sm">Leading with empathy in every rescue.</p>
                 </div>
-                <div class="relative">
-                    <div class="absolute -top-4 -right-4 w-24 h-24 bg-cozy-accent/30 rounded-full blur-xl"></div>
-                    <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-cozy-warm/40 rounded-full blur-xl"></div>
-                    <img class="relative rounded-3xl shadow-xl w-full h-[400px] object-cover transform rotate-1 hover:rotate-0 transition-transform duration-500"
-                        src="https://images.unsplash.com/photo-1574158622682-e40e69881006?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Team working">
+                <div class="p-6 bg-white/40 rounded-[2rem] blob-2 shadow-md hover:scale-105 transition-transform duration-500">
+                    <div class="text-4xl mb-3">🤝</div>
+                    <h3 class="font-pinterest-serif text-xl font-bold mb-2">Community</h3>
+                    <p class="text-sm">Building a network of care for animals.</p>
+                </div>
+                <div class="p-6 bg-white/40 rounded-[2rem] blob-3 shadow-md hover:scale-105 transition-transform duration-500">
+                    <div class="text-4xl mb-3">🌍</div>
+                    <h3 class="font-pinterest-serif text-xl font-bold mb-2">Action</h3>
+                    <p class="text-sm">Committed to SDG 15: Life on Land.</p>
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Team Section -->
-    <div class="bg-cozy-card py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <p class="font-script text-xl text-cozy-accent mb-2">The people behind the paws</p>
-                <h2 class="text-3xl font-serif font-bold text-cozy-brown">Meet Our Team</h2>
-                <div class="w-16 h-1 bg-cozy-accent mx-auto rounded-full mt-4"></div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                @foreach([['name'=>'Sarah Jenkins','role'=>'Founder & Director','initials'=>'Sarah+J'],['name'=>'Mike Thompson','role'=>'Head Veterinarian','initials'=>'Mike+T'],['name'=>'Linda Khoo','role'=>'Volunteer Coordinator','initials'=>'Linda+K']] as $m)
-                <div class="group text-center">
-                    <div class="relative w-40 h-40 mx-auto mb-6">
-                        <div class="absolute inset-0 bg-cozy-accent/30 rounded-full transform rotate-6 transition-transform group-hover:rotate-12"></div>
-                        <div class="relative w-full h-full rounded-full overflow-hidden border-4 border-cozy-card shadow-lg">
-                            <img src="https://ui-avatars.com/api/?name={{ $m['initials'] }}&background=E8C9A0&color=3C2415&size=200" alt="{{ $m['name'] }}" class="w-full h-full object-cover">
-                        </div>
-                    </div>
-                    <h3 class="text-xl font-serif font-bold text-cozy-brown group-hover:text-cozy-accent transition-colors">{{ $m['name'] }}</h3>
-                    <p class="text-cozy-brown/50 font-medium text-sm mt-1 uppercase tracking-wide">{{ $m['role'] }}</p>
+        
+        <h2 class="font-pinterest-script text-7xl text-pinterest-card mt-28 mb-16 mix-blend-overlay relative z-20">The People Behind the Paws</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12 max-w-5xl mx-auto relative z-20">
+            @foreach([
+                ['name'=>'Sarah Jenkins','role'=>'Founder & Director','img'=>'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80'],
+                ['name'=>'Mike Thompson','role'=>'Head Veterinarian','img'=>'https://images.unsplash.com/photo-1511044568932-338cba0ad803?auto=format&fit=crop&w=300&q=80'],
+                ['name'=>'Linda Khoo','role'=>'Volunteer Coordinator','img'=>'https://images.unsplash.com/photo-1529566193698-bc3941270f80?auto=format&fit=crop&w=300&q=80']
+            ] as $index => $m)
+            @php $blobClass = 'blob-' . (($index % 3) + 1); @endphp
+            <div class="flex flex-col items-center group">
+                <div class="w-56 h-56 mb-8 {{ $blobClass }} overflow-hidden shadow-xl border-[6px] border-pinterest-card group-hover:scale-110 transition-transform duration-500">
+                    <img src="{{ $m['img'] }}" alt="{{ $m['name'] }}" class="w-full h-full object-cover filter sepia-[0.4] group-hover:sepia-0 transition-all duration-500">
                 </div>
-                @endforeach
+                <div class="bg-pinterest-card/90 backdrop-blur-md px-6 py-3 rounded-full shadow-lg">
+                    <h3 class="font-pinterest-serif font-bold text-2xl text-pinterest-brown">{{ $m['name'] }}</h3>
+                    <p class="font-pinterest-sans text-xs text-pinterest-brown/80 font-bold tracking-widest uppercase mt-1">{{ $m['role'] }}</p>
+                </div>
             </div>
+            @endforeach
         </div>
     </div>
+</div>
 </x-app-layout>
