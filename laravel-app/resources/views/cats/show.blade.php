@@ -161,10 +161,24 @@
 
                     <!-- Actions -->
                     <div class="mt-auto flex flex-col sm:flex-row gap-4">
-                        <button
-                            class="flex-1 bg-cozy-brown text-cozy-light px-8 py-4 rounded-xl hover:bg-cozy-accent hover:shadow-lg transition-all transform hover:-translate-y-1 font-bold text-lg tracking-wide shadow-md">
-                            Apply to Adopt
-                        </button>
+                        @if($cat->status === 'Available')
+                            @auth
+                                <a href="{{ route('adoptions.create', $cat) }}"
+                                   class="flex-1 text-center bg-cozy-brown text-cozy-light px-8 py-4 rounded-xl hover:bg-cozy-accent hover:shadow-lg transition-all transform hover:-translate-y-1 font-bold text-lg tracking-wide shadow-md">
+                                    Apply to Adopt
+                                </a>
+                            @else
+                                <a href="{{ route('adoptions.create', $cat) }}"
+                                   class="flex-1 text-center bg-cozy-brown text-cozy-light px-8 py-4 rounded-xl hover:bg-cozy-accent hover:shadow-lg transition-all transform hover:-translate-y-1 font-bold text-lg tracking-wide shadow-md">
+                                    Login to Apply
+                                </a>
+                            @endauth
+                        @else
+                            <button disabled
+                                class="flex-1 bg-cozy-brown/40 text-cozy-light px-8 py-4 rounded-xl font-bold text-lg tracking-wide cursor-not-allowed opacity-60">
+                                Not Available
+                            </button>
+                        @endif
 
                         <!-- QR Code Toggle -->
                         <div x-data="{ open: false }" class="relative">

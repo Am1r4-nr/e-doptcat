@@ -12,6 +12,51 @@
 
     // Featured cat of the day
     $featuredCat = \App\Models\Cat::where('status', 'Available')->inRandomOrder()->first();
+
+    // Messages
+    $messages = $user->receivedMessages()->with('sender')->latest()->get();
+    $unreadCount = $messages->filter(fn($m) => $m->isUnread())->count();
+
+    // Smart notifications derived from existing data
+    $notifications = collect();
+
+    foreach ($adoptions as $a) {
+        $notifications->push([
+            'icon'  => '🐾',
+            'color' => $a->status === 'Approved' ? 'green' : ($a->status === 'Rejected' ? 'red' : 'amber'),
+            'title' => 'Adoption Application — ' . ($a->cat->name ?? 'Cat'),
+            'body'  => 'Status: ' . $a->status . ' · Stage: ' . ($a->pipeline_stage ?? 'New'),
+            'time'  => $a->updated_at,
+        ]);
+    }
+    foreach ($registrations as $r) {
+        $notifications->push([
+            'icon'  => '🗓️',
+            'color' => 'blue',
+            'title' => 'Event Registered — ' . ($r->event->title ?? 'Event'),
+            'body'  => 'You are registered for ' . (\Carbon\Carbon::parse($r->event->start_time ?? now())->format('M d, Y')),
+            'time'  => $r->created_at,
+        ]);
+    }
+    foreach ($donations->take(3) as $d) {
+        $notifications->push([
+            'icon'  => '💛',
+            'color' => 'yellow',
+            'title' => 'Donation Received',
+            'body'  => 'RM ' . number_format($d->amount, 2) . ' — Thank you for your generosity!',
+            'time'  => $d->created_at,
+        ]);
+    }
+    foreach ($reports as $r) {
+        $notifications->push([
+            'icon'  => '🚨',
+            'color' => $r->status === 'Resolved' ? 'green' : 'amber',
+            'title' => 'Incident Report #' . $r->id,
+            'body'  => 'Status: ' . ($r->status ?? 'Received') . ' · ' . ($r->location_name ?? 'Campus'),
+            'time'  => $r->updated_at,
+        ]);
+    }
+    $notifications = $notifications->sortByDesc('time')->values();
 @endphp
 
 <x-app-layout>
@@ -144,6 +189,62 @@
             </div>
         </div>
 
+        <!-- ── NOTIFICATION BOARD (full-width) ── -->
+        <div class="mb-8" x-data="{ open: true }">
+            <div class="bg-cozy-card rounded-[2.5rem] shadow-lg border border-cozy-warm/40 overflow-hidden">
+                <!-- Header -->
+                <button @click="open = !open" class="w-full flex items-center justify-between px-8 py-5 hover:bg-cozy-warm/10 transition-colors">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-2xl bg-cozy-warm/50 flex items-center justify-center text-xl">🔔</div>
+                        <div class="text-left">
+                            <p class="font-script text-xl text-cozy-accent leading-none">What's New</p>
+                            <h3 class="font-serif font-bold text-lg text-cozy-brown mt-0.5">Notification Board</h3>
+                        </div>
+                        @if($notifications->count() > 0)
+                        <span class="bg-cozy-accent text-cozy-light text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">
+                            {{ $notifications->count() }} updates
+                        </span>
+                        @endif
+                    </div>
+                    <svg class="w-5 h-5 text-cozy-brown/50 transition-transform duration-300" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+
+                <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
+                    @if($notifications->count() > 0)
+                    <div class="px-8 pb-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+                            @foreach($notifications as $notif)
+                            @php
+                                $colorMap = [
+                                    'green'  => 'bg-green-50 border-green-200 text-green-700',
+                                    'amber'  => 'bg-amber-50 border-amber-200 text-amber-700',
+                                    'red'    => 'bg-red-50 border-red-200 text-red-600',
+                                    'blue'   => 'bg-blue-50 border-blue-200 text-blue-700',
+                                    'yellow' => 'bg-yellow-50 border-yellow-200 text-yellow-700',
+                                ];
+                                $cls = $colorMap[$notif['color']] ?? 'bg-cozy-light border-cozy-warm/40 text-cozy-brown';
+                            @endphp
+                            <div class="flex items-start gap-3 p-4 rounded-2xl border {{ $cls }} transition-all hover:shadow-sm">
+                                <span class="text-xl flex-shrink-0 mt-0.5">{{ $notif['icon'] }}</span>
+                                <div class="min-w-0">
+                                    <p class="font-bold text-sm font-sans truncate">{{ $notif['title'] }}</p>
+                                    <p class="text-xs mt-0.5 opacity-80 font-sans">{{ $notif['body'] }}</p>
+                                    <p class="text-[10px] mt-1 opacity-50 font-sans">{{ \Carbon\Carbon::parse($notif['time'])->diffForHumans() }}</p>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                    @else
+                    <div class="px-8 pb-8 text-center">
+                        <span class="text-4xl block mb-2">🍃</span>
+                        <p class="text-sm font-semibold text-cozy-brown/60 font-sans">All caught up! No new notifications.</p>
+                    </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+
         <!-- ── ASYMMETRICAL PINTEREST-STYLE GRID ── -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
@@ -267,60 +368,7 @@
             <!-- RIGHT COLUMN (Span 7): Large aesthetic cards mirroring the Tuvkel Cozy Cafe card -->
             <div class="lg:col-span-7 space-y-8">
 
-                <!-- 1. Featured Cat Card (RECREATING THE PINTEREST MAIN IMAGE & TITLE CARD) -->
-                @if($featuredCat)
-                <div class="bg-cozy-card rounded-[3rem] overflow-hidden shadow-lg border border-cozy-warm/40 relative group transition-all hover:shadow-2xl">
-                    <!-- Top section: High quality cat picture framed nicely -->
-                    <div class="relative h-72 overflow-hidden">
-                        <img src="{{ $featuredCat->image }}" alt="{{ $featuredCat->name }}"
-                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                        <div class="absolute inset-0 bg-gradient-to-t from-cozy-brown/40 via-transparent to-transparent"></div>
-
-                        <!-- Sparkle/Featured badge -->
-                        <span class="absolute top-4 left-4 bg-cozy-accent text-cozy-light text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full shadow-md">
-                            Featured Companion
-                        </span>
-                        <!-- Status badge -->
-                        <span class="absolute top-4 right-4 bg-green-500 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full shadow-md">
-                            {{ $featuredCat->status }}
-                        </span>
-                    </div>
-
-                    <!-- Bottom section: Cursive script details and cozy description -->
-                    <div class="p-8 space-y-5">
-                        <div class="flex justify-between items-end">
-                            <div>
-                                <p class="font-script text-2xl text-cozy-accent leading-none">Cozy Friend of the Day</p>
-                                <h3 class="font-serif font-bold text-3xl text-cozy-brown mt-1">{{ $featuredCat->name }}</h3>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-xs text-cozy-brown/50 font-bold uppercase tracking-widest">Campus Resident</p>
-                                <p class="text-sm font-semibold text-cozy-brown/80 mt-0.5">{{ $featuredCat->location_name ?? 'AIKOL Block' }}</p>
-                            </div>
-                        </div>
-
-                        <div class="w-16 h-0.5 bg-cozy-accent/40 rounded-full"></div>
-
-                        <p class="text-cozy-brown/65 leading-relaxed text-sm">
-                            Meet <span class="font-bold">{{ $featuredCat->name }}</span>, a delightful {{ $featuredCat->breed ?? 'Mixed Breed' }} ({{ $featuredCat->age }} years old). Known for a highly docile, <span class="text-cozy-accent italic">{{ strtolower($featuredCat->personality ?? 'affectionate') }}</span> personality. This adorable campus companion would love to find a forever warm blanket and caring household!
-                        </p>
-
-                        <div class="flex items-center justify-between gap-4 pt-2">
-                            <div class="flex gap-2">
-                                @if($featuredCat->vaccinated)
-                                    <span class="bg-cozy-light border border-cozy-warm/50 text-cozy-brown text-[10px] font-bold uppercase tracking-wider px-2.5 py-1.5 rounded-xl">Vaccinated</span>
-                                @endif
-                                <span class="bg-cozy-light border border-cozy-warm/50 text-cozy-brown text-[10px] font-bold uppercase tracking-wider px-2.5 py-1.5 rounded-xl">{{ $featuredCat->health_status ?? 'Healthy' }}</span>
-                            </div>
-                            <a id="featured-cat-details-link" href="{{ route('cats.show', $featuredCat) }}" class="bg-cozy-brown hover:bg-cozy-accent text-cozy-light hover:text-cozy-brown font-bold px-6 py-3 rounded-2xl shadow-md transition-colors text-xs uppercase tracking-wider shrink-0">
-                                Meet {{ $featuredCat->name }}!
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                @endif
-
-                <!-- 2. Registered Events (Pinterest Style List Card) -->
+                <!-- 1. Registered Events (Pinterest Style List Card) -->
                 <div class="bg-cozy-card rounded-[2.5rem] p-6 shadow-lg border border-cozy-warm/40 relative overflow-hidden">
                     <div class="flex items-center justify-between mb-6">
                         <div>
@@ -373,7 +421,6 @@
                                     <p class="text-[10px] text-cozy-brown/50">Reported {{ $report->created_at->diffForHumans() }}</p>
                                 </div>
                                 <div class="flex items-center gap-3">
-                                    <!-- Dynamic status text -->
                                     @if($report->status === 'Resolved')
                                         <span class="bg-green-100 text-green-700 border border-green-200 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">Resolved</span>
                                     @elseif($report->status === 'Investigating')
@@ -390,6 +437,134 @@
                             <p class="text-xs font-semibold text-cozy-brown/65 text-center">No reports filed from your account.</p>
                         </div>
                     @endif
+                </div>
+
+                <!-- 4. Messages Card -->
+                <div class="bg-cozy-card rounded-[2.5rem] shadow-lg border border-cozy-warm/40 overflow-hidden"
+                     x-data="{ tab: 'inbox' }">
+
+                    <!-- Card Header -->
+                    <div class="px-6 pt-6 pb-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <p class="font-script text-2xl text-cozy-accent leading-none">AHC Team</p>
+                                <h3 class="font-serif font-bold text-xl text-cozy-brown mt-0.5">Messages</h3>
+                            </div>
+                            @if($unreadCount > 0)
+                            <span class="bg-cozy-accent text-cozy-light text-[10px] font-bold px-2.5 py-1 rounded-full">
+                                {{ $unreadCount }} unread
+                            </span>
+                            @endif
+                        </div>
+
+                        <!-- Tab Pills -->
+                        <div class="flex gap-2 bg-cozy-bg rounded-2xl p-1">
+                            <button @click="tab = 'inbox'"
+                                    :class="tab === 'inbox' ? 'bg-cozy-brown text-cozy-light shadow-sm' : 'text-cozy-brown/60 hover:text-cozy-brown'"
+                                    class="flex-1 py-2 px-4 rounded-xl text-xs font-bold font-sans transition-all">
+                                Inbox ({{ $messages->count() }})
+                            </button>
+                            <button @click="tab = 'compose'"
+                                    :class="tab === 'compose' ? 'bg-cozy-brown text-cozy-light shadow-sm' : 'text-cozy-brown/60 hover:text-cozy-brown'"
+                                    class="flex-1 py-2 px-4 rounded-xl text-xs font-bold font-sans transition-all">
+                                + New Message
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Flash: message sent -->
+                    @if(session('message_sent'))
+                    <div class="mx-6 mb-4 bg-green-50 border border-green-200 text-green-700 rounded-2xl px-4 py-3 text-xs font-sans font-bold flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        {{ session('message_sent') }}
+                    </div>
+                    @endif
+
+                    <!-- INBOX TAB -->
+                    <div x-show="tab === 'inbox'" class="px-6 pb-6">
+                        @if($messages->count() > 0)
+                        <div class="space-y-3 max-h-80 overflow-y-auto pr-1">
+                            @foreach($messages as $msg)
+                            <div class="rounded-2xl border p-4 transition-all {{ $msg->isUnread() ? 'bg-cozy-warm/20 border-cozy-accent/40' : 'bg-cozy-light/50 border-cozy-warm/30' }}"
+                                 x-data="{ expanded: false }">
+                                <div class="flex items-start justify-between gap-3 cursor-pointer" @click="expanded = !expanded">
+                                    <div class="flex items-start gap-3 min-w-0">
+                                        <!-- Sender avatar -->
+                                        <div class="w-8 h-8 rounded-full bg-cozy-brown flex items-center justify-center text-cozy-light text-xs font-bold flex-shrink-0">
+                                            {{ strtoupper(substr($msg->sender->name ?? 'A', 0, 1)) }}
+                                        </div>
+                                        <div class="min-w-0">
+                                            <div class="flex items-center gap-2">
+                                                <p class="font-bold text-xs text-cozy-brown font-sans truncate">{{ $msg->sender->name ?? 'AHC Team' }}</p>
+                                                @if($msg->isUnread())
+                                                <span class="w-2 h-2 rounded-full bg-cozy-accent flex-shrink-0"></span>
+                                                @endif
+                                            </div>
+                                            <p class="text-xs text-cozy-brown/70 font-sans truncate">{{ $msg->subject ?? 'No Subject' }}</p>
+                                            <p class="text-[10px] text-cozy-brown/40 font-sans mt-0.5">{{ $msg->created_at->diffForHumans() }}</p>
+                                        </div>
+                                    </div>
+                                    <svg class="w-4 h-4 text-cozy-brown/40 flex-shrink-0 transition-transform mt-1" :class="expanded ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                                </div>
+
+                                <!-- Expanded body -->
+                                <div x-show="expanded" x-transition class="mt-3 pt-3 border-t border-cozy-warm/30" x-cloak>
+                                    <p class="text-xs text-cozy-brown/70 font-sans leading-relaxed">{{ $msg->content }}</p>
+                                    @if($msg->isUnread())
+                                    <form method="POST" action="{{ route('messages.read', $msg) }}" class="mt-3">
+                                        @csrf @method('PATCH')
+                                        <button type="submit" class="text-[10px] font-bold text-cozy-accent hover:text-cozy-brown uppercase tracking-wider font-sans">
+                                            Mark as read ✓
+                                        </button>
+                                    </form>
+                                    @endif
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                        @else
+                        <div class="text-center py-8 bg-cozy-light/40 rounded-3xl border border-dashed border-cozy-warm">
+                            <span class="text-3xl block mb-2">✉️</span>
+                            <p class="text-xs font-semibold text-cozy-brown/60 font-sans">Your inbox is empty.</p>
+                            <button @click="tab = 'compose'" class="text-cozy-accent hover:text-cozy-brown font-bold text-xs uppercase tracking-wider mt-2 inline-block font-sans">
+                                Send a message →
+                            </button>
+                        </div>
+                        @endif
+                    </div>
+
+                    <!-- COMPOSE TAB -->
+                    <div x-show="tab === 'compose'" class="px-6 pb-6" x-cloak>
+                        <form method="POST" action="{{ route('messages.store') }}" class="space-y-4">
+                            @csrf
+                            <div>
+                                <label class="block text-[10px] font-bold text-cozy-brown/50 uppercase tracking-wider mb-1.5 font-sans">To</label>
+                                <div class="flex items-center gap-2 bg-cozy-bg rounded-2xl px-4 py-3 border border-cozy-warm/40">
+                                    <div class="w-6 h-6 rounded-full bg-cozy-brown flex items-center justify-center text-cozy-light text-[10px] font-bold">A</div>
+                                    <span class="text-xs font-bold text-cozy-brown font-sans">AHC Admin Team</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-cozy-brown/50 uppercase tracking-wider mb-1.5 font-sans">Subject</label>
+                                <input type="text" name="subject" value="{{ old('subject') }}"
+                                       class="w-full rounded-2xl border border-cozy-warm/60 bg-cozy-bg px-4 py-2.5 text-xs text-cozy-brown font-sans focus:outline-none focus:ring-2 focus:ring-cozy-accent/50 focus:border-cozy-accent transition"
+                                       placeholder="What's this about?">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-cozy-brown/50 uppercase tracking-wider mb-1.5 font-sans">Message <span class="text-red-400">*</span></label>
+                                <textarea name="content" rows="4"
+                                          class="w-full rounded-2xl border border-cozy-warm/60 bg-cozy-bg px-4 py-2.5 text-xs text-cozy-brown font-sans focus:outline-none focus:ring-2 focus:ring-cozy-accent/50 focus:border-cozy-accent transition resize-none @error('content') border-red-400 @enderror"
+                                          placeholder="Write your message to the AHC team...">{{ old('content') }}</textarea>
+                                @error('content') <p class="mt-1 text-xs text-red-500 font-sans">{{ $message }}</p> @enderror
+                            </div>
+                            <button type="submit"
+                                    class="w-full py-3 bg-cozy-brown hover:bg-cozy-accent text-cozy-light font-bold rounded-2xl text-xs uppercase tracking-wider font-sans transition-colors flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                                Send Message
+                            </button>
+                        </form>
+                    </div>
+
                 </div>
 
             </div>

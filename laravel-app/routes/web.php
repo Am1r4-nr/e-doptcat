@@ -4,6 +4,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CatController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\DonationController;
+use App\Http\Controllers\AdoptionController;
+use App\Http\Controllers\VolunteerController;
+use App\Http\Controllers\MessageController as UserMessageController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\GpsController;
@@ -38,6 +41,10 @@ Route::get('/dashboard', function () {
 Route::resource('cats', CatController::class)->only(['index', 'show']);
 Route::post('cats/ai-preferences', [CatController::class, 'storeAiPreferences'])->name('cats.ai-preferences');
 Route::resource('events', EventController::class)->only(['index', 'show']);
+Route::get('volunteers/register', [VolunteerController::class, 'create'])->name('volunteers.register');
+Route::post('volunteers/register', [VolunteerController::class, 'store'])->name('volunteers.store');
+Route::get('volunteers/thanks', [VolunteerController::class, 'thanks'])->name('volunteers.thanks');
+
 Route::get('donations', [DonationController::class, 'index'])->name('donations.index');
 Route::post('donations', [DonationController::class, 'store'])->name('donations.store');
 Route::get('donations/success', [DonationController::class, 'success'])->name('donations.success');
@@ -46,6 +53,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::post('messages', [UserMessageController::class, 'store'])->name('messages.store');
+    Route::patch('messages/{message}/read', [UserMessageController::class, 'markRead'])->name('messages.read');
+
+    Route::get('cats/{cat}/adopt', [AdoptionController::class, 'create'])->name('adoptions.create');
+    Route::post('cats/{cat}/adopt', [AdoptionController::class, 'store'])->name('adoptions.store');
+    Route::get('cats/{cat}/adopt/submitted', [AdoptionController::class, 'submitted'])->name('adoptions.submitted');
 
     Route::resource('reports', ReportController::class)->only(['create', 'store']);
     Route::post('events/{event}/register', [EventController::class, 'register'])->name('events.register');
