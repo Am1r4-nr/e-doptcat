@@ -219,7 +219,10 @@
     function trackerApp() {
         return {
             map: null,
-            cats: @json($cats),
+            cats: @json($cats).map(c => ({
+                ...c,
+                image: c.image ? `/storage/${c.image}` : null
+            })),
             filterStatus: 'all',
             markers: [],
             viewMode: 'list',

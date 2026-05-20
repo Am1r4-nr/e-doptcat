@@ -33,11 +33,15 @@
             <div
                 class="bg-cozy-card overflow-hidden shadow-xl rounded-3xl flex flex-col lg:flex-row border border-cozy-warm/40">
                 <!-- Image Section -->
-                <div class="lg:w-1/2 relative min-h-[400px] lg:min-h-[600px] rounded-[60%_40%_30%_70%/60%_30%_70%_40%] overflow-hidden bg-[#E6C697] border-8 border-[#F5DEB3] shadow-inner blob-slow">
-                    <img src="{{ $cat->image }}" alt="{{ $cat->name }}" class="absolute inset-0 w-full h-full object-cover">
+                <div class="lg:w-1/2 relative min-h-[400px] lg:min-h-[600px] bg-cozy-warm/30 overflow-hidden flex items-center justify-center">
+                    @if($cat->image_url)
+                        <img src="{{ Storage::url($cat->image_url) }}" alt="{{ $cat->name }}" class="absolute inset-0 w-full h-full object-cover">
+                    @else
+                        <svg class="w-32 h-32 text-cozy-brown/20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                    @endif
                     <div class="absolute inset-0 bg-gradient-to-t from-cozy-brown/40 to-transparent"></div>
 
-                    <div class="absolute bottom-6 left-6 text-white lg:hidden">
+                    <div class="absolute bottom-6 left-6 text-white lg:hidden z-10">
                         <h1 class="text-4xl font-serif font-bold text-shadow">{{ $cat->name }}</h1>
                         <span class="inline-block bg-cozy-accent px-3 py-1 rounded-full text-sm font-bold mt-2">
                             {{ $cat->status }}
@@ -46,7 +50,7 @@
                 </div>
 
                 <!-- Info Section -->
-                <div class="lg:w-1/2 flex flex-col pt-4 lg:pt-0">
+                <div class="lg:w-1/2 flex flex-col p-8 lg:p-12">
                     <div class="hidden lg:flex justify-between items-start mb-8">
                         <div>
                             <h1 class="text-5xl font-serif font-bold text-cozy-brown mb-2">{{ $cat->name }}</h1>
@@ -101,7 +105,8 @@
                                 <span class="text-3xl">✨</span>
                                 <h3 class="font-script text-3xl font-bold text-cozy-brown">AI Personality Profile</h3>
                             </div>
-                            <div class="w-full bg-cozy-warm/40 rounded-full h-3">
+                            @if($cat->temperament_score)
+                            <div class="w-full bg-cozy-warm/40 rounded-full h-3 mb-6">
                                 <div class="bg-gradient-to-r from-purple-500 to-pink-500 h-3 rounded-full" style="width: {{ ($cat->temperament_score / 10) * 100 }}%"></div>
                             </div>
                             @endif
@@ -196,11 +201,6 @@
         .text-shadow {
             text-shadow: 2px 2px 8px rgba(111, 78, 55, 0.4);
         }
-        @keyframes blobPulseSlow {
-            0%,100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
-            50%      { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
-        }
-        .blob-slow { animation: blobPulseSlow 12s ease-in-out infinite; }
     </style>
 
     <script>

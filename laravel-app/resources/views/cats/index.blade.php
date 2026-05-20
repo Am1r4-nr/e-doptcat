@@ -115,31 +115,53 @@
             <form action="{{ route('cats.ai-preferences') }}" method="POST" class="space-y-5 relative z-10 text-sm">
                 @csrf
                 <div>
-                    <label class="block font-bold text-cozy-brown mb-2 text-xs uppercase tracking-wider">Living situation?</label>
-                    <select name="living_situation" required
+                    <label class="block font-bold text-cozy-brown mb-2 text-xs uppercase tracking-wider">1. Energy Level (1-5)?</label>
+                    <select name="energy_level" required
                         class="w-full rounded-2xl border-cozy-warm bg-cozy-light focus:border-cozy-accent focus:ring-0 text-cozy-brown py-3 px-4">
-                        <option value="apartment">Apartment</option>
-                        <option value="house_no_yard">House (no yard)</option>
-                        <option value="house_yard">House (with yard)</option>
+                        <option value="" disabled selected>Select energy level</option>
+                        <option value="1">1 - A 'chill' couch potato</option>
+                        <option value="2">2 - Laid back most of the time</option>
+                        <option value="3">3 - Moderate energy</option>
+                        <option value="4">4 - Active and playful</option>
+                        <option value="5">5 - High-energy explorer</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block font-bold text-cozy-brown mb-2 text-xs uppercase tracking-wider">Time daily?</label>
-                    <select name="time_commitment" required
+                    <label class="block font-bold text-cozy-brown mb-2 text-xs uppercase tracking-wider">2. Ideal Bond?</label>
+                    <select name="ideal_bond" required
                         class="w-full rounded-2xl border-cozy-warm bg-cozy-light focus:border-cozy-accent focus:ring-0 text-cozy-brown py-3 px-4">
-                        <option value="low">1–2 hours</option>
-                        <option value="medium">3–4 hours</option>
-                        <option value="high">5+ hours</option>
+                        <option value="" disabled selected>Select bond type</option>
+                        <option value="velcro">A 'velcro' cat that follows me everywhere</option>
+                        <option value="independent">Independent but enjoys occasional chin rubs</option>
+                        <option value="challenge">I enjoy the challenge of winning over a cautious cat</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block font-bold text-cozy-brown mb-2 text-xs uppercase tracking-wider">Other pets?</label>
+                    <label class="block font-bold text-cozy-brown mb-2 text-xs uppercase tracking-wider">3. Noise Tolerance?</label>
+                    <select name="talkative_preference" required
+                        class="w-full rounded-2xl border-cozy-warm bg-cozy-light focus:border-cozy-accent focus:ring-0 text-cozy-brown py-3 px-4">
+                        <option value="" disabled selected>Select noise tolerance</option>
+                        <option value="loves_vocal">I love a cat that communicates frequently</option>
+                        <option value="quiet">I prefer a quiet companion</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-bold text-cozy-brown mb-2 text-xs uppercase tracking-wider">4. Social Compatibility (Other Pets)?</label>
                     <select name="other_pets" required
                         class="w-full rounded-2xl border-cozy-warm bg-cozy-light focus:border-cozy-accent focus:ring-0 text-cozy-brown py-3 px-4">
+                        <option value="" disabled selected>Select household setup</option>
                         <option value="no">No other pets</option>
-                        <option value="cats">Yes, cats</option>
-                        <option value="dogs">Yes, dogs</option>
-                        <option value="both">Both</option>
+                        <option value="yes_independent">Have pets, looking for an independent cat</option>
+                        <option value="yes_seeking_feline_friends">Have pets, seeking a cat that seeks feline friends</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-bold text-cozy-brown mb-2 text-xs uppercase tracking-wider">5. Handling & Routine Maintenance?</label>
+                    <select name="medication_comfort" required
+                        class="w-full rounded-2xl border-cozy-warm bg-cozy-light focus:border-cozy-accent focus:ring-0 text-cozy-brown py-3 px-4">
+                        <option value="" disabled selected>Select medication comfort</option>
+                        <option value="yes_experienced">Yes, I can handle a cat with an attitude</option>
+                        <option value="no_docile">No, I need a cat that is very docile and easy-going</option>
                     </select>
                 </div>
                 <div class="pt-4 flex justify-end gap-3">

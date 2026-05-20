@@ -51,8 +51,9 @@ class CatController extends Controller
             // Call Nvidia AI for predictions
             $cats = $this->getAiMatchScores($cats, $preferences);
             
-            // Sort by match score descending
-            $cats = collect($cats)->sortByDesc('ai_match_score')->values();
+            // Sort by match score descending (keeping paginator intact)
+            $sorted = $cats->getCollection()->sortByDesc('ai_match_score')->values();
+            $cats->setCollection($sorted);
             
             Log::info('AI matching complete', ['matched_cats' => count($cats)]);
         }

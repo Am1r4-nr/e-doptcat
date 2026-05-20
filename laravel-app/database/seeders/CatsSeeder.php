@@ -33,6 +33,7 @@ class CatsSeeder extends Seeder
                 'color' => 'Unknown',
                 'description' => 'Rescued with a large open wound on her left arm. Been at shelter since Jan 19th, 2026.',
                 'medical_history' => 'Open wound has fully healed. Currently undergoing treatment for fungal infection on her face.',
+                'image' => 'cats/santan.jpg',
                 'status' => 'Available',
             ],
             [
@@ -44,6 +45,7 @@ class CatsSeeder extends Seeder
                 'color' => 'Unknown',
                 'description' => 'Was recovering from ulcers and had someone taking care of him. Very playful, especially with other cats.',
                 'medical_history' => 'Infected area around the ulcers could not be saved and the dead tissues had to be removed. Took about a month to recover at the vet with intensive care. Ongoing routine wound cleaning. Now awaiting approval from vet to release him.',
+                'image' => 'cats/loki.jpg',
                 'status' => 'Available',
             ],
             [
@@ -55,6 +57,7 @@ class CatsSeeder extends Seeder
                 'color' => 'Unknown',
                 'description' => 'Found at 7E around Dec 31st, 2025. Estimated to be around one month old at the time. Had a severe fungal infection and showed signs of malnutrition. Very playful and energetic, also very vocal. Playfully mischievous, tends to bite. Social with both humans and other cats and climbs on them.',
                 'medical_history' => 'Treated for fungal infection and malnutrition. Recovered well. Planned for spaying once she reaches approximately 6 months old before adoption.',
+                'image' => 'cats/ciciko.jpg',
                 'status' => 'Available',
             ],
             [
@@ -66,6 +69,7 @@ class CatsSeeder extends Seeder
                 'color' => 'Unknown',
                 'description' => 'Found with an injured paw, likely caused by a vehicle accident. Recently admitted to the shelter. Very affectionate and seeks attention. Loves being petted. Expressive and makes a distinctive "cute" face when wanting something.',
                 'medical_history' => 'Currently receiving treatment for injured paw. Undergoing daily bandage changes.',
+                'image' => 'cats/toteh.jpg',
                 'status' => 'Available',
             ],
             [
@@ -77,6 +81,7 @@ class CatsSeeder extends Seeder
                 'color' => 'Unknown',
                 'description' => 'First found at Mahallah Safiyyah. Was previously being cared for by someone before being taken to the vet. Very active and playful cat, loves to play with the other cats. Very vocal and enjoys being picked up.',
                 'medical_history' => 'Infection in the left eye, was given bagi eyedrop nicol and systane, multivitamin and anti-inflammation medicine. Recently has started wheezing and sneezing, so Ren has started new medication, which is chrolpheramine and torbraynmcin.',
+                'image' => 'cats/ren.jpg',
                 'status' => 'Available',
             ],
             [
@@ -88,6 +93,7 @@ class CatsSeeder extends Seeder
                 'color' => 'Unknown',
                 'description' => 'Found at Safiyyah July 2025, was under the care of reporter. Her paw was reportedly crushed by a car. Been at shelter since Sept 2025 (7 months). Very grumpy but now very affectionate, manja and loves chin rubs.',
                 'medical_history' => 'Muezza had her paw crushed by a car, her infected wound started growing maggots. Forced to amputate her paw. After months of recovery, skin at the amputated area has fully regenerated. Muezza has already undergone spaying and paw suturing surgery.',
+                'image' => 'cats/muezza.jpg',
                 'status' => 'Available',
             ],
             [
@@ -99,6 +105,7 @@ class CatsSeeder extends Seeder
                 'color' => 'Tabby with green eyes',
                 'description' => 'Tabby cat with green eyes. Found at Mahallah Ruqayyah. Quiet, chill old boy. Does not like being caged, Tom needs an occasional breath of fresh air.',
                 'medical_history' => 'Inflamed tooth due to kidney disease (no anesthesia). Warded 1 month+ (fluids/renal diet). Now stable but needs weekly sub-cut, monthly blood test & lifetime renal food.',
+                'image' => 'cats/tom.jpg',
                 'status' => 'Available',
             ],
         ];
