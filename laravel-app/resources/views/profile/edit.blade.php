@@ -35,9 +35,16 @@
                          style="border-radius: 60% 40% 50% 50% / 50% 30% 70% 50%;">
                         @if (Auth::user()->avatar)
                             <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}"
+<<<<<<< HEAD
                                 class="w-full h-full object-cover">
                         @else
                             <div class="w-full h-full bg-gradient-to-br from-cozy-accent to-cozy-brown flex items-center justify-center text-cozy-light text-2xl font-bold">
+=======
+                                class="w-24 h-24 mx-auto rounded-full object-cover shadow-lg ring-4 ring-p-olive/30 mb-4">
+                        @else
+                            <div
+                                class="w-24 h-24 mx-auto bg-gradient-to-br from-blue-400 to-p-forest rounded-full flex items-center justify-center text-white text-2xl font-bold mb-4 shadow-lg">
+>>>>>>> 0bb3cf11e6d92ef905b229714ead22ce22349a5c
                                 {{ substr(Auth::user()->name, 0, 2) }}
                             </div>
                         @endif
@@ -114,11 +121,56 @@
                         </button>
                     </div>
 
+<<<<<<< HEAD
                     <!-- Content Area -->
                     <div class="p-8">
                         <!-- Profile Tab -->
                         <div x-show="tab === 'profile'" class="space-y-6">
                             <h4 class="text-xl font-serif font-bold text-cozy-brown mb-6">Profile Settings</h4>
+=======
+                <!-- Right Column: Tabs & Content -->
+                <div class="w-full lg:w-2/3">
+                    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+                        <!-- Tabs Header -->
+                        <div class="bg-orange-50/50 p-2 flex flex-wrap gap-2 border-b border-orange-100">
+                            <button @click="tab = 'profile'"
+                                :class="{'bg-white shadow-sm text-p-forest': tab === 'profile', 'text-gray-500 hover:text-p-forest': tab !== 'profile'}"
+                                class="px-6 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                                Profile
+                            </button>
+                            <button @click="tab = 'adoptions'"
+                                :class="{'bg-white shadow-sm text-p-forest': tab === 'adoptions', 'text-gray-500 hover:text-p-forest': tab !== 'adoptions'}"
+                                class="px-6 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                </svg>
+                                Adoptions
+                            </button>
+                            <button @click="tab = 'donations'"
+                                :class="{'bg-white shadow-sm text-p-forest': tab === 'donations', 'text-gray-500 hover:text-p-forest': tab !== 'donations'}"
+                                class="px-6 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Donations
+                            </button>
+                            <button @click="tab = 'events'"
+                                :class="{'bg-white shadow-sm text-p-forest': tab === 'events', 'text-gray-500 hover:text-p-forest': tab !== 'events'}"
+                                class="px-6 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                Events
+                            </button>
+                        </div>
+>>>>>>> 0bb3cf11e6d92ef905b229714ead22ce22349a5c
 
                             <form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="space-y-5">
                                 @csrf
@@ -133,13 +185,34 @@
                                                  style="border-radius: 60% 40% 50% 50% / 50% 30% 70% 50%;">
                                                 @if ($user->avatar)
                                                     <img src="{{ Storage::url($user->avatar) }}" alt="{{ $user->name }}"
+<<<<<<< HEAD
                                                         class="w-full h-full object-cover">
                                                 @else
                                                     <div class="w-full h-full bg-gradient-to-br from-cozy-accent to-cozy-brown flex items-center justify-center text-white text-lg font-bold">
+=======
+                                                        class="w-24 h-24 rounded-full object-cover ring-4 ring-p-olive/30 shadow-lg">
+                                                @else
+                                                    <div
+                                                        class="w-24 h-24 rounded-full bg-gradient-to-br from-blue-400 to-p-forest flex items-center justify-center text-white text-2xl font-bold ring-4 ring-gray-200">
+>>>>>>> 0bb3cf11e6d92ef905b229714ead22ce22349a5c
                                                         {{ substr($user->name, 0, 1) }}
                                                     </div>
                                                 @endif
                                             </div>
+<<<<<<< HEAD
+=======
+                                            <div class="flex-1">
+                                                <input id="avatar" name="avatar" type="file" accept="image/*"
+                                                    class="block w-full text-sm text-gray-500
+                                                    file:mr-4 file:py-2 file:px-4
+                                                    file:rounded-lg file:border-0
+                                                    file:text-sm file:font-bold
+                                                    file:bg-p-olive file:text-white
+                                                    hover:file:bg-orange-500
+                                                    cursor-pointer" />
+                                                <p class="text-xs text-gray-500 mt-2">PNG, JPG, GIF up to 5MB</p>
+                                            </div>
+>>>>>>> 0bb3cf11e6d92ef905b229714ead22ce22349a5c
                                         </div>
                                         <div class="flex-1">
                                             <input id="avatar" name="avatar" type="file" accept="image/*"
@@ -153,7 +226,60 @@
                                             <p class="text-[10px] text-cozy-brown/40 mt-2 font-bold uppercase tracking-wider">PNG, JPG or GIF (max 5MB)</p>
                                         </div>
                                     </div>
+<<<<<<< HEAD
                                     <x-input-error class="mt-2" :messages="$errors->get('avatar')" />
+=======
+
+                                    <div>
+                                        <x-input-label for="name" :value="__('Full Name')"
+                                            class="text-gray-600 font-bold" />
+                                        <x-text-input id="name" name="name" type="text"
+                                            class="mt-1 block w-full bg-slate-50 border-gray-100 rounded-xl"
+                                            :value="old('name', $user->name)" required autofocus autocomplete="name" />
+                                        <x-input-error class="mt-2" :messages="$errors->get('name')" />
+                                    </div>
+
+                                    <div>
+                                        <x-input-label for="email" :value="__('Email Address')"
+                                            class="text-gray-600 font-bold" />
+                                        <x-text-input id="email" name="email" type="email"
+                                            class="mt-1 block w-full bg-slate-50 border-gray-100 rounded-xl"
+                                            :value="old('email', $user->email)" required autocomplete="username" />
+                                        <x-input-error class="mt-2" :messages="$errors->get('email')" />
+                                    </div>
+
+                                    <div>
+                                        <x-input-label for="phone" :value="__('Phone Number')"
+                                            class="text-gray-600 font-bold" />
+                                        <x-text-input id="phone" name="phone" type="text"
+                                            class="mt-1 block w-full bg-slate-50 border-gray-100 rounded-xl"
+                                            :value="old('phone', $user->phone)" />
+                                        <x-input-error class="mt-2" :messages="$errors->get('phone')" />
+                                    </div>
+
+                                    <div>
+                                        <x-input-label for="address" :value="__('Address')"
+                                            class="text-gray-600 font-bold" />
+                                        <textarea id="address" name="address" rows="3"
+                                            class="mt-1 block w-full bg-slate-50 border-gray-100 rounded-xl shadow-sm focus:border-p-forest focus:ring-p-forest">{{ old('address', $user->address) }}</textarea>
+                                        <x-input-error class="mt-2" :messages="$errors->get('address')" />
+                                    </div>
+
+                                    <div class="flex items-center gap-4">
+                                        <x-primary-button
+                                            class="bg-p-forest hover:bg-p-forest-d">{{ __('Save Changes') }}</x-primary-button>
+                                        @if (session('status') === 'profile-updated')
+                                            <p x-data="{ show: true }" x-show="show" x-transition
+                                                x-init="setTimeout(() => show = false, 2000)"
+                                                class="text-sm text-green-600 font-bold">{{ __('Saved successfully.') }}</p>
+                                        @endif
+                                    </div>
+                                </form>
+
+                                <div class="border-t border-gray-100 pt-6 mt-8">
+                                    <h4 class="text-lg font-bold text-gray-800 mb-4">Security</h4>
+                                    @include('profile.partials.update-password-form')
+>>>>>>> 0bb3cf11e6d92ef905b229714ead22ce22349a5c
                                 </div>
 
                                 <div>
