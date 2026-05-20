@@ -1,150 +1,151 @@
 <x-app-layout>
-    <!-- Hero Section -->
-    <div class="relative bg-boho-brown overflow-hidden">
-        <div class="absolute inset-0">
-            <div class="absolute inset-0 bg-boho-brown opacity-90 z-10"></div>
-            <!-- Optional: Add a subtle pattern or background image here -->
-            <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-1.2.1&auto=format&fit=crop&w=1927&q=80"
-                class="w-full h-full object-cover text-gray-400" alt="Cat background">
-        </div>
-        <div class="relative max-w-7xl mx-auto py-24 px-4 sm:px-6 lg:px-8 z-20 text-center">
-            <h1 class="text-4xl font-serif font-bold tracking-tight text-white sm:text-5xl lg:text-6xl mb-6">
-                About Abu Hurairah Club
-            </h1>
-            <p class="mt-4 text-xl text-boho-cream max-w-3xl mx-auto font-light leading-relaxed">
-                Champions for Compassion, Guardians of Life. dedicated to the well-being and protection of our feline
-                friends.
-            </p>
-        </div>
-    </div>
-
-    <!-- Mission & Vision -->
-    <div class="py-20 bg-boho-bg overflow-hidden">
+    <!-- Section 1: Hero -->
+    <div class="bg-boho-bg py-16 md:py-24">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
-                <div class="mb-12 lg:mb-0">
-                    <h2 class="text-3xl font-serif font-bold text-boho-brown mb-6 relative inline-block">
-                        Our Mission
-                        <span
-                            class="absolute bottom-1 left-0 w-full h-2 bg-boho-orange/20 -z-10 transform -rotate-1 rounded-full"></span>
-                    </h2>
-                    <p class="text-lg text-gray-700 leading-relaxed mb-8 text-pretty">
-                        Our primary mission is to rescue, rehabilitate, and rehome stray and abandoned cats. We believe
-                        every feline deserves a loving home and a chance at a dignified life. We strive to reduce the
-                        stray population through Trap-Neuter-Return (TNR) programs and public education.
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Left Content -->
+                <div class="space-y-6">
+                    <span class="inline-block px-4 py-1.5 rounded-full bg-[#fae8d4] text-[#a66a33] text-sm font-bold tracking-widest uppercase">
+                        OUR JOURNEY
+                    </span>
+                    <h1 class="text-5xl md:text-7xl font-sans font-extrabold text-gray-900 tracking-tight">
+                        About e-Doptcat
+                    </h1>
+                    <p class="text-xl md:text-2xl text-gray-600 leading-snug font-medium max-w-lg">
+                        A real-time cat adoption and rescue management system by the Abu Hurairah Club (AHC), IIUM.
                     </p>
-
-                    <h3 class="text-xl font-serif font-bold text-boho-brown mb-6">Core Values</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="bg-white p-4 rounded-xl shadow-sm border border-boho-light flex items-start gap-3">
-                            <div class="bg-boho-light p-2 rounded-lg text-boho-brown">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                                </svg>
-                            </div>
-                            <span class="text-sm font-bold text-gray-700 mt-1">Compassion for all</span>
-                        </div>
-                        <div class="bg-white p-4 rounded-xl shadow-sm border border-boho-light flex items-start gap-3">
-                            <div class="bg-boho-light p-2 rounded-lg text-boho-brown">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            </div>
-                            <span class="text-sm font-bold text-gray-700 mt-1">Transparency</span>
-                        </div>
-                        <div class="bg-white p-4 rounded-xl shadow-sm border border-boho-light flex items-start gap-3">
-                            <div class="bg-boho-light p-2 rounded-lg text-boho-brown">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                </svg>
-                            </div>
-                            <span class="text-sm font-bold text-gray-700 mt-1">Community</span>
-                        </div>
-                        <div class="bg-white p-4 rounded-xl shadow-sm border border-boho-light flex items-start gap-3">
-                            <div class="bg-boho-light p-2 rounded-lg text-boho-brown">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                            </div>
-                            <span class="text-sm font-bold text-gray-700 mt-1">SDG 15 Commit</span>
-                        </div>
+                    
+                    <div class="bg-[#f5ebd9] border-l-4 border-[#b7791f] p-6 rounded-r-3xl mt-8">
+                        <p class="italic text-gray-700 text-lg">
+                            "AHC is a student-run organisation at IIUM dedicated to rescuing, caring for, and rehoming stray and abandoned cats on campus."
+                        </p>
                     </div>
                 </div>
-                <!-- Image Grid -->
-                <div class="relative">
-                    <div class="absolute -top-4 -right-4 w-24 h-24 bg-boho-orange/20 rounded-full blur-xl"></div>
-                    <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-boho-brown/10 rounded-full blur-xl"></div>
-                    <img class="relative rounded-3xl shadow-xl w-full h-[400px] object-cover transform rotate-1 hover:rotate-0 transition-transform duration-500"
-                        src="https://images.unsplash.com/photo-1574158622682-e40e69881006?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                        alt="Team working">
+
+                <!-- Right Image -->
+                <div class="relative w-full h-[500px] md:h-[600px] lg:w-[90%] ml-auto">
+                    <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                         alt="Orange Cat" 
+                         class="w-full h-full object-cover rounded-[3rem] shadow-2xl">
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Team Section -->
-    <div class="bg-white py-20">
+    <!-- Section 2: Our Story -->
+    <div class="bg-boho-bg py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
+            <h2 class="text-4xl font-sans font-bold text-gray-900">Our Story</h2>
+            
+            <div class="text-gray-600 text-lg md:text-xl leading-relaxed space-y-8 text-left md:text-center px-4">
+                <p>
+                    For years, the Abu Hurairah Club (AHC) worked tirelessly to manage campus cat welfare through fragmented channels. Our volunteers navigated manual processes, tracking rescues via social media DMs and spreadsheets that couldn't keep up with the urgency of campus needs. The lack of a centralized hub often delayed vital medical care and slowed down the rehoming of our furry friends.
+                </p>
+                <p>
+                    Recognizing this challenge, the vision for <span class="font-bold text-gray-800">e-Doptcat</span> was born. We needed more than just a website; we needed a dedicated digital sanctuary. By moving away from manual bottlenecks to a real-time management system, we empowered our community to respond faster, track health history accurately, and connect hopeful adopters with their perfect feline matches seamlessly.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 3: Mission & Values -->
+    <div class="bg-boho-bg py-24">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl font-serif font-bold text-boho-brown">Meet Our Team</h2>
-                <div class="w-16 h-1 bg-boho-orange mx-auto rounded-full mt-4"></div>
+            <div class="text-center mb-16 space-y-4">
+                <h2 class="text-4xl font-sans font-bold text-gray-900">Our Mission & Values</h2>
+                <p class="text-gray-500 text-lg">The pillars that support every rescue and every purr.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                <!-- Member 1 -->
-                <div class="group text-center">
-                    <div class="relative w-40 h-40 mx-auto mb-6">
-                        <div
-                            class="absolute inset-0 bg-boho-orange/20 rounded-full transform rotate-6 transition-transform group-hover:rotate-12">
-                        </div>
-                        <div
-                            class="relative w-full h-full rounded-full overflow-hidden border-4 border-white shadow-lg">
-                            <img src="https://ui-avatars.com/api/?name=Sarah+J&background=random" alt="Sarah"
-                                class="w-full h-full object-cover">
-                        </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-[#f0ece5] rounded-3xl p-8 text-center space-y-4 hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 mx-auto bg-[#fae8d4] text-[#a66a33] rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c-5.33 0-8 3.48-8 7 0 2.2 1.48 4.29 4 5l1.6 3.6c.2.46.74.68 1.23.49L12 17.5l1.17.59c.49.19 1.03-.03 1.23-.49L16 14c2.52-.71 4-2.8 4-5 0-3.52-2.67-7-8-7zm0 2c3.54 0 6 2.45 6 5 0 1.43-.88 2.92-2.82 3.62l-1.37 3.08-.81-.41-1 .5-.81.41-1.37-3.08C6.88 11.42 6 9.93 6 9c0-2.55 2.46-5 6-5z"/></svg>
                     </div>
-                    <h3
-                        class="text-xl font-serif font-bold text-boho-brown group-hover:text-boho-orange transition-colors">
-                        Sarah Jenkins</h3>
-                    <p class="text-gray-500 font-medium text-sm mt-1 uppercase tracking-wide">Founder & Director</p>
+                    <h3 class="text-xl font-bold text-gray-900">Cat Welfare</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Prioritizing the health, safety, and happiness of every campus feline under our care.</p>
                 </div>
-                <!-- Member 2 -->
-                <div class="group text-center">
-                    <div class="relative w-40 h-40 mx-auto mb-6">
-                        <div
-                            class="absolute inset-0 bg-boho-orange/20 rounded-full transform -rotate-3 transition-transform group-hover:-rotate-6">
-                        </div>
-                        <div
-                            class="relative w-full h-full rounded-full overflow-hidden border-4 border-white shadow-lg">
-                            <img src="https://ui-avatars.com/api/?name=Mike+T&background=random" alt="Mike"
-                                class="w-full h-full object-cover">
-                        </div>
+                <!-- Card 2 -->
+                <div class="bg-[#f0ece5] rounded-3xl p-8 text-center space-y-4 hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 mx-auto bg-[#fae8d4] text-[#a66a33] rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                     </div>
-                    <h3
-                        class="text-xl font-serif font-bold text-boho-brown group-hover:text-boho-orange transition-colors">
-                        Mike Thompson</h3>
-                    <p class="text-gray-500 font-medium text-sm mt-1 uppercase tracking-wide">Head Veterinarian</p>
+                    <h3 class="text-xl font-bold text-gray-900">Transparency</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Ensuring every donation and rescue action is tracked and visible to our supporters.</p>
                 </div>
-                <!-- Member 3 -->
-                <div class="group text-center">
-                    <div class="relative w-40 h-40 mx-auto mb-6">
-                        <div
-                            class="absolute inset-0 bg-boho-orange/20 rounded-full transform rotate-3 transition-transform group-hover:rotate-6">
-                        </div>
-                        <div
-                            class="relative w-full h-full rounded-full overflow-hidden border-4 border-white shadow-lg">
-                            <img src="https://ui-avatars.com/api/?name=Linda+K&background=random" alt="Linda"
-                                class="w-full h-full object-cover">
-                        </div>
+                <!-- Card 3 -->
+                <div class="bg-[#f0ece5] rounded-3xl p-8 text-center space-y-4 hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 mx-auto bg-[#fae8d4] text-[#a66a33] rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                     </div>
-                    <h3
-                        class="text-xl font-serif font-bold text-boho-brown group-hover:text-boho-orange transition-colors">
-                        Linda Khoo</h3>
-                    <p class="text-gray-500 font-medium text-sm mt-1 uppercase tracking-wide">Volunteer Coordinator</p>
+                    <h3 class="text-xl font-bold text-gray-900">Community</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Fostering a nurturing ecosystem of student volunteers and animal lovers at IIUM.</p>
+                </div>
+                <!-- Card 4 -->
+                <div class="bg-[#f0ece5] rounded-3xl p-8 text-center space-y-4 hover:shadow-lg transition-shadow">
+                    <div class="w-12 h-12 mx-auto bg-[#fae8d4] text-[#a66a33] rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900">Tech-Enabled Care</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Leveraging modern platforms like e-Doptcat to optimize rescue logistics and outreach.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 4: Meet The Team -->
+    <div class="bg-boho-bg py-16 pb-32">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12 space-y-2">
+                <h2 class="text-4xl font-sans font-bold text-gray-900">Meet the Team</h2>
+                <p class="text-gray-500 text-lg">The passionate hearts behind the platform.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Team Member 1 -->
+                <div class="space-y-4">
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=600" alt="Nur Amira Nabila" class="w-full h-96 lg:h-[450px] object-cover rounded-[2.5rem] shadow-md grayscale">
+                    <div>
+                        <h3 class="font-bold text-xl text-gray-900">Nur Amira Nabila Binti Mohd Ab Rahman</h3>
+                        <p class="text-[#a66a33] font-medium">Developer</p>
+                    </div>
+                </div>
+                <!-- Team Member 2 -->
+                <div class="space-y-4">
+                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=600" alt="Nurul Nasreen" class="w-full h-96 lg:h-[450px] object-cover rounded-[2.5rem] shadow-md grayscale">
+                    <div>
+                        <h3 class="font-bold text-xl text-gray-900">Nurul Nasreen Binti Abdul Malik</h3>
+                        <p class="text-[#a66a33] font-medium">Developer</p>
+                    </div>
+                </div>
+                <!-- Team Member 3 -->
+                <div class="space-y-4">
+                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=600" alt="Dr Mohd Khairul Azmi" class="w-full h-96 lg:h-[450px] object-cover rounded-[2.5rem] shadow-md grayscale">
+                    <div>
+                        <h3 class="font-bold text-xl text-gray-900">Dr. Mohd Khairul Azmi Bin Hassan</h3>
+                        <p class="text-[#a66a33] font-medium">Supervisor</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 5: CTA Banner -->
+    <div class="bg-boho-bg pb-24">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-gradient-to-r from-[#995913] to-[#e68a2e] rounded-[3rem] p-12 lg:p-16 text-center text-white shadow-2xl relative overflow-hidden">
+                <div class="relative z-10 space-y-6">
+                    <h2 class="text-4xl md:text-5xl font-bold font-sans">
+                        Want to make a difference for campus cats?
+                    </h2>
+                    <p class="text-lg text-white/90 max-w-2xl mx-auto font-medium">
+                        Join our growing community of volunteers and help us create a better world for every stray at IIUM.
+                    </p>
+                    <div class="pt-4">
+                        <a href="{{ Route::has('volunteers.register') ? route('volunteers.register') : '#' }}" class="inline-block bg-[#fcf8f2] text-[#995913] font-bold px-8 py-4 rounded-full shadow hover:bg-white hover:scale-105 transition-all">
+                            Become a Volunteer
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

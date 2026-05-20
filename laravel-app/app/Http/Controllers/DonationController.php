@@ -19,11 +19,13 @@ class DonationController extends Controller
         $validated = $request->validate([
             'amount' => 'required|numeric|min:1',
             'payment_method' => 'required|string|in:fpx,card',
+            'cause' => 'nullable|string|max:255',
         ]);
 
         Stripe::setApiKey(config('services.stripe.secret'));
 
         $paymentMethodTypes = $validated['payment_method'] === 'fpx' ? ['fpx'] : ['card'];
+        $cause = $validated['cause'] ?? 'General Support';
         
         // Create a Stripe Checkout Session
         $session = Session::create([
@@ -32,8 +34,8 @@ class DonationController extends Controller
                 'price_data' => [
                     'currency' => 'myr',
                     'product_data' => [
-                        'name' => 'Donation to E-DoptCat',
-                        'description' => 'Support our furry friends!',
+                        'name' => 'Donation for: ' . $cause,
+                        'description' => 'Support E-DoptCat - ' . $cause,
                     ],
                     'unit_amount' => $validated['amount'] * 100, // Stripe uses cents (sen)
                 ],
@@ -43,9 +45,10 @@ class DonationController extends Controller
             'success_url' => route('donations.success') . '?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => route('donations.index'),
             'metadata' => [
-                'user_id' => auth()->id(),
+                'user_id' => auth()->check() ? auth()->id() : 'guest',
                 'amount' => $validated['amount'],
                 'payment_method' => $validated['payment_method'],
+                'cause' => $cause,
             ],
         ]);
 
@@ -72,7 +75,7 @@ class DonationController extends Controller
 
             if (!$exists && $session->payment_status === 'paid') {
                 Donation::create([
-                    'user_id' => $session->metadata->user_id,
+                    'user_id' => $session->metadata->user_id === 'guest' ? null : $session->metadata->user_id,
                     'amount' => $session->metadata->amount,
                     'payment_method' => $session->metadata->payment_method,
                     'status' => 'Completed',

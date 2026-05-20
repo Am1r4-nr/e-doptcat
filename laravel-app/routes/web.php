@@ -39,14 +39,13 @@ Route::resource('cats', CatController::class)->only(['index', 'show']);
 Route::post('cats/ai-preferences', [CatController::class, 'storeAiPreferences'])->name('cats.ai-preferences');
 Route::resource('events', EventController::class)->only(['index', 'show']);
 Route::get('donations', [DonationController::class, 'index'])->name('donations.index');
+Route::post('donations', [DonationController::class, 'store'])->name('donations.store');
+Route::get('donations/success', [DonationController::class, 'success'])->name('donations.success');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    Route::post('donations', [DonationController::class, 'store'])->name('donations.store');
-    Route::get('donations/success', [DonationController::class, 'success'])->name('donations.success');
 
     Route::resource('reports', ReportController::class)->only(['create', 'store']);
     Route::post('events/{event}/register', [EventController::class, 'register'])->name('events.register');
