@@ -119,19 +119,19 @@
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
                 <div>
-                    <p class="font-serif font-bold text-4xl text-cozy-gold mb-1">450+</p>
+                    <p class="font-serif font-bold text-4xl text-cozy-gold mb-1">{{ $impact['rescued'] }}+</p>
                     <p class="font-sans text-cozy-warm/80 text-sm">Cats Rescued</p>
                 </div>
                 <div>
-                    <p class="font-serif font-bold text-4xl text-cozy-gold mb-1">985+</p>
+                    <p class="font-serif font-bold text-4xl text-cozy-gold mb-1">{{ $impact['donations'] }}+</p>
                     <p class="font-sans text-cozy-warm/80 text-sm">Donations Received</p>
                 </div>
                 <div>
-                    <p class="font-serif font-bold text-4xl text-cozy-gold mb-1">RM 100K</p>
+                    <p class="font-serif font-bold text-4xl text-cozy-gold mb-1">RM {{ number_format($impact['raised'], 0) }}</p>
                     <p class="font-sans text-cozy-warm/80 text-sm">Money Raised</p>
                 </div>
                 <div>
-                    <p class="font-serif font-bold text-4xl text-cozy-gold mb-1">12+</p>
+                    <p class="font-serif font-bold text-4xl text-cozy-gold mb-1">{{ $impact['campaigns'] }}+</p>
                     <p class="font-sans text-cozy-warm/80 text-sm">Active Campaigns</p>
                 </div>
             </div>
