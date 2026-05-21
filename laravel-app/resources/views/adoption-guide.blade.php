@@ -55,10 +55,10 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 @foreach ([
                     ['Age',             'Minimum 18 years old.'],
-                    ['Student / Staff', 'Must be a current IIUM student or staff member with valid ID.'],
-                    ['Accommodation',   'Must reside in off-campus accommodation or family home. Hostel/dormitory residents are not eligible.'],
+                    ['Citizenship',     'Must be a Malaysian citizen.'],
+                    ['Accommodation',   'Must reside in accommodation that permits pets (off-campus or family home). Hostel/dormitory residents are not eligible.'],
                     ['Household',       'All household members must agree to the adoption.'],
-                    ['Prior Pets',      'If you have existing pets, they must be vaccinated and non-aggressive toward cats.'],
+                    ['Prior Pets',      'Households may have a maximum of 5 pets. All existing pets must be vaccinated and non-aggressive toward cats.'],
                     ['Commitment',      'Must commit to providing proper food, veterinary care, and a safe indoor environment for the cat\'s lifetime.'],
                 ] as [$label, $text])
                 <div class="flex gap-3 bg-[#FAF8F5] rounded-2xl p-4">
