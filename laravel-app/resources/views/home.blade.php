@@ -198,10 +198,17 @@
                 </div>
             </div>
 
-            <div class="text-center mt-10">
+            <div class="text-center mt-10 flex items-center justify-center gap-4 flex-wrap">
                 <a href="{{ route('cats.index') }}"
                    class="inline-block bg-cozy-brown text-cozy-light font-bold px-10 py-3.5 rounded-full shadow hover:bg-cozy-accent hover:scale-105 transition-all duration-300 font-sans text-[14px]">
                     Adopt a Cat Now
+                </a>
+                <a href="{{ route('adoption.guide') }}"
+                   class="inline-flex items-center gap-2 px-8 py-3.5 rounded-full border-2 border-cozy-brown text-cozy-brown font-bold text-[14px] hover:bg-cozy-brown hover:text-cozy-light transition-all duration-300 font-sans">
+                    Learn More
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                    </svg>
                 </a>
             </div>
         </div>

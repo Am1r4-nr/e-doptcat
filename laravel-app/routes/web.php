@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', App\Http\Controllers\HomeController::class)->name('home');
 Route::view('/about', 'about')->name('about');
+Route::view('/adoption-guide', 'adoption-guide')->name('adoption.guide');
 Route::view('/scanner', 'scanner')->name('scanner');
 Route::get('/tracker', App\Http\Controllers\TrackerController::class)->name('tracker');
 
