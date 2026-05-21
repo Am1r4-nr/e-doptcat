@@ -35,7 +35,7 @@ Route::get('/dashboard', function () {
     if (auth()->user()->getAttribute('role') === 'admin') {
         return redirect()->route('admin.dashboard');
     }
-    return view('dashboard');
+    return redirect()->route('profile.edit', ['tab' => 'notifications']);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::resource('cats', CatController::class)->only(['index', 'show']);

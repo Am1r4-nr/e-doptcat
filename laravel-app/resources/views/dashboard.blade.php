@@ -192,7 +192,7 @@
         </div>
 
         <!-- ── UNIFIED TABBED CARD ── -->
-        <div class="bg-cozy-card rounded-[2.5rem] shadow-xl border border-cozy-warm/40 overflow-hidden" x-data="{ tab: 'notifications', msgTab: 'inbox' }">
+        <div class="bg-cozy-card rounded-[2.5rem] shadow-xl border border-cozy-warm/40 overflow-hidden" x-data="{ tab: (new URLSearchParams(window.location.search).get('tab')) || 'profile', msgTab: 'inbox' }">
 
             <!-- Tab Bar -->
             <div class="flex items-center gap-2 p-4 overflow-x-auto border-b border-cozy-warm/30">
@@ -204,6 +204,7 @@
                     ['key' => 'donations',     'label' => 'Donations',     'icon' => 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
                     ['key' => 'events',        'label' => 'Events',        'icon' => 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'],
                     ['key' => 'reports',       'label' => 'Reports',       'icon' => 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z'],
+                    ['key' => 'profile',       'label' => 'Profile Settings', 'icon' => 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'],
                 ] as $t)
                 <button @click="tab = '{{ $t['key'] }}'"
                         :class="tab === '{{ $t['key'] }}' ? 'bg-cozy-brown text-cozy-light shadow-md' : 'bg-cozy-bg text-cozy-brown/60 hover:text-cozy-brown hover:bg-cozy-warm/30'"
@@ -732,6 +733,167 @@
                             <a href="{{ route('reports.create') }}" class="text-cozy-accent hover:text-cozy-brown font-bold text-sm uppercase tracking-wider mt-3 inline-block">File a report →</a>
                         </div>
                     @endif
+                </div>
+
+                <!-- TAB: Profile Settings -->
+                <div x-show="tab === 'profile'" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <p class="font-script text-2xl text-cozy-accent mb-0.5">My Information</p>
+                            <h3 class="font-serif font-bold text-2xl text-cozy-brown">Profile Settings</h3>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Left Column: Summary Card -->
+                        <div class="col-span-1">
+                            <div class="bg-cozy-light/40 rounded-3xl border border-cozy-warm/40 p-6 text-center">
+                                <!-- Avatar with organic mask -->
+                                <div class="relative w-24 h-24 mx-auto mb-4 overflow-hidden shadow-md border-2 border-cozy-accent/30"
+                                     style="border-radius: 60% 40% 50% 50% / 50% 30% 70% 50%;">
+                                    @if ($user->avatar)
+                                        <img src="{{ Storage::url($user->avatar) }}" alt="{{ $user->name }}"
+                                            class="w-full h-full object-cover">
+                                    @else
+                                        <div class="w-full h-full bg-gradient-to-br from-cozy-accent to-cozy-brown flex items-center justify-center text-cozy-light text-xl font-bold">
+                                            {{ substr($user->name, 0, 2) }}
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <h4 class="text-lg font-serif font-bold text-cozy-brown">{{ $user->name }}</h4>
+                                <p class="text-cozy-brown/50 text-[11px] mt-1">{{ $user->email }}</p>
+
+                                <div class="w-12 h-[1px] bg-cozy-warm/60 mx-auto my-4"></div>
+
+                                <!-- Contact Details -->
+                                <div class="space-y-2.5 text-left text-xs text-cozy-brown/85">
+                                    <div class="flex items-center gap-3 bg-cozy-light/60 p-2.5 rounded-xl border border-cozy-warm/20">
+                                        <span class="text-base">📞</span>
+                                        <span class="font-medium truncate">{{ $user->phone ?? 'No phone number' }}</span>
+                                    </div>
+                                    <div class="flex items-center gap-3 bg-cozy-light/60 p-2.5 rounded-xl border border-cozy-warm/20">
+                                        <span class="text-base">📍</span>
+                                        <span class="font-medium truncate" title="{{ $user->address ?? 'No address set' }}">{{ $user->address ?? 'No address set' }}</span>
+                                    </div>
+                                    <div class="flex items-center gap-3 bg-cozy-light/60 p-2.5 rounded-xl border border-cozy-warm/20">
+                                        <span class="text-base">🗓️</span>
+                                        <span class="font-medium">Joined {{ $user->created_at->format('M d, Y') }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="w-12 h-[1px] bg-cozy-warm/60 mx-auto my-4"></div>
+
+                                <!-- Stats -->
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="bg-cozy-light/80 p-3 rounded-2xl border border-cozy-warm/30 shadow-inner">
+                                        <span class="text-base block mb-0.5">🐾</span>
+                                        <div class="text-base font-serif font-bold text-cozy-brown">{{ $totalAdoptions }}</div>
+                                        <div class="text-[8px] font-bold text-cozy-brown/40 uppercase tracking-widest mt-0.5">Adoptions</div>
+                                    </div>
+                                    <div class="bg-cozy-light/80 p-3 rounded-2xl border border-cozy-warm/30 shadow-inner">
+                                        <span class="text-base block mb-0.5">💝</span>
+                                        <div class="text-xs font-serif font-bold text-cozy-brown truncate">RM {{ number_format($totalDonationsAmount, 0) }}</div>
+                                        <div class="text-[8px] font-bold text-cozy-brown/40 uppercase tracking-widest mt-0.5">Donated</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Settings Forms -->
+                        <div class="col-span-1 lg:col-span-2 space-y-8">
+                            <!-- Update Profile Info Form -->
+                            <form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="space-y-5">
+                                @csrf
+                                @method('patch')
+
+                                <!-- Avatar Upload -->
+                                <div>
+                                    <label class="block text-cozy-brown text-xs font-bold mb-2 uppercase tracking-wider">Profile Picture</label>
+                                    <div class="mt-2 flex items-center gap-4">
+                                        <div class="flex-shrink-0">
+                                            <div class="relative w-16 h-16 overflow-hidden shadow-inner border border-cozy-accent/30"
+                                                 style="border-radius: 60% 40% 50% 50% / 50% 30% 70% 50%;">
+                                                @if ($user->avatar)
+                                                    <img src="{{ Storage::url($user->avatar) }}" alt="{{ $user->name }}"
+                                                        class="w-full h-full object-cover">
+                                                @else
+                                                    <div class="w-full h-full bg-gradient-to-br from-cozy-accent to-cozy-brown flex items-center justify-center text-white text-base font-bold">
+                                                        {{ substr($user->name, 0, 1) }}
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="flex-1">
+                                            <input id="avatar" name="avatar" type="file" accept="image/*"
+                                                class="block w-full text-xs text-cozy-brown/60
+                                                file:mr-4 file:py-2 file:px-4
+                                                file:rounded-xl file:border-0
+                                                file:text-xs file:font-bold
+                                                file:bg-cozy-brown file:text-cozy-light
+                                                hover:file:bg-cozy-accent hover:file:text-cozy-brown
+                                                cursor-pointer" />
+                                            <p class="text-[9px] text-cozy-brown/40 mt-1.5 font-bold uppercase tracking-wider">PNG, JPG or GIF (max 5MB)</p>
+                                        </div>
+                                    </div>
+                                    <x-input-error class="mt-2" :messages="$errors->get('avatar')" />
+                                </div>
+
+                                <div>
+                                    <label class="block text-cozy-brown text-xs font-bold mb-2 uppercase tracking-wider">Full Name</label>
+                                    <input id="name" name="name" type="text"
+                                        class="w-full py-3 px-4 rounded-2xl border-0 bg-cozy-light text-cozy-brown font-semibold focus:ring-2 focus:ring-cozy-accent text-sm"
+                                        :value="old('name', $user->name)" required autofocus autocomplete="name" />
+                                    <x-input-error class="mt-2" :messages="$errors->get('name')" />
+                                </div>
+
+                                <div>
+                                    <label class="block text-cozy-brown text-xs font-bold mb-2 uppercase tracking-wider">Email Address</label>
+                                    <input id="email" name="email" type="email"
+                                        class="w-full py-3 px-4 rounded-2xl border-0 bg-cozy-light text-cozy-brown font-semibold focus:ring-2 focus:ring-cozy-accent text-sm"
+                                        :value="old('email', $user->email)" required autocomplete="username" />
+                                    <x-input-error class="mt-2" :messages="$errors->get('email')" />
+                                </div>
+
+                                <div>
+                                    <label class="block text-cozy-brown text-xs font-bold mb-2 uppercase tracking-wider">Phone Number</label>
+                                    <input id="phone" name="phone" type="text"
+                                        class="w-full py-3 px-4 rounded-2xl border-0 bg-cozy-light text-cozy-brown font-semibold focus:ring-2 focus:ring-cozy-accent text-sm"
+                                        :value="old('phone', $user->phone)" />
+                                    <x-input-error class="mt-2" :messages="$errors->get('phone')" />
+                                </div>
+
+                                <div>
+                                    <label class="block text-cozy-brown text-xs font-bold mb-2 uppercase tracking-wider">Address</label>
+                                    <textarea id="address" name="address" rows="3"
+                                        class="w-full py-3 px-4 rounded-2xl border-0 bg-cozy-light text-cozy-brown font-semibold focus:ring-2 focus:ring-cozy-accent text-sm placeholder-cozy-brown/30"
+                                        placeholder="Add campus department or current address details...">{{ old('address', $user->address) }}</textarea>
+                                    <x-input-error class="mt-2" :messages="$errors->get('address')" />
+                                </div>
+
+                                <div class="flex items-center gap-4 pt-1">
+                                    <button class="bg-cozy-brown hover:bg-cozy-accent text-cozy-light hover:text-cozy-brown font-bold py-3 px-6 rounded-2xl shadow-md transition-colors text-xs uppercase tracking-wider cursor-pointer" type="submit">
+                                        {{ __('Save Changes') }}
+                                    </button>
+                                    @if (session('status') === 'profile-updated')
+                                        <p x-data="{ show: true }" x-show="show" x-transition
+                                            x-init="setTimeout(() => show = false, 2500)"
+                                            class="text-xs text-emerald-600 font-bold uppercase tracking-wider">{{ __('Saved successfully.') }}</p>
+                                    @endif
+                                </div>
+                            </form>
+
+                            <!-- Password Update Section -->
+                            <div class="border-t border-cozy-warm/30 pt-6 mt-6">
+                                @include('profile.partials.update-password-form')
+                            </div>
+
+                            <!-- Delete Account Section -->
+                            <div class="border-t border-cozy-warm/30 pt-6 mt-6">
+                                @include('profile.partials.delete-user-form')
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>
