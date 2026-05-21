@@ -201,7 +201,7 @@
             <div class="text-center mt-10">
                 <a href="{{ route('cats.index') }}"
                    class="inline-block bg-cozy-brown text-cozy-light font-bold px-10 py-3.5 rounded-full shadow hover:bg-cozy-accent hover:scale-105 transition-all duration-300 font-sans text-[14px]">
-                    Start Browsing Cats
+                    Adopt a Cat Now
                 </a>
             </div>
         </div>
