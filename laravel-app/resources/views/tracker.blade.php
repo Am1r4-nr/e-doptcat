@@ -5,6 +5,12 @@
         50%      { border-radius: 40% 60% 30% 70% / 60% 40% 70% 50%; }
     }
     .blob { animation: blobPulse 10s ease-in-out infinite; }
+    #reader video {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        border-radius: 1rem;
+    }
 </style>
 
 <div class="bg-cozy-bg min-h-screen pt-28 pb-20 relative overflow-hidden flex flex-col" x-data="trackerApp()">
@@ -188,9 +194,43 @@
                 <!-- QR Scanner View -->
                 <div x-show="viewMode === 'scanner'" class="space-y-6 flex-1 flex flex-col overflow-hidden">
                     <div class="bg-cozy-card rounded-3xl shadow-md border border-cozy-warm/40 p-6 flex flex-col items-center flex-1 overflow-y-auto">
-                        <div id="reader" style="width: 100%; max-width: 400px; margin-bottom: 1.5rem;"></div>
-                        <div id="result" class="mt-2 font-serif font-bold text-lg text-cozy-brown text-center min-h-6"></div>
-                        <p class="mt-3 text-xs text-cozy-brown/55 text-center leading-relaxed">Scan QR codes located on cat collars to immediately view their location and full safety profiles.</p>
+                        <!-- Custom Camera Container -->
+                        <div class="relative w-full max-w-[320px] aspect-square rounded-2xl overflow-hidden border border-cozy-warm bg-black shadow-inner mb-5">
+                            <div id="reader" class="w-full h-full"></div>
+                            
+                            <!-- Scanner Scanning Overlay -->
+                            <div x-show="scannerActive" class="absolute inset-0 pointer-events-none z-10 flex items-center justify-center">
+                                <!-- Target Box with corner borders -->
+                                <div class="w-48 h-48 relative border-2 border-dashed border-cozy-accent/40 rounded-2xl flex items-center justify-center">
+                                    <!-- Horizontal laser scanning line -->
+                                    <div class="absolute w-[90%] h-0.5 bg-cozy-accent shadow-[0_0_8px_#c8956d] animate-[bounce_2s_infinite]"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Scanner Controls / Info -->
+                        <div class="w-full text-center space-y-4">
+                            <div id="result" class="font-serif font-bold text-sm text-cozy-accent min-h-6 bg-cozy-light/40 py-2.5 px-4 rounded-xl border border-cozy-warm/20 inline-block max-w-[280px]">
+                                Preparing camera...
+                            </div>
+                            
+                            <div class="flex justify-center gap-3">
+                                <button @click="startScanner" x-show="!scannerActive" class="px-5 py-2.5 bg-cozy-brown hover:bg-cozy-accent text-cozy-light font-bold text-xs rounded-xl transition-all shadow-sm">
+                                    Start Camera
+                                </button>
+                                <button @click="stopScanner" x-show="scannerActive" class="px-5 py-2.5 bg-red-100 hover:bg-red-200 text-red-700 font-bold text-xs rounded-xl transition-all shadow-sm">
+                                    Stop Camera
+                                </button>
+                                <label class="px-5 py-2.5 bg-cozy-light hover:bg-cozy-warm/30 text-cozy-brown border border-cozy-warm/40 font-bold text-xs rounded-xl transition-all shadow-sm cursor-pointer flex items-center justify-center gap-1.5">
+                                    <span>📁 Upload Image</span>
+                                    <input type="file" accept="image/*" class="hidden" @change="scanUploadedFile($event)">
+                                </label>
+                            </div>
+                            
+                            <p class="text-xs text-cozy-brown/55 leading-relaxed max-w-[280px] mx-auto">
+                                Scan QR codes located on cat collars to immediately view their location and full safety profiles.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -229,16 +269,13 @@
             filterStatus: 'all',
             markers: [],
             viewMode: 'list',
-            scannerInitialized: false,
+            scannerActive: false,
+            html5QrCode: null,
 
             init() {
                 this.initMap();
-                this.$watch('viewMode', () => {
-                    if (this.viewMode === 'scanner' && !this.scannerInitialized) {
-                        this.$nextTick(() => {
-                            this.initScanner();
-                        });
-                    }
+                this.$watch('viewMode', (value) => {
+                    this.toggleScanner(value);
                 });
             },
 
@@ -268,32 +305,117 @@
                 });
             },
 
-            initScanner() {
-                if (typeof Html5QrcodeScanner === 'undefined') {
-                    console.error('Html5QrcodeScanner library not loaded');
+            toggleScanner(mode) {
+                if (mode === 'scanner') {
+                    this.$nextTick(() => {
+                        this.startScanner();
+                    });
+                } else {
+                    this.stopScanner();
+                }
+            },
+
+            startScanner() {
+                if (typeof Html5Qrcode === 'undefined') {
+                    console.error('Html5Qrcode library not loaded');
+                    return;
+                }
+                
+                if (!this.html5QrCode) {
+                    this.html5QrCode = new Html5Qrcode("reader");
+                }
+
+                const resultEl = document.getElementById('result');
+                if (resultEl) resultEl.innerText = "Requesting camera access...";
+
+                const config = { fps: 15, qrbox: { width: 200, height: 200 } };
+
+                this.html5QrCode.start(
+                    { facingMode: "environment" }, 
+                    config,
+                    (decodedText, decodedResult) => {
+                        this.onScanSuccess(decodedText, decodedResult);
+                    },
+                    (error) => {
+                        // Silently keep scanning
+                    }
+                ).then(() => {
+                    this.scannerActive = true;
+                    if (resultEl) resultEl.innerText = "Align QR code inside box";
+                }).catch(err => {
+                    console.error("Unable to start scanner", err);
+                    if (resultEl) resultEl.innerText = "⚠️ Camera access denied or not found";
+                    this.scannerActive = false;
+                });
+            },
+
+            stopScanner() {
+                if (this.html5QrCode && this.scannerActive) {
+                    this.html5QrCode.stop().then(() => {
+                        this.scannerActive = false;
+                        const resultEl = document.getElementById('result');
+                        if (resultEl) resultEl.innerText = "Camera stopped";
+                    }).catch(err => {
+                        console.error("Failed to stop scanner", err);
+                    });
+                }
+            },
+
+            onScanSuccess(decodedText, decodedResult) {
+                const resultEl = document.getElementById('result');
+                if (resultEl) resultEl.innerText = "✓ Found: Redirecting...";
+
+                this.stopScanner();
+
+                // If it's a URL to our cats, redirect
+                if (decodedText.includes('/cats/')) {
+                    window.location.href = decodedText;
+                } else {
+                    if (resultEl) resultEl.innerText = "✓ Scanned text: " + decodedText;
+                }
+            },
+
+            scanUploadedFile(event) {
+                const fileList = event.target.files;
+                if (fileList.length === 0) {
                     return;
                 }
 
-                function onScanSuccess(decodedText, decodedResult) {
-                    document.getElementById('result').innerText = "✓ Found: " + decodedText;
-
-                    // If it's a URL to our cats, redirect
-                    if (decodedText.includes('/cats/')) {
-                        window.location.href = decodedText;
-                    }
+                if (typeof Html5Qrcode === 'undefined') {
+                    console.error('Html5Qrcode library not loaded');
+                    return;
                 }
 
-                function onScanFailure(error) {
-                    // Silently fail - keep scanning
+                if (!this.html5QrCode) {
+                    this.html5QrCode = new Html5Qrcode("reader");
                 }
 
-                let html5QrcodeScanner = new Html5QrcodeScanner(
-                    "reader",
-                    { fps: 10, qrbox: { width: 250, height: 250 } },
-                    false
-                );
-                html5QrcodeScanner.render(onScanSuccess, onScanFailure);
-                this.scannerInitialized = true;
+                const proceed = () => {
+                    const imageFile = fileList[0];
+                    const resultEl = document.getElementById('result');
+                    if (resultEl) resultEl.innerText = "Analyzing image file...";
+
+                    this.html5QrCode.scanFile(imageFile, true)
+                        .then(decodedText => {
+                            this.onScanSuccess(decodedText, null);
+                        })
+                        .catch(err => {
+                            console.error("Error scanning file", err);
+                            if (resultEl) resultEl.innerText = "❌ No QR code found in this image";
+                        });
+                };
+
+                if (this.scannerActive) {
+                    this.html5QrCode.stop().then(() => {
+                        this.scannerActive = false;
+                        proceed();
+                    }).catch(err => {
+                        console.error("Failed to stop scanner before file upload", err);
+                        proceed();
+                    });
+                } else {
+                    proceed();
+                }
             },
 
             updateMarkers() {
