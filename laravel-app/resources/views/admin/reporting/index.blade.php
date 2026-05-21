@@ -13,12 +13,12 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-<!-- Lost & Found Reports -->
+<!-- Incident Reports -->
 <div class="bg-white rounded-2xl shadow-sm border border-[#E8E2D8] overflow-hidden mt-6">
     <div class="px-6 py-4 border-b border-[#E8E2D8] flex items-center justify-between">
         <div>
-            <p class="text-base font-semibold text-gray-800">Lost &amp; Found Reports</p>
-            <p class="text-xs text-gray-400 mt-0.5">Review and manage lost and found cat reports</p>
+            <p class="text-base font-semibold text-gray-800">Incident Reports</p>
+            <p class="text-xs text-gray-400 mt-0.5">Review and manage community incident reports</p>
         </div>
     </div>
 
@@ -27,10 +27,11 @@
         <select id="lfFilter"
                 class="text-sm text-gray-600 bg-[#FAF6F0] border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-[#C9A84C] min-w-[130px]">
             <option value="">All Reports</option>
-            <option value="Lost">Lost</option>
-            <option value="Found">Found</option>
+            <option value="Injury">Injured</option>
+            <option value="Missing">Missing</option>
+            <option value="Stray">Stray</option>
         </select>
-        <input id="lfSearch" type="text" placeholder="Search by name, location..."
+        <input id="lfSearch" type="text" placeholder="Search by description, location..."
                class="flex-1 max-w-sm text-sm bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-[#C9A84C] placeholder-gray-400">
     </div>
 
@@ -39,7 +40,7 @@
             <thead>
                 <tr class="border-b border-gray-100">
                     <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500">Type</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500">Cat Name/Description</th>
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500">Description</th>
                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500">Reporter</th>
                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500">Location</th>
                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500">Date Reported</th>
@@ -48,9 +49,9 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-50" id="lfBody">
-                @forelse($lostFoundReports as $r)
+                @forelse($userReports as $r)
                     @php
-                        $isLost     = strtolower($r->type) === 'lost';
+                        $isEmergency = in_array(strtolower($r->type), ['injury', 'injured', 'missing', 'lost']);
                         $isResolved = $r->status === 'Resolved';
                         $reporter   = $r->user?->name ?? $r->reporter_name ?? 'Unknown';
                         $contact    = $r->user?->email ?? $r->reporter_contact ?? '';
@@ -59,7 +60,7 @@
                         data-type="{{ $r->type }}"
                         data-search="{{ strtolower($r->description . ' ' . $r->location . ' ' . $reporter) }}">
                         <td class="px-6 py-3.5">
-                            <span class="text-xs font-bold px-2.5 py-1 rounded-full text-white {{ $isLost ? 'bg-red-500' : 'bg-green-500' }}">
+                            <span class="text-xs font-bold px-2.5 py-1 rounded-full text-white {{ $isEmergency ? 'bg-red-500' : 'bg-orange-500' }}">
                                 {{ $r->type }}
                             </span>
                         </td>

@@ -3,7 +3,7 @@ $navLinks = [
     ['label' => 'Home',     'route' => 'home',            'match' => 'home'],
     ['label' => 'About',    'route' => 'about',           'match' => 'about'],
     ['label' => 'Our Cats', 'route' => 'cats.index',      'match' => 'cats.*'],
-    ['label' => 'Tracker',  'route' => 'tracker',         'match' => 'tracker'],
+    ['label' => 'Lost & Found', 'route' => 'tracker',     'match' => 'tracker'],
     ['label' => 'Events',   'route' => 'events.index',    'match' => 'events.*'],
     ['label' => 'Donate',   'route' => 'donations.index', 'match' => 'donations.*'],
 ];
@@ -61,7 +61,7 @@ $navLinks = [
                             </button>
                         </x-slot>
                         <x-slot name="content">
-                            <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-cozy-brown hover:bg-cozy-bg transition-colors">Profile</a>
+                            <a href="{{ Auth::user()->role === 'admin' ? route('profile.edit') : route('profile.edit', ['tab' => 'profile']) }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-cozy-brown hover:bg-cozy-bg transition-colors">Profile</a>
                             @if(Auth::user()->role === 'admin')
                                 <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-cozy-brown hover:bg-cozy-bg transition-colors">Admin Panel</a>
                             @endif
@@ -128,7 +128,7 @@ $navLinks = [
                     </div>
                 </div>
                 <div class="mt-3 space-y-1">
-                    <a href="{{ route('profile.edit') }}" class="block px-4 py-3 text-sm font-semibold rounded-xl text-cozy-brown/70 hover:bg-cozy-warm/20">
+                    <a href="{{ Auth::user()->role === 'admin' ? route('profile.edit') : route('profile.edit', ['tab' => 'profile']) }}" class="block px-4 py-3 text-sm font-semibold rounded-xl text-cozy-brown/70 hover:bg-cozy-warm/20">
                         {{ __('Profile') }}
                     </a>
                     @if(Auth::user()->role === 'admin')
