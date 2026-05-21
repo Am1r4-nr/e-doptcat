@@ -166,12 +166,32 @@ function chatApp() {
             this.active = conv;
             conv.unread = 0;
         },
-        sendMessage() {
-            if (!this.draft.trim() || !this.active) return;
-            this.active.messages.push({ text: this.draft.trim(), sent: true, time: now() });
-            this.active.preview = this.draft.trim();
-            this.active.time = 'Now';
+        async sendMessage() {
+            const text = this.draft.trim();
+            if (!text || !this.active) return;
             this.draft = '';
+
+            const optimistic = { text, sent: true, time: now() };
+            this.active.messages.push(optimistic);
+            this.active.preview = text;
+            this.active.time = 'Now';
+
+            try {
+                const res = await fetch(`/admin/messages/${this.active.id}/reply`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({ content: text }),
+                });
+                if (!res.ok) {
+                    optimistic.text = '⚠️ Failed to send.';
+                }
+            } catch (e) {
+                optimistic.text = '⚠️ Network error.';
+            }
         },
     };
 }

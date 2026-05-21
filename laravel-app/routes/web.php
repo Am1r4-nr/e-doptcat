@@ -104,6 +104,7 @@ Route::middleware('auth')->group(function () {
 
         // Messages
         Route::get('messages', [MessageController::class, 'index'])->name('messages.index');
+        Route::post('messages/{user}/reply', [MessageController::class, 'reply'])->name('messages.reply');
 
         // Donation Management
         Route::resource('donations', DonationManagementController::class)->only(['index', 'show', 'destroy']);

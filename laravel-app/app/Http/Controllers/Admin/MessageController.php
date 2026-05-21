@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Message;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class MessageController extends Controller
@@ -56,5 +57,26 @@ class MessageController extends Controller
         })->filter()->values();
 
         return view('admin.messages.index', compact('conversations'));
+    }
+
+    public function reply(Request $request, User $user)
+    {
+        $request->validate(['content' => 'required|string|min:1|max:2000']);
+
+        $msg = Message::create([
+            'sender_id'   => auth()->id(),
+            'receiver_id' => $user->id,
+            'subject'     => 'Admin Reply',
+            'content'     => $request->content,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => [
+                'text' => $msg->content,
+                'sent' => true,
+                'time' => $msg->created_at->format('M d, g:ia'),
+            ],
+        ]);
     }
 }
