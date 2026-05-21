@@ -1,0 +1,5 @@
+public/hot
+storage/*.key
+storage/pail
+node_modules
+tests
