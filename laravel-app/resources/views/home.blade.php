@@ -137,6 +137,75 @@
             </div>
         </div>
 
+        <!-- How Adoption Works -->
+        <div class="mb-16">
+            <div class="text-center mb-12">
+                <p class="font-script text-3xl text-cozy-gold mb-1">Ready to Adopt?</p>
+                <h2 class="font-serif font-bold text-4xl text-cozy-brown">How Adoption Works</h2>
+                <p class="font-sans text-gray-500 mt-3 max-w-xl mx-auto text-[15px]">Giving a campus cat a forever home is simple. Here's what the journey looks like.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
+                <!-- Connecting line (desktop only) -->
+                <div class="hidden md:block absolute top-10 left-[12.5%] right-[12.5%] h-px bg-cozy-warm/40 z-0"></div>
+
+                <!-- Step 1 -->
+                <div class="relative z-10 bg-[#FAF8F5] rounded-3xl p-7 text-center flex flex-col items-center gap-4">
+                    <div class="w-14 h-14 rounded-full bg-cozy-gold/15 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-cozy-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
+                    <div class="w-7 h-7 rounded-full bg-cozy-gold text-white text-xs font-bold flex items-center justify-center -mt-2">1</div>
+                    <h3 class="font-serif font-bold text-[17px] text-cozy-brown">Browse Cats</h3>
+                    <p class="font-sans text-gray-500 text-[13px] leading-relaxed">Explore our available residents and find a cat whose personality matches yours.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="relative z-10 bg-[#FAF8F5] rounded-3xl p-7 text-center flex flex-col items-center gap-4">
+                    <div class="w-14 h-14 rounded-full bg-cozy-gold/15 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-cozy-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    <div class="w-7 h-7 rounded-full bg-cozy-gold text-white text-xs font-bold flex items-center justify-center -mt-2">2</div>
+                    <h3 class="font-serif font-bold text-[17px] text-cozy-brown">Submit Application</h3>
+                    <p class="font-sans text-gray-500 text-[13px] leading-relaxed">Fill in a short form about your home environment and experience with cats.</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="relative z-10 bg-[#FAF8F5] rounded-3xl p-7 text-center flex flex-col items-center gap-4">
+                    <div class="w-14 h-14 rounded-full bg-cozy-gold/15 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-cozy-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                        </svg>
+                    </div>
+                    <div class="w-7 h-7 rounded-full bg-cozy-gold text-white text-xs font-bold flex items-center justify-center -mt-2">3</div>
+                    <h3 class="font-serif font-bold text-[17px] text-cozy-brown">Screening & Meet</h3>
+                    <p class="font-sans text-gray-500 text-[13px] leading-relaxed">Our team reviews your application and arranges a meet-and-greet with your chosen cat.</p>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="relative z-10 bg-cozy-brown rounded-3xl p-7 text-center flex flex-col items-center gap-4">
+                    <div class="w-14 h-14 rounded-full bg-cozy-gold/30 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-cozy-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                        </svg>
+                    </div>
+                    <div class="w-7 h-7 rounded-full bg-cozy-gold text-white text-xs font-bold flex items-center justify-center -mt-2">4</div>
+                    <h3 class="font-serif font-bold text-[17px] text-cozy-light">Welcome Home!</h3>
+                    <p class="font-sans text-cozy-warm/70 text-[13px] leading-relaxed">Once approved, your new companion comes home — a lifelong bond begins.</p>
+                </div>
+            </div>
+
+            <div class="text-center mt-10">
+                <a href="{{ route('cats.index') }}"
+                   class="inline-block bg-cozy-brown text-cozy-light font-bold px-10 py-3.5 rounded-full shadow hover:bg-cozy-accent hover:scale-105 transition-all duration-300 font-sans text-[14px]">
+                    Start Browsing Cats
+                </a>
+            </div>
+        </div>
+
         <!-- CTA Banner -->
         <div class="bg-gradient-to-r from-cozy-brown to-cozy-accent rounded-3xl shadow-2xl p-12 lg:p-16 text-center text-cozy-light relative overflow-hidden">
             <div class="absolute top-0 right-0 w-64 h-64 bg-cozy-warm/20 blob opacity-50 pointer-events-none translate-x-1/3 -translate-y-1/3"></div>
