@@ -46,7 +46,7 @@ $navLinks = [
                                  class="absolute top-full left-0 mt-1 w-48 bg-cozy-card rounded-2xl shadow-lg border border-cozy-warm/30 py-2 z-50">
                                 <a href="{{ route('cats.index') }}"
                                    class="block px-4 py-2.5 text-sm font-semibold {{ request()->routeIs('cats.*') ? 'text-cozy-brown bg-cozy-warm/30' : 'text-cozy-brown/70 hover:text-cozy-brown hover:bg-cozy-warm/20' }} transition-colors">
-                                    Browse Cats
+                                    Our Cats
                                 </a>
                                 <a href="{{ route('adoption.guide') }}"
                                    class="block px-4 py-2.5 text-sm font-semibold {{ request()->routeIs('adoption.guide') ? 'text-cozy-brown bg-cozy-warm/30' : 'text-cozy-brown/70 hover:text-cozy-brown hover:bg-cozy-warm/20' }} transition-colors">
@@ -134,7 +134,7 @@ $navLinks = [
                         </p>
                         <a href="{{ route('cats.index') }}"
                            class="block pl-8 pr-4 py-2.5 text-sm font-semibold rounded-xl {{ request()->routeIs('cats.*') ? 'text-cozy-brown bg-cozy-warm/30' : 'text-cozy-brown/60 hover:bg-cozy-warm/20' }}">
-                            Browse Cats
+                            Our Cats
                         </a>
                         <a href="{{ route('adoption.guide') }}"
                            class="block pl-8 pr-4 py-2.5 text-sm font-semibold rounded-xl {{ request()->routeIs('adoption.guide') ? 'text-cozy-brown bg-cozy-warm/30' : 'text-cozy-brown/60 hover:bg-cozy-warm/20' }}">
