@@ -15,41 +15,13 @@
 
         <div class="flex-1 overflow-y-auto px-3 pb-4 space-y-5">
 
-            <!-- Groups -->
-            <div>
-                <p class="text-xs font-bold text-gray-500 uppercase tracking-widest px-1 mb-2">Groups</p>
-                <div class="space-y-0.5">
-                    <template x-for="conv in filteredGroups" :key="conv.id">
-                        <button @click="selectConv(conv)"
-                                class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition text-left"
-                                :class="active?.id === conv.id ? 'bg-[#F5EDD8]' : 'hover:bg-[#FAF6F0]'">
-                            <div class="relative flex-shrink-0">
-                                <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm"
-                                     :style="'background:' + conv.color">
-                                    <span x-text="conv.initials"></span>
-                                </div>
-                                <span x-show="conv.online"
-                                      class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-400 rounded-full border-2 border-white"></span>
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <div class="flex justify-between items-baseline">
-                                    <p class="text-sm font-semibold text-gray-800 truncate" x-text="conv.name"></p>
-                                    <p class="text-[10px] text-gray-400 flex-shrink-0 ml-1" x-text="conv.time"></p>
-                                </div>
-                                <p class="text-xs text-gray-400 truncate" x-text="conv.preview"></p>
-                            </div>
-                            <span x-show="conv.unread > 0"
-                                  class="flex-shrink-0 w-5 h-5 bg-[#C9A84C] text-white text-[10px] font-bold rounded-full flex items-center justify-center"
-                                  x-text="conv.unread"></span>
-                        </button>
-                    </template>
-                </div>
-            </div>
-
             <!-- People -->
             <div>
-                <p class="text-xs font-bold text-gray-500 uppercase tracking-widest px-1 mb-2">People</p>
+                <p class="text-xs font-bold text-gray-500 uppercase tracking-widest px-1 mb-2">Messages</p>
                 <div class="space-y-0.5">
+                    <template x-if="filteredPeople.length === 0">
+                        <p class="text-xs text-gray-400 px-2 py-4 text-center">No messages yet.</p>
+                    </template>
                     <template x-for="conv in filteredPeople" :key="conv.id">
                         <button @click="selectConv(conv)"
                                 class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition text-left"
@@ -186,72 +158,7 @@ function chatApp() {
         search: '',
         draft: '',
         active: null,
-        conversations: [
-            {
-                id: 1, type: 'group', name: 'Volunteers', initials: 'VO', color: '#C9A84C', online: true,
-                time: 'Today', preview: 'New intake this weekend!', unread: 3,
-                messages: [
-                    { text: 'Hey team, we have 3 new kittens coming in.', sent: false, time: 'Today, 9:00am' },
-                    { text: 'I can help on Saturday!', sent: true, time: 'Today, 9:05am' },
-                    { text: 'New intake this weekend!', sent: false, time: 'Today, 9:10am' },
-                ]
-            },
-            {
-                id: 2, type: 'group', name: 'Foster Families', initials: 'FF', color: '#8B7355', online: false,
-                time: 'Yesterday', preview: 'Luna is doing great 🐱', unread: 0,
-                messages: [
-                    { text: 'Luna is doing great 🐱', sent: false, time: 'Yesterday, 6:30pm' },
-                    { text: 'That is wonderful to hear!', sent: true, time: 'Yesterday, 6:35pm' },
-                ]
-            },
-            {
-                id: 3, type: 'group', name: 'Medical Team', initials: 'MT', color: '#6B8E6B', online: true,
-                time: 'Wednesday', preview: 'Checkup scheduled for Milo', unread: 1,
-                messages: [
-                    { text: 'Checkup scheduled for Milo on Friday.', sent: false, time: 'Wednesday, 11:00am' },
-                    { text: 'Noted, I will prepare the records.', sent: true, time: 'Wednesday, 11:15am' },
-                ]
-            },
-            {
-                id: 4, type: 'people', name: 'Amirah', initials: 'AM', color: '#C9A84C', online: true,
-                time: 'Today', preview: 'Is the adoption form ready?', unread: 2,
-                messages: [
-                    { text: 'Hello! I want to adopt Bits.', sent: false, time: 'Today, 10:00am' },
-                    { text: 'Hi Amirah! Sure, let me check availability.', sent: true, time: 'Today, 10:05am' },
-                    { text: 'Is the adoption form ready?', sent: false, time: 'Today, 10:10am' },
-                ]
-            },
-            {
-                id: 5, type: 'people', name: 'Razif', initials: 'RZ', color: '#7B6B8E', online: false,
-                time: 'Today', preview: 'Thank you!', unread: 0,
-                messages: [
-                    { text: 'I made a donation earlier.', sent: false, time: 'Today, 8:00am' },
-                    { text: 'Thank you so much for your support!', sent: true, time: 'Today, 8:05am' },
-                    { text: 'Thank you!', sent: false, time: 'Today, 8:06am' },
-                ]
-            },
-            {
-                id: 6, type: 'people', name: 'Sarah', initials: 'SR', color: '#8E6B6B', online: true,
-                time: 'Today', preview: 'Can I visit this Sunday?', unread: 1,
-                messages: [
-                    { text: 'Can I visit the sanctuary this Sunday?', sent: false, time: 'Today, 7:30am' },
-                    { text: 'Of course! We open at 10am.', sent: true, time: 'Today, 7:45am' },
-                    { text: 'Can I visit this Sunday?', sent: false, time: 'Today, 7:50am' },
-                ]
-            },
-            {
-                id: 7, type: 'people', name: 'Hafiz', initials: 'HF', color: '#6B7B8E', online: false,
-                time: 'Yesterday', preview: 'Got it, thanks!', unread: 0,
-                messages: [
-                    { text: 'Is Snowy still available for adoption?', sent: false, time: 'Yesterday, 3:00pm' },
-                    { text: 'Snowy was just adopted today, sorry!', sent: true, time: 'Yesterday, 3:15pm' },
-                    { text: 'Got it, thanks!', sent: false, time: 'Yesterday, 3:20pm' },
-                ]
-            },
-        ],
-        get filteredGroups() {
-            return this.conversations.filter(c => c.type === 'group' && c.name.toLowerCase().includes(this.search.toLowerCase()));
-        },
+        conversations: @json($conversations),
         get filteredPeople() {
             return this.conversations.filter(c => c.type === 'people' && c.name.toLowerCase().includes(this.search.toLowerCase()));
         },
