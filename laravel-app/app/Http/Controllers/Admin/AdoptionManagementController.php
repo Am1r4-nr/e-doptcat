@@ -10,8 +10,15 @@ class AdoptionManagementController extends Controller
 {
     public function index()
     {
-        $adoptions = Adoption::with(['user', 'cat'])->paginate(15);
-        return view('admin.adoptions.index', compact('adoptions'));
+        $adoptions = Adoption::with(['user', 'cat'])->latest()->paginate(15);
+
+        $pendingCount  = Adoption::where('status', 'Pending')->count();
+        $approvedCount = Adoption::where('status', 'Approved')->count();
+        $archivedCount = Adoption::where('status', 'Archived')->count();
+
+        return view('admin.adoptions.index', compact(
+            'adoptions', 'pendingCount', 'approvedCount', 'archivedCount'
+        ));
     }
 
     public function pipeline()

@@ -164,14 +164,14 @@
                          alt="Cozy Cat Cafe Scene" class="w-full h-full object-cover">
                     <!-- Overlay shadow/gradient -->
                     <div class="absolute inset-0 bg-gradient-to-t from-cozy-brown/40 via-transparent to-transparent"></div>
+                </div>
 
-                    <!-- Small float badge on image -->
-                    <div class="absolute bottom-5 left-5 bg-cozy-card/95 backdrop-blur-md rounded-2xl px-4 py-3 shadow-lg border border-cozy-warm/50 flex items-center gap-3">
-                        <span class="text-2xl animate-bounce">🐱</span>
-                        <div>
-                            <p class="text-[9px] font-bold text-cozy-brown/50 uppercase tracking-widest leading-none">Caring Campus</p>
-                            <p class="font-bold text-cozy-brown text-xs mt-0.5">Abu Hurairah Club</p>
-                        </div>
+                <!-- Float badge outside blob so it is never clipped -->
+                <div class="absolute bottom-6 left-6 z-20 bg-cozy-card/95 backdrop-blur-md rounded-2xl px-4 py-3 shadow-lg border border-cozy-warm/50 flex items-center gap-3">
+                    <span class="text-2xl animate-bounce">🐱</span>
+                    <div>
+                        <p class="text-[9px] font-bold text-cozy-brown/50 uppercase tracking-widest leading-none">Caring Campus</p>
+                        <p class="font-bold text-cozy-brown text-xs mt-0.5">Abu Hurairah Club</p>
                     </div>
                 </div>
                 <!-- Scattered micro flower/accent -->

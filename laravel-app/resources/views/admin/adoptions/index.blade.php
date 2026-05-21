@@ -23,7 +23,7 @@
             <div class="bg-[#FAF8F5] rounded-3xl p-7 flex items-center justify-between">
                 <div>
                     <div class="text-[12px] font-bold text-gray-500 tracking-wider mb-1 uppercase">PENDING</div>
-                    <div class="text-4xl font-bold text-[#C9A84C]">24</div>
+                    <div class="text-4xl font-bold text-[#C9A84C]">{{ $pendingCount }}</div>
                 </div>
                 <div class="w-12 h-12 rounded-2xl bg-[#F5EDD8] flex items-center justify-center text-[#C9A84C]">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
@@ -34,7 +34,7 @@
             <div class="bg-white rounded-3xl p-7 flex items-center justify-between border-2 border-teal-50 shadow-[0_4px_20px_-5px_rgba(20,184,166,0.1)]">
                 <div>
                     <div class="text-[12px] font-bold text-gray-500 tracking-wider mb-1 uppercase">APPROVED</div>
-                    <div class="text-4xl font-bold text-teal-600">142</div>
+                    <div class="text-4xl font-bold text-teal-600">{{ $approvedCount }}</div>
                 </div>
                 <div class="w-12 h-12 rounded-full border-2 border-teal-100 flex items-center justify-center text-teal-600">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
@@ -45,7 +45,7 @@
             <div class="bg-[#FAF8F5] rounded-3xl p-7 flex items-center justify-between">
                 <div>
                     <div class="text-[12px] font-bold text-gray-500 tracking-wider mb-1 uppercase">ARCHIVED</div>
-                    <div class="text-4xl font-bold text-gray-800">12</div>
+                    <div class="text-4xl font-bold text-gray-800">{{ $archivedCount }}</div>
                 </div>
                 <div class="w-12 h-12 rounded-2xl bg-white border border-gray-200 flex items-center justify-center text-gray-500 shadow-sm">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
