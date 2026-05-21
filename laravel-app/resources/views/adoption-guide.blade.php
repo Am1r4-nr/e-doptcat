@@ -76,35 +76,6 @@
             </div>
         </div>
 
-        <!-- FAQ -->
-        <div class="bg-cozy-brown rounded-3xl p-8 md:p-10 mb-12" x-data="{ open: null }">
-            <h2 class="font-serif font-bold text-2xl text-cozy-light mb-6">Frequently Asked Questions</h2>
-            <div class="space-y-3">
-                @foreach ([
-                    ['Can I adopt if I live in a hostel?',        'Unfortunately no — hostel and dormitory environments don\'t allow pets and can be stressful for cats. Applicants must live in off-campus or family accommodation.'],
-                    ['Is there an adoption fee?',                  'There is no adoption fee. We ask that you cover the cost of spay/neuter if the cat has not yet been fixed, and initial vaccinations if due.'],
-                    ['How long does the whole process take?',      'Typically 1–2 weeks from application to handover, depending on screening availability and your meet-and-greet schedule.'],
-                    ['Can I adopt more than one cat?',             'Yes! Some cats are bonded pairs and do better together. Let us know in your application if you\'re open to adopting two.'],
-                    ['What if the adoption doesn\'t work out?',   'We have a return policy — no questions asked. The cat\'s welfare comes first and we will work with you to find the best outcome.'],
-                ] as $i => [$q, $a])
-                <div class="border border-cozy-warm/20 rounded-2xl overflow-hidden">
-                    <button @click="open === {{ $i }} ? open = null : open = {{ $i }}"
-                            class="w-full flex items-center justify-between px-6 py-4 text-left">
-                        <span class="font-bold text-[14px] text-cozy-light">{{ $q }}</span>
-                        <svg class="w-4 h-4 text-cozy-gold flex-shrink-0 transition-transform duration-200"
-                             :class="open === {{ $i }} ? 'rotate-180' : ''"
-                             fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-                    <div x-show="open === {{ $i }}" x-transition class="px-6 pb-5">
-                        <p class="text-[13px] text-cozy-warm/80 leading-relaxed">{{ $a }}</p>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-        </div>
-
         <!-- CTA -->
         <div class="text-center">
             <p class="font-sans text-gray-500 text-[14px] mb-5">Ready to give a campus cat a loving home?</p>
