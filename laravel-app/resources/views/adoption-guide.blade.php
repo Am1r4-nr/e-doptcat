@@ -76,28 +76,6 @@
             </div>
         </div>
 
-        <!-- What to prepare -->
-        <div class="bg-white rounded-3xl shadow-sm border border-cozy-warm/30 p-8 md:p-10 mb-10">
-            <h2 class="font-serif font-bold text-2xl text-cozy-brown mb-2">What to Prepare</h2>
-            <p class="font-sans text-gray-400 text-[13px] mb-6">Have these ready before and after your application is approved.</p>
-            <div class="space-y-3">
-                @foreach ([
-                    ['Before applying',  'Valid student / staff ID, basic details about your home (type, floor, outdoor access), names of all household members.'],
-                    ['During screening', 'Be available for a short call or Whatsapp chat. We may request photos of your home environment.'],
-                    ['Before pick-up',   'Purchase a carrier box, litter tray, food & water bowls, and a starter supply of cat food ahead of the handover day.'],
-                    ['After adoption',   'Register the cat with a nearby vet within 30 days. Send us a short update photo within the first month — we love hearing how they\'re settling in!'],
-                ] as [$stage, $detail])
-                <div class="flex gap-4 items-start">
-                    <span class="flex-shrink-0 mt-1 w-2 h-2 rounded-full bg-cozy-gold"></span>
-                    <div>
-                        <span class="font-bold text-[13px] text-cozy-brown">{{ $stage }}: </span>
-                        <span class="text-[13px] text-gray-500 leading-relaxed">{{ $detail }}</span>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-        </div>
-
         <!-- FAQ -->
         <div class="bg-cozy-brown rounded-3xl p-8 md:p-10 mb-12" x-data="{ open: null }">
             <h2 class="font-serif font-bold text-2xl text-cozy-light mb-6">Frequently Asked Questions</h2>
