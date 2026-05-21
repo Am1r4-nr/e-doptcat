@@ -269,7 +269,7 @@
                         </a>
                         <a id="quick-link-cat-tracker" href="{{ route('tracker') }}" class="group bg-cozy-light hover:bg-cozy-brown hover:text-cozy-light p-4 rounded-2xl border border-cozy-warm/30 shadow-sm transition-all duration-300 flex flex-col items-center text-center gap-2">
                             <span class="text-3xl group-hover:scale-110 transition-transform">📍</span>
-                            <span class="font-serif font-bold text-sm text-cozy-brown group-hover:text-cozy-light">Cat Tracker</span>
+                            <span class="font-serif font-bold text-sm text-cozy-brown group-hover:text-cozy-light">Lost & Found</span>
                         </a>
                     </div>
                 </div>

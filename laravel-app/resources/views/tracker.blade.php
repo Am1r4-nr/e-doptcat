@@ -15,13 +15,13 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 flex-1 flex flex-col overflow-hidden">
         <!-- Header -->
         <div class="text-center pb-8 flex-shrink-0">
-            <p class="font-script text-3xl text-cozy-accent mb-1">Real-time Companions</p>
+            <p class="font-script text-3xl text-cozy-accent mb-1">Community Care</p>
             <h2 class="font-serif font-bold text-4xl md:text-5xl text-cozy-brown mb-4">
-                {{ __('Cat Tracker') }}
+                {{ __('Lost & Found') }}
             </h2>
             <div class="w-20 h-1 bg-cozy-accent/60 mx-auto rounded-full mb-4"></div>
             <p class="text-cozy-brown/60 max-w-xl mx-auto text-base">
-                Real-time GPS tracking of cats in our care. Monitor their location, battery life, and safety status.
+                Report and track lost, missing, or injured cats in our community. Help us reunite them with their families.
             </p>
         </div>
 
@@ -92,6 +92,9 @@
                         <button id="toggle-view-scanner" @click="viewMode = 'scanner'" :class="viewMode === 'scanner' ? 'bg-cozy-brown text-cozy-light' : 'bg-cozy-light text-cozy-brown/70 hover:bg-cozy-warm/20'" class="flex-1 py-2.5 rounded-xl font-bold transition-all text-sm shadow-sm">
                             📸 Scanner
                         </button>
+                        <a id="btn-redirect-report" href="{{ route('reports.create') }}" class="flex-1 py-2.5 rounded-xl font-bold transition-all text-sm shadow-sm bg-cozy-light text-cozy-brown/70 hover:bg-cozy-warm/20 flex items-center justify-center gap-1.5">
+                            📢 Report
+                        </a>
                     </div>
                 </div>
 

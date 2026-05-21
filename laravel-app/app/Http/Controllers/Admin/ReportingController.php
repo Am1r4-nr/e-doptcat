@@ -19,8 +19,7 @@ class ReportingController extends Controller
  
     public function index()
     {
-        $lostFoundReports = Report::with('user')
-            ->whereIn('type', ['Lost', 'Found'])
+        $userReports = Report::with('user')
             ->latest()
             ->get();
  
@@ -47,7 +46,7 @@ class ReportingController extends Controller
         }
  
         return view('admin.reporting.index', compact(
-            'lostFoundReports',
+            'userReports',
             'catsWithGps',
         ));
     }

@@ -38,14 +38,14 @@
             <div class="relative mt-16 lg:mt-0">
                 <!-- Main Big Image -->
                 <div class="w-full lg:w-[90%] ml-auto rounded-[3rem] shadow-2xl overflow-hidden border-4 border-cozy-warm/40">
-                    <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                         alt="Cat at event"
+                    <img src="/images/event-booth.png"
+                         alt="Community event with cats"
                          class="w-full h-[400px] md:h-[520px] object-cover">
                 </div>
                 <!-- Small Overlapping Image -->
                 <div class="absolute -bottom-12 left-0 md:left-4 lg:-left-12 w-48 h-48 md:w-64 md:h-64 rounded-[2rem] shadow-xl border-[6px] border-cozy-bg overflow-hidden z-10 transform -rotate-3 hover:rotate-0 transition-transform duration-500">
-                    <img src="https://images.unsplash.com/photo-1548247661-bc1959b85c18?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-                         alt="Kitten at event"
+                    <img src="/images/event-detail.png"
+                         alt="Event detail with cats"
                          class="w-full h-full object-cover scale-110">
                 </div>
             </div>

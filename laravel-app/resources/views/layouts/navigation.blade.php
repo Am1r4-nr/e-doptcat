@@ -3,7 +3,7 @@ $navLinks = [
     ['label' => 'Home',     'route' => 'home',            'match' => 'home'],
     ['label' => 'About',    'route' => 'about',           'match' => 'about'],
     ['label' => 'Our Cats', 'route' => 'cats.index',      'match' => 'cats.*'],
-    ['label' => 'Tracker',  'route' => 'tracker',         'match' => 'tracker'],
+    ['label' => 'Lost & Found', 'route' => 'tracker',     'match' => 'tracker'],
     ['label' => 'Events',   'route' => 'events.index',    'match' => 'events.*'],
     ['label' => 'Donate',   'route' => 'donations.index', 'match' => 'donations.*'],
 ];
