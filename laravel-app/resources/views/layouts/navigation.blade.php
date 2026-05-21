@@ -30,13 +30,37 @@ $navLinks = [
             </div>
 
             {{-- Desktop nav links --}}
-            <div class="hidden space-x-1 sm:-my-px sm:ms-6 sm:flex">
+            <div class="hidden space-x-1 sm:-my-px sm:ms-6 sm:flex items-center">
                 @foreach ($navLinks as $link)
-                    <a href="{{ route($link['route']) }}"
-                       class="inline-flex items-center px-4 py-2 text-sm font-semibold rounded-xl transition-all duration-200
-                              {{ request()->routeIs($link['match']) ? 'text-cozy-brown bg-cozy-warm/40' : 'text-cozy-brown/70 hover:text-cozy-brown hover:bg-cozy-warm/20' }}">
-                        {{ $link['label'] }}
-                    </a>
+                    @if ($link['label'] === 'Adopt a Cat')
+                        {{-- Dropdown --}}
+                        <div class="relative" x-data="{ adoptOpen: false }" @mouseenter="adoptOpen = true" @mouseleave="adoptOpen = false">
+                            <button class="inline-flex items-center gap-1 px-4 py-2 text-sm font-semibold rounded-xl transition-all duration-200
+                                           {{ request()->routeIs('cats.*') || request()->routeIs('adoption.guide') ? 'text-cozy-brown bg-cozy-warm/40' : 'text-cozy-brown/70 hover:text-cozy-brown hover:bg-cozy-warm/20' }}">
+                                Adopt a Cat
+                                <svg class="w-3 h-3 transition-transform duration-200" :class="adoptOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </button>
+                            <div x-show="adoptOpen" x-transition
+                                 class="absolute top-full left-0 mt-1 w-48 bg-cozy-card rounded-2xl shadow-lg border border-cozy-warm/30 py-2 z-50">
+                                <a href="{{ route('cats.index') }}"
+                                   class="block px-4 py-2.5 text-sm font-semibold {{ request()->routeIs('cats.*') ? 'text-cozy-brown bg-cozy-warm/30' : 'text-cozy-brown/70 hover:text-cozy-brown hover:bg-cozy-warm/20' }} transition-colors">
+                                    Browse Cats
+                                </a>
+                                <a href="{{ route('adoption.guide') }}"
+                                   class="block px-4 py-2.5 text-sm font-semibold {{ request()->routeIs('adoption.guide') ? 'text-cozy-brown bg-cozy-warm/30' : 'text-cozy-brown/70 hover:text-cozy-brown hover:bg-cozy-warm/20' }} transition-colors">
+                                    Adoption Guide
+                                </a>
+                            </div>
+                        </div>
+                    @else
+                        <a href="{{ route($link['route']) }}"
+                           class="inline-flex items-center px-4 py-2 text-sm font-semibold rounded-xl transition-all duration-200
+                                  {{ request()->routeIs($link['match']) ? 'text-cozy-brown bg-cozy-warm/40' : 'text-cozy-brown/70 hover:text-cozy-brown hover:bg-cozy-warm/20' }}">
+                            {{ $link['label'] }}
+                        </a>
+                    @endif
                 @endforeach
             </div>
 
@@ -103,11 +127,27 @@ $navLinks = [
     <div :class="{'block': open, 'hidden': !open}" class="hidden sm:hidden bg-cozy-card/95 backdrop-blur-xl border-t border-cozy-warm/20">
         <div class="pt-2 pb-3 space-y-1 px-4">
             @foreach ($navLinks as $link)
-                <a href="{{ route($link['route']) }}"
-                   class="block px-4 py-3 text-sm font-semibold rounded-xl
-                          {{ request()->routeIs($link['match']) ? 'text-cozy-brown bg-cozy-warm/30' : 'text-cozy-brown/70 hover:bg-cozy-warm/20' }}">
-                    {{ $link['label'] }}
-                </a>
+                @if ($link['label'] === 'Adopt a Cat')
+                    <div class="rounded-xl overflow-hidden">
+                        <p class="px-4 py-3 text-sm font-semibold {{ request()->routeIs('cats.*') || request()->routeIs('adoption.guide') ? 'text-cozy-brown' : 'text-cozy-brown/70' }}">
+                            Adopt a Cat
+                        </p>
+                        <a href="{{ route('cats.index') }}"
+                           class="block pl-8 pr-4 py-2.5 text-sm font-semibold rounded-xl {{ request()->routeIs('cats.*') ? 'text-cozy-brown bg-cozy-warm/30' : 'text-cozy-brown/60 hover:bg-cozy-warm/20' }}">
+                            Browse Cats
+                        </a>
+                        <a href="{{ route('adoption.guide') }}"
+                           class="block pl-8 pr-4 py-2.5 text-sm font-semibold rounded-xl {{ request()->routeIs('adoption.guide') ? 'text-cozy-brown bg-cozy-warm/30' : 'text-cozy-brown/60 hover:bg-cozy-warm/20' }}">
+                            Adoption Guide
+                        </a>
+                    </div>
+                @else
+                    <a href="{{ route($link['route']) }}"
+                       class="block px-4 py-3 text-sm font-semibold rounded-xl
+                              {{ request()->routeIs($link['match']) ? 'text-cozy-brown bg-cozy-warm/30' : 'text-cozy-brown/70 hover:bg-cozy-warm/20' }}">
+                        {{ $link['label'] }}
+                    </a>
+                @endif
             @endforeach
         </div>
 
