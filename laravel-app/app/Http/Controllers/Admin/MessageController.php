@@ -12,19 +12,17 @@ class MessageController extends Controller
 {
     public function index()
     {
-        $adminId = auth()->id();
+        $adminId = (int) auth()->id();
         $colors  = ['#C9A84C', '#8B7355', '#6B8E6B', '#7B6B8E', '#8E6B6B', '#6B7B8E'];
 
-        $userIds = Message::where('sender_id', $adminId)
-            ->orWhere('receiver_id', $adminId)
-            ->get()
-            ->flatMap(fn($m) => [$m->sender_id, $m->receiver_id])
-            ->filter(fn($id) => $id !== $adminId)
-            ->unique()
-            ->values();
+        // All unique non-admin users who have exchanged messages with admin
+        $sentTo     = Message::where('sender_id', $adminId)->where('receiver_id', '!=', $adminId)->pluck('receiver_id');
+        $receivedFrom = Message::where('receiver_id', $adminId)->where('sender_id', '!=', $adminId)->pluck('sender_id');
+        $userIds    = $sentTo->merge($receivedFrom)->unique()->values();
 
         $conversations = $userIds->map(function ($userId, $i) use ($adminId, $colors) {
-            $user = User::find($userId);
+            $userId = (int) $userId;
+            $user   = User::find($userId);
             if (!$user) return null;
 
             $messages = Message::where(function ($q) use ($adminId, $userId) {
@@ -33,9 +31,9 @@ class MessageController extends Controller
                     $q->where('sender_id', $adminId)->where('receiver_id', $userId);
                 })->orderBy('created_at')->get();
 
-            $latest  = $messages->last();
-            $unread  = $messages->where('sender_id', $userId)->whereNull('read_at')->count();
-            $parts   = explode(' ', $user->name);
+            $latest   = $messages->last();
+            $unread   = $messages->where('sender_id', $userId)->whereNull('read_at')->count();
+            $parts    = explode(' ', $user->name);
             $initials = strtoupper(substr($parts[0], 0, 1) . (isset($parts[1]) ? substr($parts[1], 0, 1) : ''));
 
             return [
@@ -50,7 +48,7 @@ class MessageController extends Controller
                 'unread'   => $unread,
                 'messages' => $messages->map(fn($msg) => [
                     'text' => $msg->content,
-                    'sent' => $msg->sender_id === $adminId,
+                    'sent' => (int) $msg->sender_id === $adminId,
                     'time' => $msg->created_at->format('M d, g:ia'),
                 ])->values()->toArray(),
             ];
