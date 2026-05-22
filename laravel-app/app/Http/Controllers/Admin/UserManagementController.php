@@ -68,4 +68,20 @@ class UserManagementController extends Controller
         $user->delete();
         return redirect()->route('admin.users.index')->with('success', 'User deleted successfully.');
     }
+
+    public function importStaff(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:pdf,xlsx,xls|max:10240',
+        ]);
+
+        $path = $request->file('file')->store('staff-imports', 'public');
+
+        return response()->json([
+            'success' => true,
+            'path'    => $path,
+            'name'    => $request->file('file')->getClientOriginalName(),
+            'ext'     => $request->file('file')->getClientOriginalExtension(),
+        ]);
+    }
 }

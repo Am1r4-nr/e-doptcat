@@ -99,6 +99,7 @@ Route::middleware('auth')->group(function () {
         Route::patch('reports/{report}/status', [ReportManagementController::class, 'updateStatus'])->name('reports.status');
 
         // User Management
+        Route::post('users/import-staff', [UserManagementController::class, 'importStaff'])->name('users.importStaff');
         Route::resource('users', UserManagementController::class)->only(['index', 'show', 'destroy']);
         Route::patch('users/{user}/role', [UserManagementController::class, 'updateRole'])->name('users.role');
 

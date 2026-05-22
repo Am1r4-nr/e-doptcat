@@ -9,11 +9,31 @@
                 Club advisors, high committee members, and active volunteers of AHC.
             </p>
         </div>
-        <button x-show="activeTab === 'staff'" @click="openAddStaff()"
-                class="px-6 py-2.5 rounded-full bg-[#C9A84C] text-white text-sm font-bold shadow-md shadow-amber-600/20 hover:bg-[#b8963e] transition flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-            Add Staff
-        </button>
+        <div x-show="activeTab === 'staff'" class="flex items-center gap-3">
+            <!-- Import button -->
+            <input type="file" id="staffImportFile" accept=".xlsx,.xls,.pdf" class="hidden" @change="importStaffFile($event)">
+            <button @click="document.getElementById('staffImportFile').click()"
+                    class="px-5 py-2.5 rounded-full bg-white border border-[#E8E2D8] text-gray-600 text-sm font-bold hover:bg-[#FAF6F0] hover:border-[#C9A84C] hover:text-[#C9A84C] transition flex items-center gap-2 shadow-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+                Import PDF / XLSX
+            </button>
+            <!-- Add Staff button -->
+            <button @click="openAddStaff()"
+                    class="px-6 py-2.5 rounded-full bg-[#C9A84C] text-white text-sm font-bold shadow-md shadow-amber-600/20 hover:bg-[#b8963e] transition flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                Add Staff
+            </button>
+        </div>
+
+        <!-- Import toast -->
+        <div x-show="importToast.show" x-transition
+             class="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-xl text-sm font-bold"
+             :class="importToast.ok ? 'bg-teal-600 text-white' : 'bg-red-500 text-white'"
+             style="display:none">
+            <svg x-show="importToast.ok" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            <svg x-show="!importToast.ok" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            <span x-text="importToast.msg"></span>
+        </div>
     </div>
 
     <!-- Stats Cards — Staff -->
@@ -574,6 +594,7 @@ function staffApp() {
         showAddStaff: false,
         showEditStaff: false,
         showAddVolunteer: false,
+        importToast: { show: false, ok: true, msg: '' },
         newStaff: { type: 'lecturer', name: '', department: '', position: '', email: '', phone: '' },
         newVolunteer: { name: '', matric: '', email: '', phone: '', program: '', availability: '', status: 'PENDING' },
         editStaff: { id: null, type: '', name: '', department: '', position: '', email: '', phone: '' },
@@ -592,6 +613,80 @@ function staffApp() {
             { id: 8,  name: 'Afiq Danial',         position: 'Safety & Welfare',       department: 'Faculty of Animal Science',       email: 'afiq@student.edu.my',      phone: '+60 12-888 9999' },
             { id: 9,  name: 'Zahirah Zainal',      position: 'Special Tasks',          department: 'Faculty of Agriculture',          email: 'zahirah@student.edu.my',   phone: '+60 12-999 0000' },
         ],
+        showToast(ok, msg) {
+            this.importToast = { show: true, ok, msg };
+            setTimeout(() => this.importToast.show = false, 4000);
+        },
+        async importStaffFile(event) {
+            const file = event.target.files[0];
+            event.target.value = '';
+            if (!file) return;
+
+            const ext = file.name.split('.').pop().toLowerCase();
+
+            /* ── PDF: upload to server for storage ── */
+            if (ext === 'pdf') {
+                const fd = new FormData();
+                fd.append('file', file);
+                fd.append('_token', document.querySelector('meta[name="csrf-token"]').content);
+                try {
+                    const res = await fetch('{{ route("admin.users.importStaff") }}', { method: 'POST', body: fd });
+                    const data = await res.json();
+                    if (data.success) {
+                        this.showToast(true, `PDF "${data.name}" uploaded for reference.`);
+                    } else {
+                        this.showToast(false, 'Upload failed. Please try again.');
+                    }
+                } catch (e) {
+                    this.showToast(false, 'Upload failed. Please try again.');
+                }
+                return;
+            }
+
+            /* ── XLSX / XLS: parse with SheetJS and import rows ── */
+            if (!window.XLSX) {
+                this.showToast(false, 'XLSX library not loaded. Please refresh.');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const wb   = XLSX.read(e.target.result, { type: 'array' });
+                    const ws   = wb.Sheets[wb.SheetNames[0]];
+                    const rows = XLSX.utils.sheet_to_json(ws, { defval: '' });
+
+                    let added = 0;
+                    rows.forEach(row => {
+                        /* normalise keys to lowercase */
+                        const r = Object.fromEntries(Object.entries(row).map(([k,v]) => [k.toLowerCase().trim(), String(v).trim()]));
+                        const type = (r.type || r.role || 'committee').toLowerCase();
+                        const name = r.name || r['full name'] || '';
+                        const email = r.email || r['e-mail'] || '';
+                        if (!name || !email) return;
+
+                        const entry = {
+                            id: Date.now() + Math.random(),
+                            name,
+                            email,
+                            department: r.department || r.faculty || '',
+                            phone: r.phone || r['phone number'] || '',
+                            position: r.position || r.role || '',
+                        };
+                        if (type === 'lecturer' || type === 'advisor') {
+                            this.lecturers.push(entry);
+                        } else {
+                            this.committee.push(entry);
+                        }
+                        added++;
+                    });
+
+                    this.showToast(true, `Imported ${added} staff member${added !== 1 ? 's' : ''} from "${file.name}".`);
+                } catch (err) {
+                    this.showToast(false, 'Could not parse file. Check the format and try again.');
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        },
         deleteStaff(person, type) {
             if (!confirm(`Delete ${person.name}? This cannot be undone.`)) return;
             if (type === 'lecturer') {
@@ -695,4 +790,5 @@ function staffApp() {
     };
 }
 </script>
+<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 </x-admin-layout>
