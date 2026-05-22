@@ -12,23 +12,27 @@ class MessageController extends Controller
 {
     public function index()
     {
-        $adminId = (int) auth()->id();
-        $colors  = ['#C9A84C', '#8B7355', '#6B8E6B', '#7B6B8E', '#8E6B6B', '#6B7B8E'];
+        $colors   = ['#C9A84C', '#8B7355', '#6B8E6B', '#7B6B8E', '#8E6B6B', '#6B7B8E'];
+        $adminIds = User::where('role', 'admin')->pluck('id')->map(fn($id) => (int) $id)->toArray();
 
-        // All unique non-admin users who have exchanged messages with admin
-        $sentTo     = Message::where('sender_id', $adminId)->where('receiver_id', '!=', $adminId)->pluck('receiver_id');
-        $receivedFrom = Message::where('receiver_id', $adminId)->where('sender_id', '!=', $adminId)->pluck('sender_id');
-        $userIds    = $sentTo->merge($receivedFrom)->unique()->values();
+        // All unique non-admin users who appear in any message involving any admin
+        $userIds = Message::where(function ($q) use ($adminIds) {
+                $q->whereIn('sender_id', $adminIds)->orWhereIn('receiver_id', $adminIds);
+            })
+            ->get()
+            ->flatMap(fn($m) => [(int) $m->sender_id, (int) $m->receiver_id])
+            ->reject(fn($id) => in_array($id, $adminIds))
+            ->unique()
+            ->values();
 
-        $conversations = $userIds->map(function ($userId, $i) use ($adminId, $colors) {
-            $userId = (int) $userId;
-            $user   = User::find($userId);
+        $conversations = $userIds->map(function ($userId, $i) use ($adminIds, $colors) {
+            $user = User::find($userId);
             if (!$user) return null;
 
-            $messages = Message::where(function ($q) use ($adminId, $userId) {
-                    $q->where('sender_id', $userId)->where('receiver_id', $adminId);
-                })->orWhere(function ($q) use ($adminId, $userId) {
-                    $q->where('sender_id', $adminId)->where('receiver_id', $userId);
+            $messages = Message::where(function ($q) use ($adminIds, $userId) {
+                    $q->whereIn('sender_id', $adminIds)->where('receiver_id', $userId);
+                })->orWhere(function ($q) use ($adminIds, $userId) {
+                    $q->where('sender_id', $userId)->whereIn('receiver_id', $adminIds);
                 })->orderBy('created_at')->get();
 
             $latest   = $messages->last();
@@ -37,7 +41,7 @@ class MessageController extends Controller
             $initials = strtoupper(substr($parts[0], 0, 1) . (isset($parts[1]) ? substr($parts[1], 0, 1) : ''));
 
             return [
-                'id'       => $userId,
+                'id'       => (int) $userId,
                 'type'     => 'people',
                 'name'     => $user->name,
                 'initials' => $initials,
@@ -48,7 +52,7 @@ class MessageController extends Controller
                 'unread'   => $unread,
                 'messages' => $messages->map(fn($msg) => [
                     'text' => $msg->content,
-                    'sent' => (int) $msg->sender_id === $adminId,
+                    'sent' => in_array((int) $msg->sender_id, $adminIds),
                     'time' => $msg->created_at->format('M d, g:ia'),
                 ])->values()->toArray(),
             ];
@@ -65,7 +69,7 @@ class MessageController extends Controller
             'sender_id'   => auth()->id(),
             'receiver_id' => $user->id,
             'subject'     => 'Admin Reply',
-            'content'     => $request->content,
+            'content'     => $request->input('content'),
         ]);
 
         return response()->json([
