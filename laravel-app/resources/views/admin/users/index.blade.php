@@ -598,21 +598,8 @@ function staffApp() {
         newStaff: { type: 'lecturer', name: '', department: '', position: '', email: '', phone: '' },
         newVolunteer: { name: '', matric: '', email: '', phone: '', program: '', availability: '', status: 'PENDING' },
         editStaff: { id: null, type: '', name: '', department: '', position: '', email: '', phone: '' },
-        lecturers: [
-            { id: 1, name: 'Dr. Amirah Hassan', department: 'Faculty of Veterinary Medicine', email: 'amirah.hassan@university.edu.my', phone: '+60 3-1234 5678' },
-            { id: 2, name: 'Dr. Rajan Krishnan', department: 'Faculty of Animal Science', email: 'rajan.krishnan@university.edu.my', phone: '+60 3-2345 6789' },
-        ],
-        committee: [
-            { id: 1,  name: 'Nurul Ain Zulkifli', position: 'President',               department: 'Faculty of Veterinary Medicine',  email: 'nurulain@student.edu.my',  phone: '+60 12-111 2222' },
-            { id: 2,  name: 'Haziq Farhan',        position: 'Vice President',          department: 'Faculty of Agriculture',          email: 'haziq@student.edu.my',     phone: '+60 12-222 3333' },
-            { id: 3,  name: 'Syafiqah Rahman',     position: 'Secretary',              department: 'Faculty of Animal Science',       email: 'syafiqah@student.edu.my',  phone: '+60 12-333 4444' },
-            { id: 4,  name: 'Aiman Zulkarnain',    position: 'Treasurer',              department: 'Faculty of Economics',            email: 'aiman@student.edu.my',     phone: '+60 12-444 5555' },
-            { id: 5,  name: 'Liyana Putri',        position: 'Module',                 department: 'Faculty of Veterinary Medicine',  email: 'liyana@student.edu.my',    phone: '+60 12-555 6666' },
-            { id: 6,  name: 'Faris Irfan',         position: 'Multimedia & Publicity', department: 'Faculty of Computer Science',     email: 'faris@student.edu.my',     phone: '+60 12-666 7777' },
-            { id: 7,  name: 'Nadia Saiful',        position: 'Economy',                department: 'Faculty of Engineering',          email: 'nadia@student.edu.my',     phone: '+60 12-777 8888' },
-            { id: 8,  name: 'Afiq Danial',         position: 'Safety & Welfare',       department: 'Faculty of Animal Science',       email: 'afiq@student.edu.my',      phone: '+60 12-888 9999' },
-            { id: 9,  name: 'Zahirah Zainal',      position: 'Special Tasks',          department: 'Faculty of Agriculture',          email: 'zahirah@student.edu.my',   phone: '+60 12-999 0000' },
-        ],
+        lecturers: [],
+        committee: [],
         showToast(ok, msg) {
             this.importToast = { show: true, ok, msg };
             setTimeout(() => this.importToast.show = false, 4000);
