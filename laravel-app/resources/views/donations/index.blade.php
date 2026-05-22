@@ -32,14 +32,7 @@
                 <p class="font-sans text-cozy-brown/70 text-lg md:text-xl leading-relaxed">
                     Abu Hurairah Club (AHC) community links donors, volunteers, and compassionate individuals across the campus to save lives.
                 </p>
-                <div class="flex items-center gap-6 pt-2">
-                    <button class="flex items-center gap-3 text-cozy-brown font-bold hover:text-cozy-accent transition-colors font-sans">
-                        <div class="w-12 h-12 bg-cozy-card rounded-full flex items-center justify-center text-cozy-accent shadow-md hover:scale-110 transition-transform border border-cozy-warm/40">
-                            <svg class="w-5 h-5 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                        </div>
-                        Watch video
-                    </button>
-                </div>
+
             </div>
 
             <!-- Right Side: Donation Card -->
