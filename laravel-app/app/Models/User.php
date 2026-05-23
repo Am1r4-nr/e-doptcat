@@ -52,7 +52,12 @@ class User extends Authenticatable
 
     public function eventRegistrations()
     {
-        return $this->hasMany(EventRegistration::class);
+        return $this->hasMany(SavedEvent::class, 'user_id');
+    }
+
+    public function savedEvents()
+    {
+        return $this->hasMany(SavedEvent::class, 'user_id');
     }
 
     public function receivedMessages()

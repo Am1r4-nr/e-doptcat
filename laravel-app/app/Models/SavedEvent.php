@@ -5,9 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class EventRegistration extends Model
+class SavedEvent extends Model
 {
     use HasFactory;
+
+    protected $table = 'saved_events';
 
     protected $fillable = [
         'user_id',

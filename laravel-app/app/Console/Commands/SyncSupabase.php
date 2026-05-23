@@ -37,7 +37,7 @@ class SyncSupabase extends Command
         'events',
         'donations',
         'reports',
-        'event_registrations',
+        'saved_events',
         'incidents',
         'gps_devices',
         'gps_location_histories',

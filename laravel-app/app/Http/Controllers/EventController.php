@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
-use App\Models\EventRegistration;
+use App\Models\SavedEvent;
 use Illuminate\Http\Request;
 
 class EventController extends Controller
@@ -14,7 +14,7 @@ class EventController extends Controller
         $completedEvents = Event::where('status', 'Completed')->orderBy('event_date', 'desc')->get();
         
         $savedEventIds = auth()->check()
-            ? auth()->user()->eventRegistrations()->pluck('event_id')->toArray()
+            ? auth()->user()->savedEvents()->pluck('event_id')->toArray()
             : [];
 
         return view('events.index', compact('upcomingEvents', 'completedEvents', 'savedEventIds'));
@@ -27,7 +27,7 @@ class EventController extends Controller
 
     public function register(Request $request, Event $event)
     {
-        $existing = EventRegistration::where('user_id', auth()->id())
+        $existing = SavedEvent::where('user_id', auth()->id())
             ->where('event_id', $event->id)
             ->first();
 
@@ -36,7 +36,7 @@ class EventController extends Controller
             return back()->with('success', 'Event removed from your saved list.');
         }
 
-        EventRegistration::create([
+        SavedEvent::create([
             'user_id' => auth()->id(),
             'event_id' => $event->id,
             'status' => 'Saved',

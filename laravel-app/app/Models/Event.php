@@ -24,6 +24,11 @@ class Event extends Model
 
     public function registrations()
     {
-        return $this->hasMany(EventRegistration::class);
+        return $this->hasMany(SavedEvent::class, 'event_id');
+    }
+
+    public function saves()
+    {
+        return $this->hasMany(SavedEvent::class, 'event_id');
     }
 }

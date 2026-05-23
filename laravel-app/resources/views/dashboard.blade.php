@@ -3,7 +3,7 @@
     $adoptions = $user->adoptions()->with('cat')->latest()->get();
     $donations = $user->donations()->latest()->get();
     $reports = $user->reports()->latest()->get();
-    $registrations = $user->eventRegistrations()->with('event')->latest()->get();
+    $registrations = $user->savedEvents()->with('event')->latest()->get();
 
     // Total metrics
     $totalAdoptions = $adoptions->count();
