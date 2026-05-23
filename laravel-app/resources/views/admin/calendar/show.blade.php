@@ -37,12 +37,12 @@
             </p>
         </div>
 
-        <!-- Registrations -->
+        <!-- Saved By -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-semibold text-gray-900">Registrations</h3>
+                <h3 class="text-lg font-semibold text-gray-900">Saved By</h3>
                 <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-bold">
-                    {{ $event->registrations->count() ?? 0 }} Total
+                    {{ $event->registrations->count() ?? 0 }} Saves
                 </span>
             </div>
 
@@ -55,7 +55,7 @@
                         <p class="text-sm text-gray-500">{{ $registration->email ?? $registration->user->email ?? 'N/A' }}</p>
                     </div>
                     <div class="text-right">
-                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded text-xs font-bold">Registered</span>
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded text-xs font-bold">Saved</span>
                         <p class="text-xs text-gray-500 mt-1">{{ $registration->created_at->format('M d, Y') }}</p>
                     </div>
                 </div>
@@ -63,7 +63,7 @@
             </div>
             @else
             <div class="text-center py-8">
-                <p class="text-gray-500">No registrations yet</p>
+                <p class="text-gray-500">No saves yet</p>
             </div>
             @endif
         </div>

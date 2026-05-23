@@ -1,4 +1,4 @@
-﻿<x-admin-layout>
+<x-admin-layout>
 
 <!-- Header -->
 <div class="mb-8 flex items-start justify-between">
@@ -63,7 +63,7 @@
                     <th class="py-4 px-6 text-left text-[11px] font-bold text-gray-500 uppercase tracking-widest">Event</th>
                     <th class="py-4 px-6 text-left text-[11px] font-bold text-gray-500 uppercase tracking-widest">Date</th>
                     <th class="py-4 px-6 text-left text-[11px] font-bold text-gray-500 uppercase tracking-widest">Location</th>
-                    <th class="py-4 px-6 text-center text-[11px] font-bold text-gray-500 uppercase tracking-widest">Registrations</th>
+                    <th class="py-4 px-6 text-center text-[11px] font-bold text-gray-500 uppercase tracking-widest">Saved</th>
                     <th class="py-4 px-6 text-left text-[11px] font-bold text-gray-500 uppercase tracking-widest">Status</th>
                     <th class="py-4 px-6 text-right text-[11px] font-bold text-gray-500 uppercase tracking-widest">Actions</th>
                 </tr>
