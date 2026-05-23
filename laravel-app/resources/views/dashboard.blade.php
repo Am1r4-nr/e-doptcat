@@ -35,8 +35,8 @@
         $notifications->push([
             'icon'  => '🗓️',
             'color' => 'blue',
-            'title' => 'Event Registered — ' . ($r->event->title ?? 'Event'),
-            'body'  => 'You are registered for ' . (\Carbon\Carbon::parse($r->event->start_time ?? now())->format('M d, Y')),
+            'title' => 'Event Saved — ' . ($r->event->title ?? 'Event'),
+            'body'  => 'You have saved ' . (\Carbon\Carbon::parse($r->event->start_time ?? now())->format('M d, Y')),
             'time'  => $r->created_at,
         ]);
     }
@@ -140,7 +140,7 @@
                             <span class="text-cozy-accent">🐾</span> {{ $totalAdoptions }} Active Adoptions
                         </li>
                         <li class="flex items-center gap-2">
-                            <span class="text-cozy-accent">🏠</span> {{ $registrations->count() }} Registered Events
+                            <span class="text-cozy-accent">🏠</span> {{ $registrations->count() }} Saved Events
                         </li>
                         <li class="flex items-center gap-2">
                             <span class="text-cozy-accent">💛</span> RM {{ number_format($totalDonationsAmount, 2) }} Donated
@@ -665,8 +665,8 @@
                 <div x-show="tab === 'events'" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <p class="font-script text-2xl text-cozy-accent mb-0.5">My Attendance</p>
-                            <h3 class="font-serif font-bold text-2xl text-cozy-brown">Registered Events</h3>
+                            <p class="font-script text-2xl text-cozy-accent mb-0.5">My Saved List</p>
+                            <h3 class="font-serif font-bold text-2xl text-cozy-brown">Saved Events</h3>
                         </div>
                         <a href="{{ route('events.index') }}" class="text-sm font-bold text-cozy-accent hover:text-cozy-brown uppercase tracking-wider font-sans">All Events →</a>
                     </div>
@@ -681,16 +681,16 @@
                                         <p class="text-xs text-cozy-brown/55 mt-0.5">{{ \Carbon\Carbon::parse($reg->event->start_time)->format('M d, Y @ h:i A') }}</p>
                                     </div>
                                 </div>
-                                <span class="bg-cozy-accent text-cozy-light text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">Registered</span>
+                                <span class="bg-cozy-accent text-cozy-light text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">Saved</span>
                             </div>
                             @endforeach
                         </div>
                     @else
                         <div class="text-center py-16 bg-cozy-light/40 rounded-3xl border border-dashed border-cozy-warm">
                             <div class="w-16 h-16 bg-cozy-warm/40 rounded-3xl flex items-center justify-center mx-auto mb-4 text-3xl">🗓️</div>
-                            <p class="font-serif font-bold text-cozy-brown/60 text-lg">Upcoming Attendance</p>
-                            <p class="text-sm text-cozy-brown/40 font-sans mt-1">You are registered to attend:</p>
-                            <p class="font-serif font-bold text-2xl text-cozy-brown mt-2">0 Campaign Events</p>
+                            <p class="font-serif font-bold text-cozy-brown/60 text-lg">Saved Events</p>
+                            <p class="text-sm text-cozy-brown/40 font-sans mt-1">You have saved:</p>
+                            <p class="font-serif font-bold text-2xl text-cozy-brown mt-2">0 Saved Events</p>
                             <a href="{{ route('events.index') }}" class="text-cozy-accent hover:text-cozy-brown font-bold text-sm uppercase tracking-wider mt-4 inline-block">Explore events →</a>
                         </div>
                     @endif

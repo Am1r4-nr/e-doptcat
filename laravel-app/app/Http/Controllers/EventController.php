@@ -12,7 +12,12 @@ class EventController extends Controller
     {
         $upcomingEvents = Event::where('status', 'Upcoming')->orderBy('event_date', 'asc')->get();
         $completedEvents = Event::where('status', 'Completed')->orderBy('event_date', 'desc')->get();
-        return view('events.index', compact('upcomingEvents', 'completedEvents'));
+        
+        $savedEventIds = auth()->check()
+            ? auth()->user()->eventRegistrations()->pluck('event_id')->toArray()
+            : [];
+
+        return view('events.index', compact('upcomingEvents', 'completedEvents', 'savedEventIds'));
     }
 
     public function show(Event $event)
@@ -27,15 +32,16 @@ class EventController extends Controller
             ->first();
 
         if ($existing) {
-            return back()->with('info', 'You are already registered.');
+            $existing->delete();
+            return back()->with('success', 'Event removed from your saved list.');
         }
 
         EventRegistration::create([
             'user_id' => auth()->id(),
             'event_id' => $event->id,
-            'status' => 'Registered',
+            'status' => 'Saved',
         ]);
 
-        return back()->with('success', 'Successfully registered for the event!');
+        return back()->with('success', 'Event saved successfully!');
     }
 }

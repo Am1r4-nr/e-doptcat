@@ -124,13 +124,26 @@
                         {{ Str::limit($event->description, 120) }}
                     </p>
 
-                    <!-- Register Button -->
+                    <!-- Save Event Button -->
                     <form method="POST" action="{{ route('events.register', $event) }}" class="mt-auto">
                         @csrf
-                        <button type="submit"
-                            class="w-full py-3 rounded-full bg-cozy-brown hover:bg-cozy-accent text-cozy-light font-bold text-sm transition-colors duration-300 font-sans">
-                            View Details
-                        </button>
+                        @if(auth()->check() && in_array($event->id, $savedEventIds))
+                            <button type="submit"
+                                class="w-full py-3 rounded-full bg-cozy-accent hover:bg-cozy-brown text-cozy-light font-bold text-sm transition-colors duration-300 font-sans flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
+                                </svg>
+                                Saved
+                            </button>
+                        @else
+                            <button type="submit"
+                                class="w-full py-3 rounded-full bg-cozy-brown hover:bg-cozy-accent text-cozy-light font-bold text-sm transition-colors duration-300 font-sans flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                                </svg>
+                                Save Event
+                            </button>
+                        @endif
                     </form>
                 </div>
             @empty
