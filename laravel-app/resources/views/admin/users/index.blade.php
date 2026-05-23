@@ -598,8 +598,8 @@ function staffApp() {
         newStaff: { type: 'lecturer', name: '', department: '', position: '', email: '', phone: '' },
         newVolunteer: { name: '', matric: '', email: '', phone: '', program: '', availability: '', status: 'PENDING' },
         editStaff: { id: null, type: '', name: '', department: '', position: '', email: '', phone: '' },
-        lecturers: [],
-        committee: [],
+        lecturers: @json($lecturers),
+        committee: @json($committee),
         showToast(ok, msg) {
             this.importToast = { show: true, ok, msg };
             setTimeout(() => this.importToast.show = false, 4000);
@@ -630,56 +630,77 @@ function staffApp() {
                 return;
             }
 
-            /* ── XLSX / XLS: parse with SheetJS and import rows ── */
+            /* ── XLSX / XLS: parse with SheetJS and batch-save to DB ── */
             if (!window.XLSX) {
                 this.showToast(false, 'XLSX library not loaded. Please refresh.');
                 return;
             }
             const reader = new FileReader();
-            reader.onload = (e) => {
+            reader.onload = async (e) => {
                 try {
                     const wb   = XLSX.read(e.target.result, { type: 'array' });
                     const ws   = wb.Sheets[wb.SheetNames[0]];
                     const rows = XLSX.utils.sheet_to_json(ws, { defval: '' });
 
-                    let added = 0;
-                    rows.forEach(row => {
-                        /* normalise keys to lowercase */
+                    const staffRows = rows.map(row => {
                         const r = Object.fromEntries(Object.entries(row).map(([k,v]) => [k.toLowerCase().trim(), String(v).trim()]));
                         const type = (r.type || r.role || 'committee').toLowerCase();
-                        const name = r.name || r['full name'] || '';
+                        const name  = r.name || r['full name'] || '';
                         const email = r.email || r['e-mail'] || '';
-                        if (!name || !email) return;
-
-                        const entry = {
-                            id: Date.now() + Math.random(),
+                        if (!name || !email) return null;
+                        return {
+                            type:       (type === 'lecturer' || type === 'advisor') ? 'lecturer' : 'committee',
                             name,
                             email,
                             department: r.department || r.faculty || '',
-                            phone: r.phone || r['phone number'] || '',
-                            position: r.position || r.role || '',
+                            phone:      r.phone || r['phone number'] || '',
+                            position:   r.position || '',
                         };
-                        if (type === 'lecturer' || type === 'advisor') {
-                            this.lecturers.push(entry);
-                        } else {
-                            this.committee.push(entry);
-                        }
-                        added++;
-                    });
+                    }).filter(Boolean);
 
-                    this.showToast(true, `Imported ${added} staff member${added !== 1 ? 's' : ''} from "${file.name}".`);
+                    if (staffRows.length === 0) {
+                        this.showToast(false, 'No valid rows found. Ensure the file has name and email columns.');
+                        return;
+                    }
+
+                    const res = await fetch('{{ route("admin.staff.batch") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        },
+                        body: JSON.stringify({ rows: staffRows }),
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        data.staff.forEach(s => {
+                            if (s.type === 'lecturer') this.lecturers.push(s);
+                            else this.committee.push(s);
+                        });
+                        this.showToast(true, `Imported ${data.count} staff member${data.count !== 1 ? 's' : ''} from "${file.name}".`);
+                    } else {
+                        this.showToast(false, 'Import failed. Please check the file format.');
+                    }
                 } catch (err) {
                     this.showToast(false, 'Could not parse file. Check the format and try again.');
                 }
             };
             reader.readAsArrayBuffer(file);
         },
-        deleteStaff(person, type) {
+        async deleteStaff(person, type) {
             if (!confirm(`Delete ${person.name}? This cannot be undone.`)) return;
-            if (type === 'lecturer') {
-                this.lecturers = this.lecturers.filter(p => p.id !== person.id);
-            } else {
-                this.committee = this.committee.filter(p => p.id !== person.id);
+            try {
+                const res = await fetch(`{{ url('admin/staff') }}/${person.id}`, {
+                    method: 'DELETE',
+                    headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+                });
+                const data = await res.json();
+                if (data.success) {
+                    if (type === 'lecturer') this.lecturers = this.lecturers.filter(p => p.id !== person.id);
+                    else this.committee = this.committee.filter(p => p.id !== person.id);
+                }
+            } catch (e) {
+                alert('Failed to delete. Please try again.');
             }
         },
         openEdit(person, type) {
@@ -694,7 +715,7 @@ function staffApp() {
             };
             this.showEditStaff = true;
         },
-        saveEdit() {
+        async saveEdit() {
             if (!this.editStaff.name.trim() || !this.editStaff.email.trim() || !this.editStaff.department.trim()) {
                 alert('Please fill in Name, Department, and Email.');
                 return;
@@ -703,14 +724,35 @@ function staffApp() {
                 alert('Please select a Position.');
                 return;
             }
-            const list = this.editStaff.type === 'lecturer' ? this.lecturers : this.committee;
-            const idx = list.findIndex(p => p.id === this.editStaff.id);
-            if (idx !== -1) {
-                list[idx] = { ...list[idx], ...this.editStaff };
-                if (this.editStaff.type === 'lecturer') this.lecturers = [...this.lecturers];
-                else this.committee = [...this.committee];
+            try {
+                const res = await fetch(`{{ url('admin/staff') }}/${this.editStaff.id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    },
+                    body: JSON.stringify({
+                        name:       this.editStaff.name.trim(),
+                        email:      this.editStaff.email.trim(),
+                        department: this.editStaff.department.trim(),
+                        position:   this.editStaff.position || null,
+                        phone:      this.editStaff.phone.trim(),
+                    }),
+                });
+                const data = await res.json();
+                if (data.success) {
+                    const list = this.editStaff.type === 'lecturer' ? this.lecturers : this.committee;
+                    const idx = list.findIndex(p => p.id === this.editStaff.id);
+                    if (idx !== -1) {
+                        list[idx] = data.staff;
+                        if (this.editStaff.type === 'lecturer') this.lecturers = [...this.lecturers];
+                        else this.committee = [...this.committee];
+                    }
+                    this.showEditStaff = false;
+                }
+            } catch (e) {
+                alert('Failed to save. Please try again.');
             }
-            this.showEditStaff = false;
         },
         openAddStaff() {
             this.newStaff = { type: 'lecturer', name: '', department: '', position: '', email: '', phone: '' };
@@ -746,32 +788,41 @@ function staffApp() {
             });
             this.showAddVolunteer = false;
         },
-        saveStaff() {
+        async saveStaff() {
             if (!this.newStaff.name.trim() || !this.newStaff.email.trim()) {
                 alert('Please fill in Name and Email.');
                 return;
             }
             if (!this.newStaff.department.trim()) { alert('Please fill in Department.'); return; }
-            if (this.newStaff.type === 'lecturer') {
-                this.lecturers.push({
-                    id: Date.now(),
-                    name: this.newStaff.name.trim(),
-                    department: this.newStaff.department.trim(),
-                    email: this.newStaff.email.trim(),
-                    phone: this.newStaff.phone.trim(),
-                });
-            } else {
-                if (!this.newStaff.position) { alert('Please select a Position.'); return; }
-                this.committee.push({
-                    id: Date.now(),
-                    name: this.newStaff.name.trim(),
-                    position: this.newStaff.position,
-                    department: this.newStaff.department.trim(),
-                    email: this.newStaff.email.trim(),
-                    phone: this.newStaff.phone.trim(),
-                });
+            if (this.newStaff.type === 'committee' && !this.newStaff.position) {
+                alert('Please select a Position.');
+                return;
             }
-            this.showAddStaff = false;
+            try {
+                const res = await fetch('{{ route("admin.staff.store") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    },
+                    body: JSON.stringify({
+                        type:       this.newStaff.type,
+                        name:       this.newStaff.name.trim(),
+                        email:      this.newStaff.email.trim(),
+                        department: this.newStaff.department.trim(),
+                        position:   this.newStaff.position || null,
+                        phone:      this.newStaff.phone.trim(),
+                    }),
+                });
+                const data = await res.json();
+                if (data.success) {
+                    if (data.staff.type === 'lecturer') this.lecturers.push(data.staff);
+                    else this.committee.push(data.staff);
+                    this.showAddStaff = false;
+                }
+            } catch (e) {
+                alert('Failed to save. Please try again.');
+            }
         },
         volunteers: @json($volunteers),
     };

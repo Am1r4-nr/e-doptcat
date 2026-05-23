@@ -31,6 +31,126 @@
             </p>
         </div>
 
+        <!-- ── User Guide ── -->
+        <div class="mb-8 flex-shrink-0">
+            <div class="bg-cozy-card rounded-3xl shadow-md border border-cozy-warm/40 overflow-hidden">
+                <!-- Guide Header (collapsible) -->
+                <button @click="guideOpen = !guideOpen"
+                        class="w-full flex items-center justify-between px-7 py-5 text-left hover:bg-cozy-warm/10 transition-colors">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-cozy-accent/10 flex items-center justify-center text-cozy-accent flex-shrink-0">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"/></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-serif font-bold text-lg text-cozy-brown">How to Use This Page</h3>
+                            <p class="text-[12px] text-cozy-brown/50 font-medium mt-0.5">A quick guide to the Lost &amp; Found features</p>
+                        </div>
+                    </div>
+                    <svg class="w-5 h-5 text-cozy-brown/40 transition-transform duration-300"
+                         :class="guideOpen ? 'rotate-180' : ''"
+                         fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
+                    </svg>
+                </button>
+
+                <!-- Guide Content -->
+                <div x-show="guideOpen"
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 -translate-y-2"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     x-transition:leave="transition ease-in duration-150"
+                     x-transition:leave-start="opacity-100 translate-y-0"
+                     x-transition:leave-end="opacity-0 -translate-y-2"
+                     class="px-7 pb-7">
+                    <div class="h-px bg-cozy-warm/40 mb-6"></div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+                        <!-- Step 1: Live Map -->
+                        <div class="bg-cozy-bg rounded-2xl p-5 border border-cozy-warm/40">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-8 h-8 rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+                                </div>
+                                <div>
+                                    <span class="text-[9px] font-bold text-amber-500 uppercase tracking-widest">Step 1</span>
+                                    <p class="font-bold text-[13px] text-cozy-brown leading-none mt-0.5">Browse the Map</p>
+                                </div>
+                            </div>
+                            <p class="text-[12px] text-cozy-brown/60 leading-relaxed">
+                                Coloured dots mark each tracked cat's last known location. Click any dot to see the cat's name and health status, then tap <strong class="text-cozy-brown/80">View Profile</strong> for full details.
+                            </p>
+                            <div class="mt-3 flex flex-wrap gap-1.5">
+                                <span class="flex items-center gap-1 text-[10px] text-cozy-brown/60 font-semibold"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 flex-shrink-0"></span>Healthy</span>
+                                <span class="flex items-center gap-1 text-[10px] text-cozy-brown/60 font-semibold"><span class="w-2.5 h-2.5 rounded-full bg-amber-500 flex-shrink-0"></span>Recovering</span>
+                                <span class="flex items-center gap-1 text-[10px] text-cozy-brown/60 font-semibold"><span class="w-2.5 h-2.5 rounded-full bg-blue-500 flex-shrink-0"></span>Treated</span>
+                                <span class="flex items-center gap-1 text-[10px] text-cozy-brown/60 font-semibold"><span class="w-2.5 h-2.5 rounded-full bg-red-500 flex-shrink-0"></span>Observe</span>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: List -->
+                        <div class="bg-cozy-bg rounded-2xl p-5 border border-cozy-warm/40">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-8 h-8 rounded-xl bg-teal-100 flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/></svg>
+                                </div>
+                                <div>
+                                    <span class="text-[9px] font-bold text-teal-500 uppercase tracking-widest">Step 2</span>
+                                    <p class="font-bold text-[13px] text-cozy-brown leading-none mt-0.5">Use the List</p>
+                                </div>
+                            </div>
+                            <p class="text-[12px] text-cozy-brown/60 leading-relaxed">
+                                The <strong class="text-cozy-brown/80">List</strong> tab in the sidebar shows all tracked companions. Filter by health status using the dropdown, then click any cat card to fly the map to their location.
+                            </p>
+                            <p class="text-[11px] text-cozy-brown/40 font-semibold mt-3">
+                                Tip: A <span class="text-red-500">🔴 LIVE</span> badge means real-time GPS tracking is active.
+                            </p>
+                        </div>
+
+                        <!-- Step 3: Scanner -->
+                        <div class="bg-cozy-bg rounded-2xl p-5 border border-cozy-warm/40">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-8 h-8 rounded-xl bg-purple-100 flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z"/><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 6.75h.75v.75h-.75v-.75zM6.75 16.5h.75v.75h-.75v-.75zM16.5 6.75h.75v.75h-.75v-.75zM13.5 13.5h.75v.75h-.75v-.75zM13.5 19.5h.75v.75h-.75v-.75zM19.5 13.5h.75v.75h-.75v-.75zM19.5 19.5h.75v.75h-.75v-.75zM16.5 16.5h.75v.75h-.75v-.75z"/></svg>
+                                </div>
+                                <div>
+                                    <span class="text-[9px] font-bold text-purple-500 uppercase tracking-widest">Step 3</span>
+                                    <p class="font-bold text-[13px] text-cozy-brown leading-none mt-0.5">Scan a QR Code</p>
+                                </div>
+                            </div>
+                            <p class="text-[12px] text-cozy-brown/60 leading-relaxed">
+                                Every registered cat wears a collar with a QR code. Switch to <strong class="text-cozy-brown/80">Scanner</strong>, tap <em>Start Camera</em>, and point it at the collar. You'll be taken straight to the cat's profile.
+                            </p>
+                            <p class="text-[11px] text-cozy-brown/40 font-semibold mt-3">
+                                No collar nearby? Use <strong class="text-cozy-brown/60">Upload Image</strong> to scan from a photo instead.
+                            </p>
+                        </div>
+
+                        <!-- Step 4: Report -->
+                        <div class="bg-cozy-bg rounded-2xl p-5 border border-cozy-warm/40">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-8 h-8 rounded-xl bg-rose-100 flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-4 h-4 text-rose-600" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+                                </div>
+                                <div>
+                                    <span class="text-[9px] font-bold text-rose-500 uppercase tracking-widest">Step 4</span>
+                                    <p class="font-bold text-[13px] text-cozy-brown leading-none mt-0.5">File a Report</p>
+                                </div>
+                            </div>
+                            <p class="text-[12px] text-cozy-brown/60 leading-relaxed">
+                                Spotted a lost, injured, or stray cat? Tap the <strong class="text-cozy-brown/80">Report</strong> button in the sidebar to submit a sighting with a description and your location. Our team reviews every report.
+                            </p>
+                            <a href="{{ route('reports.create') }}"
+                               class="mt-3 inline-flex items-center gap-1.5 text-[11px] font-bold text-cozy-accent hover:underline">
+                                File a report now
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 flex-1 overflow-hidden">
             <!-- Map Section (Takes up 2 cols on large screens) -->
             <div class="lg:col-span-2 space-y-6 flex flex-col overflow-hidden h-[500px] lg:h-auto">
@@ -235,6 +355,8 @@
                 </div>
             </div>
         </div>
+
+
     </div>
 </div>
 
@@ -262,6 +384,7 @@
     function trackerApp() {
         return {
             map: null,
+            guideOpen: false,
             cats: @json($cats).map(c => ({
                 ...c,
                 image: c.image ? `/storage/${c.image}` : null
