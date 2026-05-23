@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Volunteer;
+use App\Models\Staff;
 use Illuminate\Http\Request;
 
 class UserManagementController extends Controller
@@ -39,7 +40,9 @@ class UserManagementController extends Controller
                     'applied'      => $v->applied_at ? $v->applied_at->format('M d, Y') : $v->created_at->format('M d, Y'),
                 ];
             });
-        return view('admin.users.index', compact('users', 'stats', 'volunteers'));
+        $lecturers = Staff::where('type', 'lecturer')->orderBy('name')->get();
+        $committee = Staff::where('type', 'committee')->orderBy('name')->get();
+        return view('admin.users.index', compact('users', 'stats', 'volunteers', 'lecturers', 'committee'));
     }
 
     public function show(User $user)
@@ -83,5 +86,64 @@ class UserManagementController extends Controller
             'name'    => $request->file('file')->getClientOriginalName(),
             'ext'     => $request->file('file')->getClientOriginalExtension(),
         ]);
+    }
+
+    public function storeStaff(Request $request)
+    {
+        $validated = $request->validate([
+            'type'       => 'required|in:lecturer,committee',
+            'name'       => 'required|string|max:255',
+            'email'      => 'required|email|max:255',
+            'department' => 'required|string|max:255',
+            'position'   => 'nullable|string|max:255',
+            'phone'      => 'nullable|string|max:50',
+        ]);
+
+        $staff = Staff::create($validated);
+        return response()->json(['success' => true, 'staff' => $staff]);
+    }
+
+    public function updateStaff(Request $request, Staff $staff)
+    {
+        $validated = $request->validate([
+            'name'       => 'required|string|max:255',
+            'email'      => 'required|email|max:255',
+            'department' => 'required|string|max:255',
+            'position'   => 'nullable|string|max:255',
+            'phone'      => 'nullable|string|max:50',
+        ]);
+
+        $staff->update($validated);
+        return response()->json(['success' => true, 'staff' => $staff->fresh()]);
+    }
+
+    public function destroyStaff(Staff $staff)
+    {
+        $staff->delete();
+        return response()->json(['success' => true]);
+    }
+
+    public function batchImportStaff(Request $request)
+    {
+        $request->validate([
+            'rows'         => 'required|array|min:1',
+            'rows.*.type'  => 'required|in:lecturer,committee',
+            'rows.*.name'  => 'required|string|max:255',
+            'rows.*.email' => 'required|email|max:255',
+        ]);
+
+        $created = [];
+        foreach ($request->rows as $row) {
+            $created[] = Staff::create([
+                'type'       => $row['type'],
+                'name'       => $row['name'],
+                'email'      => $row['email'],
+                'department' => $row['department'] ?? null,
+                'position'   => $row['position'] ?? null,
+                'phone'      => $row['phone'] ?? null,
+            ]);
+        }
+
+        return response()->json(['success' => true, 'count' => count($created), 'staff' => $created]);
     }
 }

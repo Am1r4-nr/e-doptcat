@@ -103,6 +103,12 @@ Route::middleware('auth')->group(function () {
         Route::resource('users', UserManagementController::class)->only(['index', 'show', 'destroy']);
         Route::patch('users/{user}/role', [UserManagementController::class, 'updateRole'])->name('users.role');
 
+        // Staff Management
+        Route::post('staff/batch', [UserManagementController::class, 'batchImportStaff'])->name('staff.batch');
+        Route::post('staff', [UserManagementController::class, 'storeStaff'])->name('staff.store');
+        Route::patch('staff/{staff}', [UserManagementController::class, 'updateStaff'])->name('staff.update');
+        Route::delete('staff/{staff}', [UserManagementController::class, 'destroyStaff'])->name('staff.destroy');
+
         // Messages
         Route::get('messages', [MessageController::class, 'index'])->name('messages.index');
         Route::post('messages/{user}/reply', [MessageController::class, 'reply'])->name('messages.reply');
