@@ -65,7 +65,7 @@ class CatManagementController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'breed' => 'required|string|max:255',
-            'age' => 'required|integer|min:0',
+            'age' => 'required|string|max:255',
             'status' => 'required|in:Available,Adopted,Lost',
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -103,7 +103,7 @@ class CatManagementController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'breed' => 'required|string|max:255',
-            'age' => 'required|integer|min:0',
+            'age' => 'required|string|max:255',
             'status' => 'required|in:Available,Adopted,Lost',
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -136,7 +136,7 @@ class CatManagementController extends Controller
             'name'          => 'nullable|string|max:255',
             'breed'         => 'nullable|string|max:255',
             'gender'        => 'nullable|string|max:50',
-            'age'           => 'nullable|integer|min:0',
+            'age'           => 'nullable|string|max:255',
             'color'         => 'nullable|string|max:255',
             'weight'        => 'nullable|numeric|min:0',
             'status'        => 'nullable|in:Available,Adopted,Lost',
