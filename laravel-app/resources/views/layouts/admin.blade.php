@@ -430,11 +430,101 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"/>
                     </svg>
                 </button>
-                <button class="relative text-gray-400 hover:text-[#C9A84C] transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/>
-                    </svg>
-                </button>
+                <!-- Notification Bell -->
+                <div x-data="notificationBell()" class="relative">
+                    <button @click="toggle()"
+                            class="relative text-gray-400 hover:text-[#C9A84C] transition-colors p-1">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/>
+                        </svg>
+                        <!-- Badge -->
+                        <span x-show="count > 0"
+                              x-text="count > 9 ? '9+' : count"
+                              class="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-0.5 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
+                        </span>
+                    </button>
+
+                    <!-- Dropdown panel -->
+                    <div x-show="open"
+                         @click.outside="open = false"
+                         x-cloak
+                         x-transition:enter="transition ease-out duration-150"
+                         x-transition:enter-start="opacity-0 scale-95 -translate-y-1"
+                         x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                         x-transition:leave="transition ease-in duration-100"
+                         x-transition:leave-start="opacity-100 scale-100"
+                         x-transition:leave-end="opacity-0 scale-95"
+                         class="absolute right-0 top-full mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-[#E8E2D8] overflow-hidden z-50"
+                         style="transform-origin: top right">
+
+                        <!-- Header -->
+                        <div class="px-5 py-3.5 border-b border-[#F0EBE3] flex items-center justify-between">
+                            <p class="font-jakarta font-extrabold text-[13px] text-[#1C1A17]">Notifications</p>
+                            <span x-show="count > 0"
+                                  x-text="count + ' new'"
+                                  class="text-[10px] font-bold text-[#C9A84C] bg-[#FAF8F0] px-2 py-0.5 rounded-full border border-[#EDD98A]">
+                            </span>
+                            <span x-show="count === 0 && !loading"
+                                  class="text-[10px] font-medium text-gray-400">
+                                All caught up
+                            </span>
+                        </div>
+
+                        <!-- Loading spinner -->
+                        <div x-show="loading" class="py-10 flex items-center justify-center">
+                            <div class="w-5 h-5 border-2 border-[#C9A84C] border-t-transparent rounded-full animate-spin"></div>
+                        </div>
+
+                        <!-- Empty state -->
+                        <div x-show="!loading && items.length === 0"
+                             class="py-10 flex flex-col items-center gap-2 text-center px-6">
+                            <div class="w-12 h-12 rounded-2xl bg-[#FAF8F0] flex items-center justify-center">
+                                <svg class="w-6 h-6 text-[#C9A84C]" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/>
+                                </svg>
+                            </div>
+                            <p class="text-[13px] font-semibold text-gray-500">You're all caught up!</p>
+                            <p class="text-[11px] text-gray-400">No pending items right now.</p>
+                        </div>
+
+                        <!-- Notification items -->
+                        <div x-show="!loading && items.length > 0"
+                             class="divide-y divide-[#F5F1EB] max-h-[340px] overflow-y-auto">
+                            <template x-for="(item, i) in items" :key="i">
+                                <a :href="item.url"
+                                   class="flex items-start gap-3 px-5 py-3.5 hover:bg-[#FAF8F5] transition group">
+                                    <div class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5"
+                                         :class="item.iconBg">
+                                        <span x-html="item.icon"></span>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-[12px] font-bold text-gray-800 truncate" x-text="item.title"></p>
+                                        <p class="text-[11px] text-gray-500 mt-0.5 line-clamp-2 leading-relaxed" x-text="item.subtitle"></p>
+                                        <p class="text-[10px] text-gray-400 mt-1" x-text="item.time"></p>
+                                    </div>
+                                    <svg class="w-3.5 h-3.5 text-gray-300 group-hover:text-[#C9A84C] flex-shrink-0 mt-1 transition" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
+                                    </svg>
+                                </a>
+                            </template>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="px-5 py-3 border-t border-[#F0EBE3] bg-[#FAF8F5] flex items-center justify-between">
+                            <a href="{{ route('admin.reporting.index') }}"
+                               class="text-[11px] font-bold text-[#C9A84C] hover:text-amber-700 transition">
+                                View all activity →
+                            </a>
+                            <button @click="refresh()"
+                                    class="text-[11px] text-gray-400 hover:text-gray-600 transition flex items-center gap-1">
+                                <svg class="w-3 h-3" :class="loading ? 'animate-spin' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/>
+                                </svg>
+                                Refresh
+                            </button>
+                        </div>
+                    </div>
+                </div>
                 @if($sidebarUser?->getAttribute('avatar'))
                     <img src="{{ Storage::url($sidebarUser->getAttribute('avatar')) }}" alt="{{ $sidebarUser->getAttribute('name') }}"
                          class="w-9 h-9 rounded-full object-cover ring-2 ring-[#C9A84C]">
@@ -707,6 +797,41 @@ function globalConfirmModal() {
             this.show = false;
             if (this._formId) { document.getElementById(this._formId)?.submit(); return; }
             if (window._confirmCb) { const cb = window._confirmCb; window._confirmCb = null; cb(); }
+        },
+    };
+}
+
+function notificationBell() {
+    return {
+        open:    false,
+        loading: false,
+        fetched: false,
+        count:   0,
+        items:   [],
+
+        init() {
+            // Silently load the badge count on every page
+            fetch('{{ route("admin.notifications") }}', { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                .then(r => r.json())
+                .then(d => { this.count = d.count; this.items = d.items; this.fetched = true; })
+                .catch(() => {});
+        },
+
+        async toggle() {
+            this.open = !this.open;
+            if (this.open && !this.fetched) await this.refresh();
+        },
+
+        async refresh() {
+            this.loading = true;
+            try {
+                const r = await fetch('{{ route("admin.notifications") }}', { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+                const d = await r.json();
+                this.count   = d.count;
+                this.items   = d.items;
+                this.fetched = true;
+            } catch (_) {}
+            finally { this.loading = false; }
         },
     };
 }
