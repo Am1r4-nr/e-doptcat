@@ -1,134 +1,348 @@
 <x-admin-layout>
 
-<!-- Page Header -->
-<div class="mb-8">
-    <h1 class="font-jakarta text-3xl font-extrabold text-[#1C1A17] tracking-tight">Dashboard</h1>
-    <p class="text-sm text-[#A09890] mt-1">Welcome back, <span class="font-semibold text-[#6B6560]">{{ auth()->user()->name }}</span> &mdash; {{ now()->format('l, F d, Y') }}</p>
+<!-- Header -->
+<div class="flex items-center justify-between mb-8">
+    <div>
+        <h1 class="font-jakarta text-3xl font-extrabold text-[#1C1A17] tracking-tight">Executive Dashboard</h1>
+        <p class="text-sm text-[#A09890] mt-1">Welcome back, <span class="font-semibold text-[#6B6560]">{{ auth()->user()->name }}</span> &mdash; {{ now()->format('F d, Y') }}</p>
+    </div>
+    @if ($stats['upcoming_event'])
+        @php
+            $event    = $stats['upcoming_event'];
+            $daysLeft = (int) now()->startOfDay()->diffInDays($event->event_date->startOfDay());
+        @endphp
+        <a href="{{ route('admin.events.index') }}"
+           class="flex items-center gap-3 bg-white border border-[rgba(0,0,0,0.08)] rounded-2xl px-4 py-2.5 hover:border-[#C9A84C] transition-all group">
+            <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style="background:rgba(201,168,76,0.12)">
+                <svg class="w-4 h-4 text-[#C9A84C]" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/>
+                </svg>
+            </div>
+            <div class="min-w-0">
+                <p class="text-[10px] font-bold tracking-[0.1em] uppercase text-[#A09890]">Upcoming Event</p>
+                <p class="text-sm font-bold text-[#1C1A17] truncate max-w-[180px] group-hover:text-[#C9A84C] transition-colors">{{ $event->title }}</p>
+                <p class="text-[10px] text-[#A09890]">{{ $event->event_date->format('d M Y') }}</p>
+            </div>
+            <div class="shrink-0 text-right ml-1">
+                <p class="font-jakarta text-2xl font-extrabold text-[#C9A84C] leading-none">{{ $daysLeft }}</p>
+                <p class="text-[10px] text-[#A09890] mt-0.5">{{ $daysLeft === 1 ? 'day left' : 'days left' }}</p>
+            </div>
+        </a>
+    @else
+        <a href="{{ route('admin.events.index') }}"
+           class="flex items-center gap-2 bg-white border border-[rgba(0,0,0,0.08)] rounded-2xl px-4 py-2.5 hover:border-[#C9A84C] transition-all">
+            <svg class="w-4 h-4 text-[#A09890]" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/>
+            </svg>
+            <span class="text-xs font-semibold text-[#A09890]">No upcoming events</span>
+        </a>
+    @endif
 </div>
 
-<!-- Stats Row -->
-<div class="grid grid-cols-4 gap-4 mb-8">
+<!-- KPI Stats Row -->
+<div class="grid grid-cols-4 gap-4 mb-6">
+
+    @php
+        $kpis = [
+            ['label' => 'Total Cats',  'val' => $stats['total_cats'],           'sub' => 'In sanctuary',  'change' => $stats['cat_change'],      'spark' => 'sparkCats'],
+            ['label' => 'Adoptions',   'val' => $stats['adoptions_this_month'], 'sub' => 'This month',    'change' => $stats['adoption_change'], 'spark' => 'sparkAdoptions'],
+            ['label' => 'Members',     'val' => $stats['total_users'],          'sub' => 'Registered',    'change' => $stats['user_change'],     'spark' => 'sparkUsers'],
+        ];
+    @endphp
+
+    @foreach ($kpis as $kpi)
     <div class="card-sm">
-        <p class="section-label mb-2">Total Cats</p>
-        <p class="font-jakarta text-4xl font-extrabold text-[#1C1A17] leading-none">{{ $stats['total_cats'] ?? 0 }}</p>
-        <p class="text-xs text-[#A09890] mt-1.5">In the system</p>
+        <div class="flex items-start justify-between gap-2">
+            <div class="flex-1 min-w-0">
+                <p class="section-label mb-2">{{ $kpi['label'] }}</p>
+                <p class="font-jakarta text-4xl font-extrabold text-[#1C1A17] leading-none">{{ number_format($kpi['val']) }}</p>
+                @php $ch = $kpi['change']; @endphp
+                <div class="flex items-center gap-1.5 mt-2.5">
+                    <span class="text-[11px] font-bold {{ $ch >= 0 ? 'text-emerald-600' : 'text-red-500' }}">
+                        {{ $ch >= 0 ? '↑' : '↓' }} {{ abs($ch) }}%
+                    </span>
+                    <span class="text-[10px] text-[#A09890]">vs last month</span>
+                </div>
+                <p class="text-[10px] text-[#A09890] mt-0.5">{{ $kpi['sub'] }}</p>
+            </div>
+            <canvas id="{{ $kpi['spark'] }}" width="76" height="40" class="shrink-0 mt-0.5"></canvas>
+        </div>
     </div>
-    <div class="card-sm">
-        <p class="section-label mb-2">Adoptions</p>
-        <p class="font-jakarta text-4xl font-extrabold text-[#1C1A17] leading-none">{{ $stats['adoptions_this_month'] ?? 0 }}</p>
-        <p class="text-xs text-[#A09890] mt-1.5">This month</p>
-    </div>
-    <div class="card-sm">
-        <p class="section-label mb-2">Users</p>
-        <p class="font-jakarta text-4xl font-extrabold text-[#1C1A17] leading-none">{{ $stats['total_users'] ?? 0 }}</p>
-        <p class="text-xs text-[#A09890] mt-1.5">Registered members</p>
-    </div>
+    @endforeach
+
+    <!-- Donations – gold card -->
     <div class="card-gold">
-        <p class="text-[10px] font-bold tracking-[0.12em] uppercase text-white/70 mb-2">Donations</p>
-        <p class="font-jakarta text-4xl font-extrabold text-white leading-none">RM {{ number_format($stats['total_donations'] ?? 0) }}</p>
-        <p class="text-xs text-white/60 mt-1.5">Total raised</p>
+        <div class="flex items-start justify-between gap-2">
+            <div class="flex-1 min-w-0">
+                <p class="text-[10px] font-bold tracking-[0.12em] uppercase text-white/70 mb-2">Donations</p>
+                <p class="font-jakarta text-3xl font-extrabold text-white leading-none">RM&nbsp;{{ number_format($stats['total_donations']) }}</p>
+                @php $dc = $stats['donation_change']; @endphp
+                <div class="flex items-center gap-1.5 mt-2.5">
+                    <span class="text-[11px] font-bold text-white/90">{{ $dc >= 0 ? '↑' : '↓' }} {{ abs($dc) }}%</span>
+                    <span class="text-[10px] text-white/60">vs last month</span>
+                </div>
+                <p class="text-[10px] text-white/60 mt-0.5">Total raised</p>
+            </div>
+            <canvas id="sparkDonations" width="76" height="40" class="shrink-0 mt-0.5"></canvas>
+        </div>
     </div>
+
 </div>
 
-<!-- Charts + Activity Row -->
-<div class="grid grid-cols-3 gap-6">
-    <!-- Chart -->
-    <div class="col-span-2 card">
-        <p class="section-label-muted mb-6">Adoption vs Intake Trends</p>
-        <canvas id="trendsChart" height="90"></canvas>
+<!-- Middle Row -->
+<div class="grid grid-cols-3 gap-6 mb-6">
+
+    <!-- Adoption & Intake Trends -->
+    <div class="card">
+        <div class="flex items-start justify-between mb-4">
+            <div>
+                <p class="section-label-muted">Adoption Trends</p>
+                <p class="text-[11px] text-[#A09890] mt-0.5">Adoptions vs intake · last 6 months</p>
+            </div>
+            <a href="{{ route('admin.adoptions.index') }}" class="text-[#A09890] hover:text-[#C9A84C] transition-colors mt-0.5" title="View all adoptions">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+        </div>
+        <div class="relative" style="height:150px">
+            <canvas id="trendsChart"></canvas>
+        </div>
     </div>
 
-    <!-- Recent Reports -->
+    <!-- By Pipeline Stage -->
+    <div class="card">
+        <div class="flex items-start justify-between mb-4">
+            <div>
+                <p class="section-label-muted">By Pipeline Stage</p>
+                <p class="text-[11px] text-[#A09890] mt-0.5">Current adoption applications</p>
+            </div>
+        </div>
+        <div class="relative" style="height:150px">
+            <canvas id="stageChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Recent Incidents -->
     <div class="card flex flex-col">
-        <p class="section-label-muted mb-5">Recent Incidents</p>
-        <div class="space-y-4 flex-1 overflow-y-auto">
-            @forelse ($stats['recent_reports'] as $report)
+        <div class="flex items-start justify-between mb-4">
+            <div>
+                <p class="section-label-muted">Recent Incidents</p>
+                <p class="text-[11px] text-[#A09890] mt-0.5">Latest reports</p>
+            </div>
+            <a href="{{ route('admin.reports.index') }}"
+               class="text-[10px] text-[#C9A84C] hover:text-[#b8932e] font-bold uppercase tracking-wide transition-colors whitespace-nowrap">View All →</a>
+        </div>
+        <div class="space-y-3 flex-1">
+            @forelse ($stats['recent_reports'] as $i => $report)
                 @php
-                    $dot = match($report->status) {
-                        'Pending'  => 'bg-amber-400',
-                        'Resolved' => 'bg-green-400',
-                        default    => 'bg-gray-300',
-                    };
+                    $dot    = match($report->status) { 'Resolved' => 'bg-emerald-400', 'Pending' => 'bg-amber-400', default => 'bg-gray-300' };
+                    $badge  = $report->status === 'Resolved' ? 'badge-green' : 'badge-gold';
                 @endphp
-                <div class="flex gap-3">
-                    <span class="w-2 h-2 rounded-full {{ $dot }} mt-1.5 flex-shrink-0"></span>
-                    <div>
-                        <p class="text-sm text-[#1C1A17] leading-snug">{{ $report->type }} — {{ Str::limit($report->description, 45) }}</p>
-                        <p class="text-[11px] text-[#A09890] mt-0.5">
-                            {{ $report->user?->name ?? $report->reporter_name }} &middot; {{ $report->created_at->diffForHumans() }}
+                <div class="flex items-start gap-2.5">
+                    <span class="text-[11px] font-bold text-[#A09890] w-4 shrink-0 mt-0.5">{{ $i + 1 }}</span>
+                    <span class="w-1.5 h-1.5 rounded-full {{ $dot }} shrink-0 mt-1.5"></span>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-xs text-[#1C1A17] font-semibold leading-snug truncate">{{ $report->type }}</p>
+                        <p class="text-[10px] text-[#A09890] mt-0.5 truncate">
+                            {{ $report->user?->name ?? $report->reporter_name ?? '—' }} · {{ $report->created_at->diffForHumans() }}
                         </p>
                     </div>
+                    <span class="badge {{ $badge }} text-[9px] shrink-0">{{ $report->status }}</span>
                 </div>
             @empty
-                <p class="text-sm text-[#A09890] italic">No recent reports.</p>
+                <p class="text-xs text-[#A09890] italic text-center py-6">No recent incidents.</p>
             @endforelse
         </div>
-        <a href="{{ route('admin.reports.index') }}" class="text-xs text-[#C9A84C] hover:text-[#b8932e] font-bold mt-5 tracking-wide uppercase transition-colors">
-            View All Reports &rarr;
-        </a>
     </div>
+
 </div>
 
-<!-- Bottom Cards -->
-<div class="grid grid-cols-3 gap-6 mt-6">
-    <div class="card-sm">
-        <div class="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style="background:rgba(201,168,76,0.12)">
-            <svg class="w-5 h-5 text-[#C9A84C]" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg>
+<!-- Bottom Row -->
+<div class="grid grid-cols-3 gap-6">
+
+    <!-- Cats by Status -->
+    <div class="card">
+        <div class="flex items-start justify-between mb-4">
+            <div>
+                <p class="section-label-muted">Cats by Status</p>
+                <p class="text-[11px] text-[#A09890] mt-0.5">Current sanctuary inventory</p>
+            </div>
+            <a href="{{ route('admin.cats.index') }}" class="text-[#A09890] hover:text-[#C9A84C] transition-colors mt-0.5" title="View cat directory">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
         </div>
-        <p class="font-jakarta text-sm font-bold text-[#1C1A17]">Health Metrics</p>
-        <p class="text-xs text-[#A09890] mt-1 leading-relaxed">Track veterinary screenings and health records for all residents.</p>
-        <a href="{{ route('admin.cats.index') }}" class="text-xs text-[#C9A84C] hover:text-[#b8932e] font-bold mt-3 inline-block uppercase tracking-wide transition-colors">View Directory &rarr;</a>
-    </div>
-    <div class="card-sm">
-        <div class="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style="background:rgba(201,168,76,0.12)">
-            <svg class="w-5 h-5 text-[#C9A84C]" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
+        <div class="relative" style="height:150px">
+            <canvas id="statusChart"></canvas>
         </div>
-        <p class="font-jakarta text-sm font-bold text-[#1C1A17]">Upcoming Adoptions</p>
-        <p class="text-xs text-[#A09890] mt-1 leading-relaxed">{{ $stats['adoptions_this_month'] ?? 0 }} adoptions processed this month.</p>
-        <a href="{{ route('admin.adoptions.index') }}" class="text-xs text-[#C9A84C] hover:text-[#b8932e] font-bold mt-3 inline-block uppercase tracking-wide transition-colors">View All &rarr;</a>
     </div>
-    <div class="card-gold">
-        <div class="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style="background:rgba(255,255,255,0.15)">
-            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"/></svg>
+
+    <!-- Donations by Month (horizontal bar list) -->
+    <div class="card">
+        <div class="flex items-start justify-between mb-4">
+            <div>
+                <p class="section-label-muted">Donations by Month</p>
+                <p class="text-[11px] text-[#A09890] mt-0.5">Last 6 months · RM</p>
+            </div>
         </div>
-        <p class="font-jakarta text-sm font-bold text-white">AI Care Suggestion</p>
-        <p class="text-xs text-white/70 mt-1 leading-relaxed">System suggests reviewing adoption matches based on recent activity data.</p>
-        <a href="{{ route('admin.cats.index') }}" class="text-xs text-white/90 hover:text-white font-bold mt-3 inline-block uppercase tracking-wide transition-colors">Review Now &rarr;</a>
+        @php $dMax = max(array_merge($stats['monthly_donations'], [1])); @endphp
+        <div class="space-y-3">
+            @foreach ($stats['month_labels'] as $mi => $mLabel)
+                @php
+                    $dVal = $stats['monthly_donations'][$mi] ?? 0;
+                    $dPct = $dMax > 0 ? ($dVal / $dMax * 100) : 0;
+                @endphp
+                <div class="flex items-center gap-3">
+                    <span class="text-[11px] font-medium text-[#6B6560] w-7 shrink-0 text-right">{{ $mLabel }}</span>
+                    <div class="flex-1 h-3.5 bg-[rgba(201,168,76,0.1)] rounded-full overflow-hidden">
+                        <div class="h-full rounded-full transition-all duration-500"
+                             style="width:{{ $dPct }}%; background: linear-gradient(90deg, #C9A84C, #8B6914)"></div>
+                    </div>
+                    <span class="text-[11px] font-semibold text-[#1C1A17] w-16 shrink-0 text-right">
+                        {{ $dVal > 0 ? 'RM '.number_format($dVal) : '—' }}
+                    </span>
+                </div>
+            @endforeach
+        </div>
     </div>
+
+    <!-- Recent Donors -->
+    <div class="card flex flex-col">
+        <div class="flex items-start justify-between mb-4">
+            <div>
+                <p class="section-label-muted">Recent Donors</p>
+                <p class="text-[11px] text-[#A09890] mt-0.5">Latest contributions</p>
+            </div>
+            <a href="{{ route('admin.donations.index') }}"
+               class="text-[10px] text-[#C9A84C] hover:text-[#b8932e] font-bold uppercase tracking-wide transition-colors whitespace-nowrap">View All →</a>
+        </div>
+        <div class="space-y-3 flex-1">
+            @forelse ($stats['recent_donors'] as $i => $donation)
+                <div class="flex items-center gap-3">
+                    <span class="text-[11px] font-bold text-[#A09890] w-4 shrink-0">{{ $i + 1 }}</span>
+                    <div class="w-7 h-7 rounded-full bg-[rgba(201,168,76,0.12)] flex items-center justify-center shrink-0">
+                        <span class="text-[10px] font-bold text-[#C9A84C]">
+                            {{ strtoupper(substr($donation->user?->name ?? 'A', 0, 1)) }}
+                        </span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-xs font-semibold text-[#1C1A17] truncate">{{ $donation->user?->name ?? 'Anonymous' }}</p>
+                        <p class="text-[10px] text-[#A09890]">{{ $donation->created_at->diffForHumans() }}</p>
+                    </div>
+                    <span class="text-xs font-bold text-[#C9A84C] shrink-0">RM&nbsp;{{ number_format($donation->amount) }}</span>
+                </div>
+            @empty
+                <p class="text-xs text-[#A09890] italic text-center py-6">No donations yet.</p>
+            @endforelse
+        </div>
+    </div>
+
 </div>
 
 <script>
-const ctx = document.getElementById('trendsChart').getContext('2d');
-new Chart(ctx, {
+// ── Sparklines ─────────────────────────────────────────────────────────────
+function mkSpark(id, data, color) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    new Chart(el.getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: Array(data.length).fill(''),
+            datasets: [{ data, borderColor: color, borderWidth: 1.8, pointRadius: 0, tension: 0.4, fill: false }]
+        },
+        options: {
+            responsive: false, animation: false,
+            plugins: { legend: { display: false }, tooltip: { enabled: false } },
+            scales: { x: { display: false }, y: { display: false } }
+        }
+    });
+}
+mkSpark('sparkCats',      @json($stats['monthly_intake']),    '#C9A84C');
+mkSpark('sparkAdoptions', @json($stats['monthly_adoptions']), '#C9A84C');
+mkSpark('sparkUsers',     @json($stats['monthly_users']),     '#C9A84C');
+mkSpark('sparkDonations', @json($stats['monthly_donations']), 'rgba(255,255,255,0.75)');
+
+// ── Adoption & Intake Trends ────────────────────────────────────────────────
+new Chart(document.getElementById('trendsChart').getContext('2d'), {
     type: 'line',
     data: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+        labels: @json($stats['month_labels']),
         datasets: [
             {
                 label: 'Adoptions',
-                data: [5, 6, 8, 12, 15, 14, 18],
-                borderColor: '#C9A84C',
-                backgroundColor: 'rgba(201,168,76,0.08)',
-                fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 0,
+                data: @json($stats['monthly_adoptions']),
+                borderColor: '#C9A84C', backgroundColor: 'rgba(201,168,76,0.08)',
+                fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: '#C9A84C',
             },
             {
                 label: 'Intake',
-                data: [5, 4, 7, 9, 11, 10, 13],
-                borderColor: '#8B6914',
-                backgroundColor: 'rgba(139,105,20,0.06)',
-                fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 0,
+                data: @json($stats['monthly_intake']),
+                borderColor: '#8B6914', backgroundColor: 'rgba(139,105,20,0.06)',
+                fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: '#8B6914',
             }
         ]
     },
     options: {
-        responsive: true,
-        maintainAspectRatio: true,
+        responsive: true, maintainAspectRatio: false,
         plugins: {
-            legend: { position: 'top', labels: { usePointStyle: true, padding: 16, font: { size: 11, family: 'Lato' } } }
+            legend: { display: true, position: 'bottom', labels: { usePointStyle: true, padding: 10, font: { size: 10, family: 'Lato' } } }
         },
         scales: {
-            y: { beginAtZero: true, grid: { color: 'rgba(201,168,76,0.08)' }, ticks: { font: { size: 11, family: 'Lato' } } },
-            x: { grid: { display: false }, ticks: { font: { size: 11, family: 'Lato' } } }
+            y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { font: { size: 10 }, maxTicksLimit: 5 } },
+            x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+        }
+    }
+});
+
+// ── Pipeline Stage Bar ──────────────────────────────────────────────────────
+@php
+    $stageLabels    = array_keys($stats['adoptions_by_stage']);
+    $stageCounts    = array_values($stats['adoptions_by_stage']);
+    $stageColors    = ['#E8CE92', '#DDB96A', '#C9A84C', '#A07830', '#8B6914'];
+@endphp
+new Chart(document.getElementById('stageChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+        labels: @json($stageLabels),
+        datasets: [{
+            data: @json($stageCounts),
+            backgroundColor: @json($stageColors),
+            borderRadius: 5,
+            borderSkipped: false,
+        }]
+    },
+    options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+            y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { stepSize: 1, font: { size: 10 }, maxTicksLimit: 5 } },
+            x: { grid: { display: false }, ticks: { font: { size: 9 } } }
+        }
+    }
+});
+
+// ── Cats by Status Bar ──────────────────────────────────────────────────────
+@php
+    $statusLabels = collect($stats['cats_by_status'])->keys()->map(fn($s) => ucfirst(str_replace('_', ' ', $s)))->toArray();
+    $statusCounts = array_values($stats['cats_by_status']);
+    $allColors    = ['#C9A84C', '#8B6914', '#DDB96A', '#A07830', '#E8CE92', '#6B4C10'];
+    $statusColors = array_map(fn($i) => $allColors[$i % count($allColors)], range(0, max(0, count($statusLabels) - 1)));
+@endphp
+new Chart(document.getElementById('statusChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+        labels: @json($statusLabels),
+        datasets: [{
+            data: @json($statusCounts),
+            backgroundColor: @json($statusColors),
+            borderRadius: 5,
+            borderSkipped: false,
+        }]
+    },
+    options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+            y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { stepSize: 1, font: { size: 10 }, maxTicksLimit: 5 } },
+            x: { grid: { display: false }, ticks: { font: { size: 9 } } }
         }
     }
 });
