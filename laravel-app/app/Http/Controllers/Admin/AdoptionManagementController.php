@@ -64,7 +64,12 @@ class AdoptionManagementController extends Controller
     public function approve(Adoption $adoption)
     {
         $adoption->update(['status' => 'Approved']);
-        return redirect()->back()->with('success', 'Adoption approved successfully.');
+
+        if ($adoption->cat) {
+            $adoption->cat->update(['status' => 'Adopted']);
+        }
+
+        return redirect()->back()->with('success', 'Adoption approved successfully and cat status updated to Adopted.');
     }
 
     public function reject(Adoption $adoption)
