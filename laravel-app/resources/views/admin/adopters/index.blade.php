@@ -2,7 +2,7 @@
 
 <!-- Page Header -->
 <div class="mb-8">
-    <h1 class="text-3xl font-cabinet font-semibold text-gray-800">Adopters</h1>
+    <h1 class="font-jakarta text-3xl font-extrabold text-[#1C1A17] tracking-tight">Adopters</h1>
     <p class="text-sm text-gray-400 mt-1">Registered users who have submitted adoption applications</p>
 </div>
 

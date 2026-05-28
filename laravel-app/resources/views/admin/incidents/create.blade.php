@@ -1,7 +1,7 @@
-<x-admin-layout>
+﻿<x-admin-layout>
     <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
         <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-900">
+            <h2 class="font-jakarta text-3xl font-extrabold text-[#1C1A17] tracking-tight">
                 Create New Incident
             </h2>
             <a href="{{ route('admin.incidents.index') }}"

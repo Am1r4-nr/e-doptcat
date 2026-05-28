@@ -3,7 +3,7 @@
 <!-- Page Header -->
 <div class="mb-6 flex items-start justify-between">
     <div>
-        <h1 class="text-3xl font-cabinet font-bold text-gray-800">Hello, {{ auth()->user()->name }}</h1>
+        <h1 class="font-jakarta text-3xl font-extrabold text-[#1C1A17] tracking-tight">Hello, {{ auth()->user()->name }}</h1>
         <p class="text-sm text-gray-400 mt-1">Strategic insights for the feline sanctuary</p>
     </div>
     <div class="flex items-center gap-3">

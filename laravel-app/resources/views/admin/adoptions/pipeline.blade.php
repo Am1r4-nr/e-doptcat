@@ -1,4 +1,4 @@
-<x-admin-layout>
+﻿<x-admin-layout>
 @php
 $total = collect($columns)->sum(fn($c) => $c->count());
 
@@ -219,7 +219,7 @@ $avatarColors = ['bg-purple-200 text-purple-700','bg-teal-200 text-teal-700','bg
         {{-- Header --}}
         <div class="flex items-center justify-between mb-6 flex-shrink-0">
             <div>
-                <h2 class="text-[28px] font-bold text-gray-900 tracking-tight">Adoption Pipeline</h2>
+                <h2 class="font-jakarta text-3xl font-extrabold text-[#1C1A17] tracking-tight">Adoption Pipeline</h2>
                 <p class="text-[14px] text-gray-500 mt-0.5">Track applications through every stage — tick checklist items directly on the board.</p>
             </div>
             <div class="flex items-center gap-3">

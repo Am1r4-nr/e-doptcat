@@ -1,9 +1,9 @@
 ﻿<x-admin-layout>
-    <div class="px-8 py-6 max-w-7xl mx-auto">
+    <div class="max-w-7xl mx-auto">
         <!-- Header Section -->
-        <div class="mb-10 flex items-start justify-between">
+        <div class="mb-5 flex items-start justify-between">
             <div>
-                <h2 class="text-[32px] font-bold text-gray-900 tracking-tight">Adopter Applications</h2>
+                <h2 class="font-jakarta text-3xl font-extrabold text-[#1C1A17] tracking-tight">Adopter Applications</h2>
                 <p class="text-[15px] font-medium text-gray-500 mt-1 max-w-2xl">
                     Review and manage incoming feline adoption requests with the care and attention our residents deserve.
                 </p>

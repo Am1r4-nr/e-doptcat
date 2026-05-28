@@ -1,9 +1,9 @@
-<x-admin-layout>
+﻿<x-admin-layout>
 
 <!-- Header -->
-<div class="mb-8 flex items-start justify-between">
+<div class="mb-5 flex items-start justify-between">
     <div>
-        <h1 class="text-3xl font-cabinet font-semibold text-gray-800">Event Management</h1>
+        <h1 class="font-jakarta text-3xl font-extrabold text-[#1C1A17] tracking-tight">Event Management</h1>
         <p class="text-sm text-gray-400 mt-1">Create and manage sanctuary events</p>
     </div>
     <div class="flex items-center gap-3">
@@ -116,10 +116,11 @@
                                    class="text-xs font-semibold text-[#C9A84C] hover:text-amber-800 transition">
                                     Edit
                                 </a>
-                                <form method="POST" action="{{ route('admin.events.destroy', $event) }}"
-                                      onsubmit="return confirm('Delete this event?')">
+                                <form id="form-del-event-{{ $event->id }}" method="POST" action="{{ route('admin.events.destroy', $event) }}">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="text-xs font-semibold text-red-400 hover:text-red-600 transition">
+                                    <button type="button"
+                                            onclick="showConfirmModal({ title: 'Delete Event?', message: '{{ addslashes($event->title) }}', formId: 'form-del-event-{{ $event->id }}' })"
+                                            class="text-xs font-semibold text-red-400 hover:text-red-600 transition">
                                         Delete
                                     </button>
                                 </form>

@@ -1,9 +1,9 @@
-<x-admin-layout>
+﻿<x-admin-layout>
 
 <!-- Page Header -->
 <div class="mb-6 flex items-start justify-between">
     <div>
-        <h1 class="text-3xl font-cabinet font-semibold text-gray-800">Reporting Hub</h1>
+        <h1 class="font-jakarta text-3xl font-extrabold text-[#1C1A17] tracking-tight">Reporting Hub</h1>
         <p class="text-sm text-gray-400 mt-1">Review and manage sanctuary reports</p>
     </div>
 </div>

@@ -1,4 +1,4 @@
-<x-admin-layout>
+﻿<x-admin-layout>
 
 <!-- FullCalendar CSS -->
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
@@ -96,7 +96,7 @@
 <!-- Page Header -->
 <div class="mb-6 flex items-start justify-between">
     <div>
-        <h1 class="text-3xl font-cabinet font-semibold text-gray-800">Calendar</h1>
+        <h1 class="font-jakarta text-3xl font-extrabold text-[#1C1A17] tracking-tight">Calendar</h1>
         <p class="text-sm text-gray-400 mt-1">All sanctuary events on one view</p>
     </div>
     <a href="{{ route('admin.events.create') }}"
