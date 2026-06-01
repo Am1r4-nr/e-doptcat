@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "buildCommand": "",
+  "outputDirectory": "laravel-app/public",
+  "functions": {
+    "laravel-app/api/index.php": {
+      "runtime": "vercel-php@0.7.2"
+    }
+  },
+  "routes": [
+    { "src": "/build/(.*)",   "dest": "/laravel-app/public/build/$1" },
+    { "src": "/storage/(.*)", "dest": "/laravel-app/public/storage/$1" },
+    { "src": "/(.*)",         "dest": "/laravel-app/api/index.php" }
+  ]
+}
