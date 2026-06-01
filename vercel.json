@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "",
+  "buildCommand": "cd laravel-app && composer install --no-dev --optimize-autoloader --no-interaction",
   "outputDirectory": "laravel-app/public",
   "functions": {
     "api/index.php": {
