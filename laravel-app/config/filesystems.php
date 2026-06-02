@@ -47,6 +47,13 @@ return [
             'report' => false,
         ],
 
+        'supabase' => [
+            'driver' => 'supabase',
+            'url'    => env('SUPABASE_URL', 'https://voultgvkbzzeqwvnmbmi.supabase.co'),
+            'key'    => env('SUPABASE_SERVICE_KEY'),
+            'bucket' => env('SUPABASE_STORAGE_BUCKET', 'e-doptcat'),
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

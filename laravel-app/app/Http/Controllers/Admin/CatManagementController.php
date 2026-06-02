@@ -76,7 +76,7 @@ class CatManagementController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('cats', 'public');
+            $validated['image'] = $request->file('image')->store('cats');
         }
 
         // Create cat record
@@ -115,9 +115,9 @@ class CatManagementController extends Controller
 
         if ($request->hasFile('image')) {
             if ($cat->image) {
-                Storage::disk('public')->delete($cat->image);
+                Storage::disk()->delete($cat->image);
             }
-            $validated['image'] = $request->file('image')->store('cats', 'public');
+            $validated['image'] = $request->file('image')->store('cats');
         }
 
         $cat->update($validated);

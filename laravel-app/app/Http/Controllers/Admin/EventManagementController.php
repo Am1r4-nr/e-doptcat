@@ -39,7 +39,7 @@ class EventManagementController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('events', 'public');
+            $data['image'] = $request->file('image')->store('events');
         }
 
         Event::create($data);
@@ -65,8 +65,8 @@ class EventManagementController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            if ($event->image) Storage::disk('public')->delete($event->image);
-            $data['image'] = $request->file('image')->store('events', 'public');
+            if ($event->image) Storage::disk()->delete($event->image);
+            $data['image'] = $request->file('image')->store('events');
         }
 
         $event->update($data);
@@ -77,7 +77,7 @@ class EventManagementController extends Controller
 
     public function destroy(Event $event)
     {
-        if ($event->image) Storage::disk('public')->delete($event->image);
+        if ($event->image) Storage::disk()->delete($event->image);
         $event->delete();
 
         return redirect()->route('admin.events.index')

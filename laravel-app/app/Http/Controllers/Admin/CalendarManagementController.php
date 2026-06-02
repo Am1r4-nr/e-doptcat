@@ -65,7 +65,7 @@ class CalendarManagementController extends Controller
 
         // Handle image upload
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('events', 'public');
+            $path = $request->file('image')->store('events');
             $validated['image'] = $path;
         }
 
@@ -108,7 +108,7 @@ class CalendarManagementController extends Controller
 
         // Handle image upload
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('events', 'public');
+            $path = $request->file('image')->store('events');
             $validated['image'] = $path;
         }
 
