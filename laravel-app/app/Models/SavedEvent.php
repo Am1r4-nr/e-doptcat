@@ -15,6 +15,7 @@ class SavedEvent extends Model
         'user_id',
         'event_id',
         'status',
+        'pictures_link',
     ];
 
     public function user()

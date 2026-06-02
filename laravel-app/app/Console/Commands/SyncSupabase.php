@@ -124,16 +124,41 @@ class SyncSupabase extends Command
 
                 // B. Sync data in chunks if there are rows
                 if ($rowCount > 0) {
-                    DB::connection('mysql')->table($table)->orderBy('id')->chunk(200, function ($chunk) use ($table) {
+                    if (Schema::connection('mysql')->hasColumn($table, 'id')) {
+                        DB::connection('mysql')->table($table)->orderBy('id')->chunk(200, function ($chunk) use ($table) {
+                            $insertData = [];
+                            foreach ($chunk as $row) {
+                                $rowArray = (array)$row;
+                                
+                                // PostgreSQL boolean conversion safety check
+                                // Standard MySQL tinyint(1) fields might have 0/1, let's cast them to actual booleans
+                                foreach ($rowArray as $column => $value) {
+                                    if (($table === 'cats' && $column === 'vaccinated') || 
+                                        ($table === 'adoptions' && $column === 'ai_match_score') || // score is int, not bool, don't touch
+                                        (is_bool($value))
+                                    ) {
+                                        if ($column === 'vaccinated') {
+                                            $rowArray[$column] = (bool)$value;
+                                        }
+                                    }
+                                }
+                                
+                                $insertData[] = $rowArray;
+                            }
+
+                            DB::connection('supabase')->table($table)->insert($insertData);
+                        });
+                    } else {
+                        // For tables without an 'id' column (like 'cache'), fetch all records directly
+                        $rows = DB::connection('mysql')->table($table)->get();
                         $insertData = [];
-                        foreach ($chunk as $row) {
+                        foreach ($rows as $row) {
                             $rowArray = (array)$row;
                             
                             // PostgreSQL boolean conversion safety check
-                            // Standard MySQL tinyint(1) fields might have 0/1, let's cast them to actual booleans
                             foreach ($rowArray as $column => $value) {
                                 if (($table === 'cats' && $column === 'vaccinated') || 
-                                    ($table === 'adoptions' && $column === 'ai_match_score') || // score is int, not bool, don't touch
+                                    ($table === 'adoptions' && $column === 'ai_match_score') || 
                                     (is_bool($value))
                                 ) {
                                     if ($column === 'vaccinated') {
@@ -144,9 +169,11 @@ class SyncSupabase extends Command
                             
                             $insertData[] = $rowArray;
                         }
-
-                        DB::connection('supabase')->table($table)->insert($insertData);
-                    });
+                        
+                        if (!empty($insertData)) {
+                            DB::connection('supabase')->table($table)->insert($insertData);
+                        }
+                    }
                 }
 
                 // C. Reset the serial sequence so subsequent inserts don't collide on primary key.

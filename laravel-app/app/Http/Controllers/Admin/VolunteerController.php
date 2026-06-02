@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Volunteer;
+use App\Mail\AdminNotificationMail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class VolunteerController extends Controller
 {
@@ -109,7 +111,12 @@ class VolunteerController extends Controller
         if (isset($data['name'])) {
             $data['name'] = ucwords(strtolower($data['name']));
         }
+        $oldStatus = $volunteer->status;
         $volunteer->update($data);
+
+        if (isset($data['status']) && $data['status'] !== $oldStatus) {
+            $this->sendStatusEmail($volunteer);
+        }
 
         $statusClass = match($volunteer->status) {
             'APPROVED'    => 'bg-green-50 text-green-600 border border-green-100',
@@ -124,7 +131,12 @@ class VolunteerController extends Controller
     public function updateStatus(Request $request, Volunteer $volunteer)
     {
         $request->validate(['status' => 'required|in:PENDING,INTERVIEWING,APPROVED,REJECTED']);
+        $oldStatus = $volunteer->status;
         $volunteer->update(['status' => $request->status]);
+
+        if ($request->status !== $oldStatus) {
+            $this->sendStatusEmail($volunteer);
+        }
 
         $statusClass = match($volunteer->status) {
             'APPROVED'    => 'bg-green-50 text-green-600 border border-green-100',
@@ -186,5 +198,30 @@ class VolunteerController extends Controller
         }
 
         return response()->json(['imported' => count($created), 'volunteers' => $created]);
+    }
+
+    private function sendStatusEmail(Volunteer $volunteer)
+    {
+        if (!$volunteer->email) {
+            return;
+        }
+
+        $messageText = match ($volunteer->status) {
+            'APPROVED' => 'Congratulations! Your AHC volunteer application has been approved. Welcome to the team!',
+            'INTERVIEWING' => 'Your AHC volunteer application status has been updated to: Interviewing. Our team will contact you shortly to schedule an interview.',
+            'REJECTED' => 'Thank you for your interest in volunteering with the Abu Hurairah Club (AHC). We regret to inform you that we are unable to accept your application at this time.',
+            default => 'Your AHC volunteer application status has been updated to: ' . $volunteer->status . '.',
+        };
+
+        try {
+            Mail::to($volunteer->email)->send(new AdminNotificationMail(
+                'Volunteer Application Status Update',
+                $messageText,
+                url('/'),
+                'Visit e-Doptcat'
+            ));
+        } catch (\Exception $e) {
+            \Log::error('Failed to send volunteer status email to ' . $volunteer->email . ': ' . $e->getMessage());
+        }
     }
 }

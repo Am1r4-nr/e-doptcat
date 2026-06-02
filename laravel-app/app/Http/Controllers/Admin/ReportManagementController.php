@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Report;
+use App\Mail\AdminNotificationMail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class ReportManagementController extends Controller
 {
@@ -27,6 +29,20 @@ class ReportManagementController extends Controller
         ]);
 
         $report->update($validated);
+
+        try {
+            $user = $report->user;
+            if ($user) {
+                Mail::to($user->email)->send(new AdminNotificationMail(
+                    'Incident Report Update',
+                    'Your submitted report regarding "' . $report->type . '" (ID: #' . $report->id . ') has been updated to: "' . $report->status . '".',
+                    route('dashboard'),
+                    'View Reports'
+                ));
+            }
+        } catch (\Exception $e) {
+            \Log::error('Failed to send report status email to ' . ($report->user ? $report->user->email : 'unknown') . ': ' . $e->getMessage());
+        }
 
         return redirect()->back()->with('success', 'Report status updated.');
     }

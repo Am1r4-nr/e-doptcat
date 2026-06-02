@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\SavedEvent;
+use App\Mail\AdminNotificationMail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class EventController extends Controller
 {
@@ -41,6 +43,18 @@ class EventController extends Controller
             'event_id' => $event->id,
             'status' => 'Saved',
         ]);
+
+        try {
+            $user = auth()->user();
+            Mail::to($user->email)->send(new AdminNotificationMail(
+                'Event Saved Successfully!',
+                'You have successfully saved the event: "' . $event->title . '". We will notify you of any updates. The event is scheduled for: ' . $event->event_date->format('M d, Y \a\t h:i A') . ' at ' . ($event->location ?? 'TBD') . '.',
+                route('events.index'),
+                'View Events'
+            ));
+        } catch (\Exception $e) {
+            \Log::error('Failed to send saved event email to ' . auth()->user()->email . ': ' . $e->getMessage());
+        }
 
         return back()->with('success', 'Event saved successfully!');
     }

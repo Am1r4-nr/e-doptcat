@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Message;
 use App\Models\User;
+use App\Mail\AdminNotificationMail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class MessageController extends Controller
@@ -71,6 +73,17 @@ class MessageController extends Controller
             'subject'     => 'Admin Reply',
             'content'     => $request->input('content'),
         ]);
+
+        try {
+            Mail::to($user->email)->send(new AdminNotificationMail(
+                'New Message from AHC Team',
+                'You received a new message from the AHC Admin team: "' . $msg->content . '"',
+                route('dashboard'),
+                'View Messages'
+            ));
+        } catch (\Exception $e) {
+            \Log::error('Failed to send admin message email to ' . $user->email . ': ' . $e->getMessage());
+        }
 
         return response()->json([
             'success' => true,

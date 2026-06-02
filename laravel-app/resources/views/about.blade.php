@@ -114,57 +114,6 @@
             </div>
         </div>
 
-        <!-- Section 4: Meet The Team -->
-        <div class="mb-24">
-            <div class="mb-12 space-y-3">
-                <p class="font-script text-3xl text-cozy-accent">The People</p>
-                <h2 class="font-serif font-bold text-4xl text-cozy-brown">Meet the Team</h2>
-                <div class="w-24 h-1 bg-cozy-accent/60 rounded-full"></div>
-                <p class="font-sans text-cozy-brown/60 text-lg">The passionate hearts behind the platform.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-
-                <!-- Team Member 1 -->
-                <div class="space-y-4">
-                    <div class="overflow-hidden rounded-[2.5rem] shadow-xl border-4 border-cozy-warm/40">
-                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=600"
-                             alt="Nur Amira Nabila"
-                             class="w-full h-96 lg:h-[450px] object-cover grayscale hover:grayscale-0 transition-all duration-500">
-                    </div>
-                    <div>
-                        <h3 class="font-serif font-bold text-xl text-cozy-brown">Nur Amira Nabila Binti Mohd Ab Rahman</h3>
-                        <p class="font-sans text-cozy-accent font-medium">Developer</p>
-                    </div>
-                </div>
-
-                <!-- Team Member 2 -->
-                <div class="space-y-4">
-                    <div class="overflow-hidden rounded-[2.5rem] shadow-xl border-4 border-cozy-warm/40">
-                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=600"
-                             alt="Nurul Nasreen"
-                             class="w-full h-96 lg:h-[450px] object-cover grayscale hover:grayscale-0 transition-all duration-500">
-                    </div>
-                    <div>
-                        <h3 class="font-serif font-bold text-xl text-cozy-brown">Nurul Nasreen Binti Abdul Malik</h3>
-                        <p class="font-sans text-cozy-accent font-medium">Developer</p>
-                    </div>
-                </div>
-
-                <!-- Team Member 3 -->
-                <div class="space-y-4">
-                    <div class="overflow-hidden rounded-[2.5rem] shadow-xl border-4 border-cozy-warm/40">
-                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=600"
-                             alt="Dr Mohd Khairul Azmi"
-                             class="w-full h-96 lg:h-[450px] object-cover grayscale hover:grayscale-0 transition-all duration-500">
-                    </div>
-                    <div>
-                        <h3 class="font-serif font-bold text-xl text-cozy-brown">Dr. Mohd Khairul Azmi Bin Hassan</h3>
-                        <p class="font-sans text-cozy-accent font-medium">Supervisor</p>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- Section 5: CTA Banner -->
         <div class="bg-gradient-to-r from-cozy-brown to-cozy-accent rounded-3xl shadow-2xl p-12 lg:p-16 text-center relative overflow-hidden">
