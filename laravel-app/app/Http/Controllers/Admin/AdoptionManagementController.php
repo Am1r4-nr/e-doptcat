@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Adoption;
+use App\Mail\AdminNotificationMail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class AdoptionManagementController extends Controller
 {
@@ -69,12 +71,39 @@ class AdoptionManagementController extends Controller
             $adoption->cat->update(['status' => 'Adopted']);
         }
 
+        try {
+            $user = $adoption->user;
+            $cat = $adoption->cat;
+            Mail::to($user->email)->send(new AdminNotificationMail(
+                'Adoption Request Approved!',
+                'Congratulations! Your adoption request for ' . ($cat ? $cat->name : 'the cat') . ' has been approved by the AHC Admin team.',
+                route('dashboard'),
+                'View Details'
+            ));
+        } catch (\Exception $e) {
+            \Log::error('Failed to send adoption approval email to ' . $adoption->user->email . ': ' . $e->getMessage());
+        }
+
         return redirect()->back()->with('success', 'Adoption approved successfully and cat status updated to Adopted.');
     }
 
     public function reject(Adoption $adoption)
     {
         $adoption->update(['status' => 'Rejected']);
+
+        try {
+            $user = $adoption->user;
+            $cat = $adoption->cat;
+            Mail::to($user->email)->send(new AdminNotificationMail(
+                'Adoption Request Update',
+                'We regret to inform you that your adoption request for ' . ($cat ? $cat->name : 'the cat') . ' has been rejected by the AHC Admin team.',
+                route('dashboard'),
+                'View Details'
+            ));
+        } catch (\Exception $e) {
+            \Log::error('Failed to send adoption rejection email to ' . $adoption->user->email . ': ' . $e->getMessage());
+        }
+
         return redirect()->back()->with('success', 'Adoption rejected successfully.');
     }
 
