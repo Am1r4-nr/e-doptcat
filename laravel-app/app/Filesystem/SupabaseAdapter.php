@@ -155,6 +155,11 @@ class SupabaseAdapter implements FilesystemAdapter, PublicUrlGenerator
 
     public function publicUrl(string $path, Config $config): string
     {
+        return $this->getUrl($path);
+    }
+
+    public function getUrl(string $path): string
+    {
         return "{$this->baseUrl}/storage/v1/object/public/{$this->bucket}/{$path}";
     }
 
