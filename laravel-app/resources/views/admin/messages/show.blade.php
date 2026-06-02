@@ -1,7 +1,7 @@
-<x-admin-layout>
+﻿<x-admin-layout>
     <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
         <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-900">
+            <h2 class="font-jakarta text-3xl font-extrabold text-[#1C1A17] tracking-tight">
                 Message Details
             </h2>
             <a href="{{ route('admin.messages.index') }}"
@@ -79,11 +79,12 @@
                         </button>
                     </form>
                 @endif
-                <form action="{{ route('admin.messages.destroy', $message) }}" method="POST" class="inline"
-                    onsubmit="return confirm('Are you sure you want to delete this message?')">
+                <form id="form-del-message" action="{{ route('admin.messages.destroy', $message) }}" method="POST" class="inline">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
+                    <button type="button"
+                            onclick="showConfirmModal({ title: 'Delete Message?', message: 'This action cannot be undone.', formId: 'form-del-message' })"
+                            class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
                         Delete Message
                     </button>
                 </form>

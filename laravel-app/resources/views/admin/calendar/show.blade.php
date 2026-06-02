@@ -1,18 +1,20 @@
-<x-admin-layout>
+﻿<x-admin-layout>
 <!-- Page Header -->
 <div class="mb-8 flex justify-between items-start">
     <div>
-        <h2 class="text-3xl font-bold text-gray-900">{{ $event->title }}</h2>
+        <h2 class="font-jakarta text-3xl font-extrabold text-[#1C1A17] tracking-tight">{{ $event->title }}</h2>
         <p class="text-gray-600 mt-1">Event Details</p>
     </div>
     <div class="flex gap-2">
         <a href="{{ route('admin.calendar.edit', $event) }}" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center gap-2">
             <span>✏️</span> Edit
         </a>
-        <form action="{{ route('admin.calendar.destroy', $event) }}" method="POST" onsubmit="return confirm('Are you sure?')" class="inline">
+        <form id="form-del-calendar" action="{{ route('admin.calendar.destroy', $event) }}" method="POST" class="inline">
             @csrf
             @method('DELETE')
-            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded flex items-center gap-2">
+            <button type="button"
+                    onclick="showConfirmModal({ title: 'Delete Event?', message: '{{ addslashes($event->title) }}', formId: 'form-del-calendar' })"
+                    class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded flex items-center gap-2">
                 <span>🗑️</span> Delete
             </button>
         </form>

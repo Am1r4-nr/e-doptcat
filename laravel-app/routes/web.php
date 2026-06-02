@@ -67,8 +67,9 @@ Route::middleware('auth')->group(function () {
 
     // Admin Routes
     Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
-        Route::get('/dashboard', [AnalyticsController::class, 'index'])->name('dashboard');
-        Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index'); // Kept for alias compatibility
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/notifications', [AdminDashboardController::class, 'notifications'])->name('notifications');
+        Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
         Route::get('/reporting', [ReportingController::class, 'index'])->name('reporting.index');
 
         // Cat Management

@@ -176,15 +176,12 @@ class SyncSupabase extends Command
                     }
                 }
 
-                // C. Reset the serial sequence in PostgreSQL so subsequent inserts don't collision on primary key
+                // C. Reset the serial sequence so subsequent inserts don't collide on primary key.
+                // pg_get_serial_sequence resolves the correct name even on renamed tables.
                 if (Schema::connection('supabase')->hasColumn($table, 'id')) {
-                    // Check if there are rows to reset sequence to, otherwise reset to 1
-                    if ($rowCount > 0) {
-                        DB::connection('supabase')->statement("SELECT setval(pg_get_serial_sequence('{$table}', 'id'), coalesce(max(id), 1)) FROM \"{$table}\";");
-                    } else {
-                        // Reset empty table sequence to 1
-                        DB::connection('supabase')->statement("ALTER SEQUENCE \"{$table}_id_seq\" RESTART WITH 1;");
-                    }
+                    DB::connection('supabase')->statement(
+                        "SELECT setval(pg_get_serial_sequence('{$table}', 'id'), coalesce((SELECT max(id) FROM \"{$table}\"), 1));"
+                    );
                 }
 
             } catch (\Exception $e) {

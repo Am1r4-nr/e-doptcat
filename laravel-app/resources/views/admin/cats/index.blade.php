@@ -1,10 +1,10 @@
-<x-admin-layout>
-<div class="px-8 py-6 max-w-7xl mx-auto">
+﻿<x-admin-layout>
+<div class="max-w-7xl mx-auto">
 
     <!-- Page Header -->
-    <div class="flex items-start justify-between mb-10 border-b pb-8 border-[#E8E2D8]/50">
+    <div class="flex items-start justify-between mb-5">
         <div>
-            <h1 class="text-[32px] font-bold text-gray-900 tracking-tight">Cat Directory</h1>
+            <h1 class="font-jakarta text-3xl font-extrabold text-[#1C1A17] tracking-tight">Cat Directory</h1>
             <p class="text-[15px] font-medium text-gray-500 mt-1 max-w-2xl">Managing the life-cycle and care records of our feline residents with boutique precision and digital transparency.</p>
         </div>
         <a href="{{ route('admin.cats.create') }}"
@@ -15,7 +15,7 @@
     </div>
 
     <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <div class="bg-white rounded-[28px] p-7 flex items-center justify-between shadow-[0_2px_15px_-5px_rgba(0,0,0,0.05)] border border-[#F0EBE3]">
             <div>
                 <div class="text-[12px] font-bold text-gray-500 tracking-widest mb-1 uppercase">Total In Care</div>

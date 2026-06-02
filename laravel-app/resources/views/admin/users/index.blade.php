@@ -1,10 +1,10 @@
-<x-admin-layout>
-<div x-data="staffApp()" class="px-8 py-6 max-w-7xl mx-auto">
+﻿<x-admin-layout>
+<div x-data="staffApp()" class="max-w-7xl mx-auto">
 
     <!-- Header -->
-    <div class="flex items-start justify-between mb-10 border-b pb-8 border-[#E8E2D8]/50">
+    <div class="flex items-start justify-between mb-5">
         <div>
-            <h2 class="text-[32px] font-bold text-gray-900 tracking-tight">Staff & Volunteers</h2>
+            <h2 class="font-jakarta text-3xl font-extrabold text-[#1C1A17] tracking-tight">Staff & Volunteers</h2>
             <p class="text-[15px] font-medium text-gray-500 mt-1 max-w-2xl">
                 Club advisors, high committee members, and active volunteers of AHC.
             </p>
@@ -687,21 +687,26 @@ function staffApp() {
             };
             reader.readAsArrayBuffer(file);
         },
-        async deleteStaff(person, type) {
-            if (!confirm(`Delete ${person.name}? This cannot be undone.`)) return;
-            try {
-                const res = await fetch(`{{ url('admin/staff') }}/${person.id}`, {
-                    method: 'DELETE',
-                    headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
-                });
-                const data = await res.json();
-                if (data.success) {
-                    if (type === 'lecturer') this.lecturers = this.lecturers.filter(p => p.id !== person.id);
-                    else this.committee = this.committee.filter(p => p.id !== person.id);
-                }
-            } catch (e) {
-                alert('Failed to delete. Please try again.');
-            }
+        deleteStaff(person, type) {
+            showConfirmModal({
+                title: `Delete ${person.name}?`,
+                message: 'This action cannot be undone.',
+                onConfirm: async () => {
+                    try {
+                        const res = await fetch(`{{ url('admin/staff') }}/${person.id}`, {
+                            method: 'DELETE',
+                            headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+                        });
+                        const data = await res.json();
+                        if (data.success) {
+                            if (type === 'lecturer') this.lecturers = this.lecturers.filter(p => p.id !== person.id);
+                            else this.committee = this.committee.filter(p => p.id !== person.id);
+                        }
+                    } catch (e) {
+                        alert('Failed to delete. Please try again.');
+                    }
+                },
+            });
         },
         openEdit(person, type) {
             this.editStaff = {

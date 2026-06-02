@@ -88,6 +88,8 @@
             transition: box-shadow 200ms ease;
         }
         .card-sm:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.10); }
+
+        [x-cloak] { display: none !important; }
     </style>
 </head>
 <body class="antialiased">
@@ -104,6 +106,7 @@
 
 <div class="flex h-screen overflow-hidden"
      :class="ready ? '' : 'no-transition'"
+     @tour-sidebar.window="sidebarOpen = $event.detail"
      x-data="{
          sidebarOpen: JSON.parse(localStorage.getItem('sidebarOpen') ?? 'true'),
          openMenu: '{{ $initialMenu }}',
@@ -136,6 +139,7 @@
 
             {{-- Dashboard --}}
             <a href="{{ route('admin.dashboard') }}"
+               data-tour="dashboard"
                :title="!sidebarOpen ? 'Dashboard' : ''"
                :class="sidebarOpen ? 'px-3 gap-3' : 'px-[14px]'"
                class="nav-item flex items-center py-2.5 rounded-xl text-sm font-medium w-full
@@ -148,6 +152,7 @@
 
             {{-- Cat Directory --}}
             <a href="{{ route('admin.cats.index') }}"
+               data-tour="cats"
                :title="!sidebarOpen ? 'Cat Directory' : ''"
                :class="sidebarOpen ? 'px-3 gap-3' : 'px-[14px]'"
                class="nav-item flex items-center py-2.5 rounded-xl text-sm font-medium w-full
@@ -161,6 +166,7 @@
             {{-- Applications dropdown --}}
             <div>
                 <button @click="sidebarOpen && (openMenu = openMenu === 'applications' ? '' : 'applications')"
+                        data-tour="applications"
                         :title="!sidebarOpen ? 'Applications' : ''"
                         :class="sidebarOpen ? 'px-3 gap-3' : 'px-[14px]'"
                         class="nav-item flex items-center py-2.5 rounded-xl text-sm font-medium w-full
@@ -201,6 +207,7 @@
 
             {{-- Reports Hub --}}
             <a href="{{ route('admin.reporting.index') }}"
+               data-tour="reports"
                :title="!sidebarOpen ? 'Reports Hub' : ''"
                :class="sidebarOpen ? 'px-3 gap-3' : 'px-[14px]'"
                class="nav-item flex items-center py-2.5 rounded-xl text-sm font-medium w-full
@@ -214,6 +221,7 @@
             {{-- Fund Management dropdown --}}
             <div>
                 <button @click="sidebarOpen && (openMenu = openMenu === 'fund' ? '' : 'fund')"
+                        data-tour="fund"
                         :title="!sidebarOpen ? 'Fund Management' : ''"
                         :class="sidebarOpen ? 'px-3 gap-3' : 'px-[14px]'"
                         class="nav-item flex items-center py-2.5 rounded-xl text-sm font-medium w-full
@@ -321,6 +329,7 @@
             {{-- Staff Management dropdown --}}
             <div>
                 <button @click="sidebarOpen && (openMenu = openMenu === 'staff' ? '' : 'staff')"
+                        data-tour="staff"
                         :title="!sidebarOpen ? 'Staff Management' : ''"
                         :class="sidebarOpen ? 'px-3 gap-3' : 'px-[14px]'"
                         class="nav-item flex items-center py-2.5 rounded-xl text-sm font-medium w-full
@@ -414,11 +423,108 @@
                 <p class="font-jakarta text-sm font-bold text-[#1C1A17] tracking-wide">Feline Management Console</p>
             </div>
             <div class="flex items-center gap-4">
-                <button class="relative text-gray-400 hover:text-[#C9A84C] transition-colors">
+                <button onclick="window.dispatchEvent(new CustomEvent('tour-relaunch'))"
+                        title="Guided Tour"
+                        class="relative text-gray-400 hover:text-[#C9A84C] transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"/>
                     </svg>
                 </button>
+                <!-- Notification Bell -->
+                <div x-data="notificationBell()" class="relative">
+                    <button @click="toggle()"
+                            class="relative text-gray-400 hover:text-[#C9A84C] transition-colors p-1">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/>
+                        </svg>
+                        <!-- Badge -->
+                        <span x-show="count > 0"
+                              x-text="count > 9 ? '9+' : count"
+                              class="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-0.5 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
+                        </span>
+                    </button>
+
+                    <!-- Dropdown panel -->
+                    <div x-show="open"
+                         @click.outside="open = false"
+                         x-cloak
+                         x-transition:enter="transition ease-out duration-150"
+                         x-transition:enter-start="opacity-0 scale-95 -translate-y-1"
+                         x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                         x-transition:leave="transition ease-in duration-100"
+                         x-transition:leave-start="opacity-100 scale-100"
+                         x-transition:leave-end="opacity-0 scale-95"
+                         class="absolute right-0 top-full mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-[#E8E2D8] overflow-hidden z-50"
+                         style="transform-origin: top right">
+
+                        <!-- Header -->
+                        <div class="px-5 py-3.5 border-b border-[#F0EBE3] flex items-center justify-between">
+                            <p class="font-jakarta font-extrabold text-[13px] text-[#1C1A17]">Notifications</p>
+                            <span x-show="count > 0"
+                                  x-text="count + ' new'"
+                                  class="text-[10px] font-bold text-[#C9A84C] bg-[#FAF8F0] px-2 py-0.5 rounded-full border border-[#EDD98A]">
+                            </span>
+                            <span x-show="count === 0 && !loading"
+                                  class="text-[10px] font-medium text-gray-400">
+                                All caught up
+                            </span>
+                        </div>
+
+                        <!-- Loading spinner -->
+                        <div x-show="loading" class="py-10 flex items-center justify-center">
+                            <div class="w-5 h-5 border-2 border-[#C9A84C] border-t-transparent rounded-full animate-spin"></div>
+                        </div>
+
+                        <!-- Empty state -->
+                        <div x-show="!loading && items.length === 0"
+                             class="py-10 flex flex-col items-center gap-2 text-center px-6">
+                            <div class="w-12 h-12 rounded-2xl bg-[#FAF8F0] flex items-center justify-center">
+                                <svg class="w-6 h-6 text-[#C9A84C]" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/>
+                                </svg>
+                            </div>
+                            <p class="text-[13px] font-semibold text-gray-500">You're all caught up!</p>
+                            <p class="text-[11px] text-gray-400">No pending items right now.</p>
+                        </div>
+
+                        <!-- Notification items -->
+                        <div x-show="!loading && items.length > 0"
+                             class="divide-y divide-[#F5F1EB] max-h-[340px] overflow-y-auto">
+                            <template x-for="(item, i) in items" :key="i">
+                                <a :href="item.url"
+                                   class="flex items-start gap-3 px-5 py-3.5 hover:bg-[#FAF8F5] transition group">
+                                    <div class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5"
+                                         :class="item.iconBg">
+                                        <span x-html="item.icon"></span>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-[12px] font-bold text-gray-800 truncate" x-text="item.title"></p>
+                                        <p class="text-[11px] text-gray-500 mt-0.5 line-clamp-2 leading-relaxed" x-text="item.subtitle"></p>
+                                        <p class="text-[10px] text-gray-400 mt-1" x-text="item.time"></p>
+                                    </div>
+                                    <svg class="w-3.5 h-3.5 text-gray-300 group-hover:text-[#C9A84C] flex-shrink-0 mt-1 transition" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
+                                    </svg>
+                                </a>
+                            </template>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="px-5 py-3 border-t border-[#F0EBE3] bg-[#FAF8F5] flex items-center justify-between">
+                            <a href="{{ route('admin.reporting.index') }}"
+                               class="text-[11px] font-bold text-[#C9A84C] hover:text-amber-700 transition">
+                                View all activity →
+                            </a>
+                            <button @click="refresh()"
+                                    class="text-[11px] text-gray-400 hover:text-gray-600 transition flex items-center gap-1">
+                                <svg class="w-3 h-3" :class="loading ? 'animate-spin' : ''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/>
+                                </svg>
+                                Refresh
+                            </button>
+                        </div>
+                    </div>
+                </div>
                 @if($sidebarUser?->getAttribute('avatar'))
                     <img src="{{ Storage::url($sidebarUser->getAttribute('avatar')) }}" alt="{{ $sidebarUser->getAttribute('name') }}"
                          class="w-9 h-9 rounded-full object-cover ring-2 ring-[#C9A84C]">
@@ -451,5 +557,397 @@
         </footer>
     </div>
 </div>
+
+<!-- ── Global Confirmation Modal ──────────────────────────────────────── -->
+<div x-data="globalConfirmModal()"
+     @confirm-modal.window="open($event.detail)"
+     x-show="show"
+     x-transition:enter="transition ease-out duration-150"
+     x-transition:enter-start="opacity-0"
+     x-transition:enter-end="opacity-100"
+     x-transition:leave="transition ease-in duration-100"
+     x-transition:leave-start="opacity-100"
+     x-transition:leave-end="opacity-0"
+     class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 px-4"
+     style="display:none">
+    <div x-show="show"
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0 scale-95"
+         x-transition:enter-end="opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-150"
+         x-transition:leave-start="opacity-100 scale-100"
+         x-transition:leave-end="opacity-0 scale-95"
+         @click.outside="close()"
+         class="bg-white rounded-2xl shadow-2xl w-full max-w-xs p-7 text-center">
+        <div class="w-14 h-14 rounded-full mx-auto mb-4 flex items-center justify-center" :class="iconBg">
+            <span x-html="iconHtml" class="flex items-center justify-center"></span>
+        </div>
+        <p class="font-jakarta text-lg font-extrabold text-[#1C1A17] mb-1.5" x-text="title"></p>
+        <p class="text-sm text-[#A09890] mb-6 leading-relaxed" x-text="message"></p>
+        <div class="flex gap-3">
+            <button @click="close()"
+                    class="flex-1 px-4 py-2.5 text-sm font-semibold text-[#6B6560] border border-[#E8E2D8] rounded-xl hover:bg-[#F2EDE3] transition">
+                Cancel
+            </button>
+            <button @click="doConfirm()"
+                    class="flex-1 px-4 py-2.5 text-sm font-semibold text-white rounded-xl transition"
+                    :class="confirmClass"
+                    x-text="confirmLabel"></button>
+        </div>
+    </div>
+</div>
+
+<!-- ── Admin Guided Tour ─────────────────────────────────────────────────── -->
+<div x-data="adminTutorial()"
+     @tour-relaunch.window="show = true; step = 0; highlighted = false"
+     @resize.window="onResize()">
+
+    {{-- Spotlight ring (highlight box with box-shadow creating the dark overlay) --}}
+    <div x-show="show && highlighted"
+         x-cloak
+         class="fixed z-[9998] rounded-2xl pointer-events-none"
+         :style="`top:${highlight.top}px;left:${highlight.left}px;width:${highlight.width}px;height:${highlight.height}px;box-shadow:0 0 0 9999px rgba(0,0,0,0.55);border:2px solid #C9A84C`">
+    </div>
+
+    {{-- Tooltip card (appears beside the highlighted element) --}}
+    <div x-show="show && highlighted"
+         x-cloak
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0 translate-y-1"
+         x-transition:enter-end="opacity-100 translate-y-0"
+         x-transition:leave="transition ease-in duration-150"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed z-[9999] w-72 bg-white rounded-2xl shadow-2xl overflow-hidden"
+         :style="`top:${tooltip.top}px;left:${tooltip.left}px`">
+
+        <div class="h-1 bg-gradient-to-r from-[#C9A84C] to-[#E5C272]"></div>
+        <div class="p-5">
+            {{-- Step counter + skip --}}
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-[10px] font-bold text-[#C9A84C] uppercase tracking-widest"
+                      x-text="'Step ' + step + ' of ' + (steps.length - 2)"></span>
+                <button @click="skip()"
+                        class="text-[11px] font-medium text-gray-400 hover:text-gray-600 transition">
+                    Skip Tutorial
+                </button>
+            </div>
+
+            {{-- Title + description --}}
+            <p class="font-jakarta text-[15px] font-extrabold text-[#1C1A17] mb-1.5" x-text="current.title"></p>
+            <p class="text-[13px] text-gray-500 leading-relaxed mb-4" x-text="current.desc"></p>
+
+            {{-- Progress dots --}}
+            <div class="flex items-center gap-1.5 mb-5">
+                <template x-for="(s, i) in steps.slice(1, steps.length - 1)" :key="i">
+                    <div class="rounded-full transition-all duration-200"
+                         :class="(i + 1) === step ? 'w-5 h-1.5 bg-[#C9A84C]' : 'w-1.5 h-1.5 bg-gray-200'">
+                    </div>
+                </template>
+            </div>
+
+            {{-- Buttons --}}
+            <div class="flex items-center gap-2">
+                <button x-show="step > 1"
+                        @click="prev()"
+                        class="px-4 py-2 text-[12px] font-semibold text-gray-500 border border-[#E8E2D8] rounded-xl hover:bg-[#FAF8F5] transition">
+                    ← Back
+                </button>
+                <button @click="next()"
+                        class="flex-1 py-2 text-[12px] font-bold text-white bg-[#C9A84C] rounded-xl hover:bg-[#b8963e] transition">
+                    <span x-text="step === steps.length - 2 ? 'Finish ✓' : 'Next →'"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {{-- Centered overlay: Welcome card + Done card --}}
+    <div x-show="show && !highlighted"
+         x-cloak
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-150"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 z-[9997] bg-black/50 flex items-center justify-center px-4">
+
+        {{-- Welcome card --}}
+        <div x-show="step === 0"
+             x-transition:enter="transition ease-out duration-250"
+             x-transition:enter-start="opacity-0 scale-95"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-95"
+             class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden text-center">
+
+            <div class="bg-gradient-to-br from-[#FAF8F0] to-[#EFE5CC] px-8 pt-10 pb-7">
+                <div class="w-20 h-20 rounded-2xl bg-white shadow-lg mx-auto mb-5 flex items-center justify-center ring-4 ring-[#C9A84C]/20">
+                    <svg class="w-11 h-11 text-[#C9A84C]" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M6 4c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm8 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zM4 10c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm12 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zM12 21c-3.87 0-7-1.57-7-4.5 0-1.5 1-2.8 2.5-3.6.6-.3 1.3-.5 2-.6.8-.1 1.6-.3 2.5-.3s1.7.2 2.5.3c.7.1 1.4.3 2 .6 1.5.8 2.5 2.1 2.5 3.6 0 2.93-3.13 4.5-7 4.5z"/>
+                    </svg>
+                </div>
+                <h2 class="font-jakarta text-[22px] font-extrabold text-[#1C1A17] mb-2">Welcome to e-Doptcat Admin</h2>
+                <p class="text-[13px] text-gray-500 leading-relaxed">Take a quick 6-step tour of the key features so you can hit the ground running.</p>
+            </div>
+
+            <div class="px-8 py-6">
+                <div class="grid grid-cols-2 gap-x-4 gap-y-2.5 mb-6 text-left">
+                    <template x-for="label in ['Cat Directory','Applications','Reports Hub','Fund Management','Events & Calendar','Staff & Volunteers']" :key="label">
+                        <div class="flex items-center gap-2 text-[12px] text-gray-600">
+                            <span class="w-1.5 h-1.5 rounded-full bg-[#C9A84C] flex-shrink-0"></span>
+                            <span x-text="label"></span>
+                        </div>
+                    </template>
+                </div>
+
+                <button @click="startTour()"
+                        class="w-full py-3 bg-[#C9A84C] text-white text-[13px] font-bold rounded-xl hover:bg-[#b8963e] transition mb-3 shadow-md shadow-amber-600/20">
+                    Start Tour →
+                </button>
+                <button @click="skip()"
+                        class="w-full py-2 text-[12px] text-gray-400 hover:text-gray-600 font-medium transition">
+                    Skip Tutorial
+                </button>
+            </div>
+        </div>
+
+        {{-- Done card --}}
+        <div x-show="step === steps.length - 1"
+             x-transition:enter="transition ease-out duration-250"
+             x-transition:enter-start="opacity-0 scale-95"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-95"
+             class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden text-center">
+
+            <div class="bg-gradient-to-br from-[#F0FDFA] to-[#CCFBF1] px-8 pt-10 pb-7">
+                <div class="w-20 h-20 rounded-2xl bg-white shadow-lg mx-auto mb-5 flex items-center justify-center ring-4 ring-teal-400/30">
+                    <svg class="w-11 h-11 text-teal-500" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <h2 class="font-jakarta text-[22px] font-extrabold text-[#1C1A17] mb-2">You're all set!</h2>
+                <p class="text-[13px] text-gray-500 leading-relaxed">The admin panel is your sanctuary's control room. Go keep those cats safe and happy!</p>
+            </div>
+
+            <div class="px-8 py-7">
+                <button @click="done()"
+                        class="w-full py-3 bg-[#C9A84C] text-white text-[13px] font-bold rounded-xl hover:bg-[#b8963e] transition shadow-md shadow-amber-600/20">
+                    Get Started →
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const _CM_ICONS = {
+    delete: {
+        bg:    'bg-red-100',
+        html:  '<svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>',
+        btn:   'bg-red-500 hover:bg-red-600',
+        label: 'Delete',
+    },
+    warning: {
+        bg:    'bg-amber-100',
+        html:  '<svg class="w-6 h-6 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>',
+        btn:   'bg-amber-500 hover:bg-amber-600',
+        label: 'Confirm',
+    },
+    done: {
+        bg:    'bg-green-100',
+        html:  '<svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>',
+        btn:   'bg-green-500 hover:bg-green-600',
+        label: 'Confirm',
+    },
+};
+
+window._confirmCb = null;
+window.showConfirmModal = function (opts) {
+    const icon = _CM_ICONS[opts.icon ?? 'delete'];
+    window._confirmCb = typeof opts.onConfirm === 'function' ? opts.onConfirm : null;
+    window.dispatchEvent(new CustomEvent('confirm-modal', { detail: {
+        title:        opts.title        ?? 'Are you sure?',
+        message:      opts.message      ?? '',
+        iconBg:       icon.bg,
+        iconHtml:     icon.html,
+        confirmLabel: opts.confirmLabel ?? icon.label,
+        confirmClass: opts.confirmClass ?? icon.btn,
+        formId:       opts.formId       ?? null,
+    }}));
+};
+
+function globalConfirmModal() {
+    return {
+        show: false, title: '', message: '',
+        iconBg: 'bg-red-100', iconHtml: '', confirmLabel: 'Delete',
+        confirmClass: 'bg-red-500 hover:bg-red-600', _formId: null,
+        open(d) {
+            this.title = d.title; this.message = d.message;
+            this.iconBg = d.iconBg; this.iconHtml = d.iconHtml;
+            this.confirmLabel = d.confirmLabel; this.confirmClass = d.confirmClass;
+            this._formId = d.formId ?? null;
+            this.show = true;
+        },
+        close()     { this.show = false; },
+        doConfirm() {
+            this.show = false;
+            if (this._formId) { document.getElementById(this._formId)?.submit(); return; }
+            if (window._confirmCb) { const cb = window._confirmCb; window._confirmCb = null; cb(); }
+        },
+    };
+}
+
+function notificationBell() {
+    return {
+        open:    false,
+        loading: false,
+        fetched: false,
+        count:   0,
+        items:   [],
+
+        init() {
+            // Silently load the badge count on every page
+            fetch('{{ route("admin.notifications") }}', { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                .then(r => r.json())
+                .then(d => { this.count = d.count; this.items = d.items; this.fetched = true; })
+                .catch(() => {});
+        },
+
+        async toggle() {
+            this.open = !this.open;
+            if (this.open && !this.fetched) await this.refresh();
+        },
+
+        async refresh() {
+            this.loading = true;
+            try {
+                const r = await fetch('{{ route("admin.notifications") }}', { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+                const d = await r.json();
+                this.count   = d.count;
+                this.items   = d.items;
+                this.fetched = true;
+            } catch (_) {}
+            finally { this.loading = false; }
+        },
+    };
+}
+
+function adminTutorial() {
+    return {
+        show:        false,
+        step:        0,
+        highlighted: false,
+        steps: [
+            { selector: null },
+            {
+                selector: '[data-tour="dashboard"]',
+                title:    'Dashboard',
+                desc:     'Your command centre — live KPI cards, adoption trends, donation sparklines, and the next upcoming event, all in one view.',
+            },
+            {
+                selector: '[data-tour="cats"]',
+                title:    'Cat Directory',
+                desc:     'Every resident lives here. Add new intakes, update medical records, set vaccination status, and toggle availability for adoption.',
+            },
+            {
+                selector: '[data-tour="applications"]',
+                title:    'Applications',
+                desc:     'Review incoming adoption requests and advance applicants through the pipeline — from first inquiry all the way to an approved home.',
+            },
+            {
+                selector: '[data-tour="reports"]',
+                title:    'Reports Hub',
+                desc:     'Track incident reports and submitted feedback. Everything is documented so nothing slips through the cracks.',
+            },
+            {
+                selector: '[data-tour="fund"]',
+                title:    'Fund Management',
+                desc:     'Monitor donations and allocate expenses. Full transaction log with stats and financial health indicators for the sanctuary.',
+            },
+            {
+                selector: '[data-tour="staff"]',
+                title:    'Staff & Volunteers',
+                desc:     'Coordinate volunteer applications and manage admin accounts — your whole team organised under one roof.',
+            },
+            { selector: null },
+        ],
+        highlight:   { top: 0, left: 0, width: 0, height: 0 },
+        tooltip:     { top: 0, left: 0 },
+        _origSidebar: true,
+
+        init() {
+            if (!localStorage.getItem('adminTourDone')) {
+                this._origSidebar = JSON.parse(localStorage.getItem('sidebarOpen') ?? 'true');
+                this.$nextTick(() => { this.show = true; });
+            }
+        },
+
+        get current() { return this.steps[this.step] ?? this.steps[0]; },
+
+        startTour() {
+            // open sidebar so nav labels are visible, then wait for its 280ms animation
+            window.dispatchEvent(new CustomEvent('tour-sidebar', { detail: true }));
+            this.step = 1;
+            setTimeout(() => {
+                this.positionHighlight();
+                this.highlighted = true;
+            }, 320);
+        },
+
+        goTo(index) {
+            this.step = index;
+            this.$nextTick(() => this.positionHighlight());
+        },
+
+        positionHighlight() {
+            const s = this.current;
+            if (!s?.selector) return;
+            const el = document.querySelector(s.selector);
+            if (!el) { this.next(); return; }
+            const r   = el.getBoundingClientRect();
+            const pad = 8;
+            this.highlight = {
+                top:    r.top    - pad,
+                left:   r.left   - pad,
+                width:  r.width  + pad * 2,
+                height: r.height + pad * 2,
+            };
+            // tooltip floats to the right of the sidebar, vertically centred on element
+            const tH  = 240;
+            const top = Math.max(72, Math.min(r.top + r.height / 2 - tH / 2, window.innerHeight - tH - 16));
+            this.tooltip = { top, left: r.right + 20 };
+        },
+
+        onResize() { if (this.show && this.highlighted) this.positionHighlight(); },
+
+        next() {
+            const n = this.step + 1;
+            if (n >= this.steps.length - 1) {
+                // going to done card — hide spotlight first
+                this.highlighted = false;
+                this.step = this.steps.length - 1;
+                return;
+            }
+            this.goTo(n);
+        },
+
+        prev() { if (this.step > 1) this.goTo(this.step - 1); },
+
+        _end() {
+            localStorage.setItem('adminTourDone', '1');
+            window.dispatchEvent(new CustomEvent('tour-sidebar', { detail: this._origSidebar }));
+            this.show = false;
+            this.highlighted = false;
+        },
+
+        done() { this._end(); },
+        skip() { this._end(); },
+    };
+}
+</script>
 </body>
 </html>

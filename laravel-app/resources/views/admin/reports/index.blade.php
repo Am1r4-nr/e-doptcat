@@ -1,6 +1,6 @@
-<x-admin-layout>
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <h2 class="text-2xl font-bold text-gray-900 mb-6">
+﻿<x-admin-layout>
+    <div class="max-w-7xl mx-auto">
+        <h2 class="font-jakarta text-3xl font-extrabold text-[#1C1A17] tracking-tight mb-5">
             Manage Reports
         </h2>
             @if (session('success'))
@@ -36,11 +36,12 @@
                                 <td class="px-6 py-4 flex gap-2">
                                     <a href="{{ route('admin.reports.show', $report) }}"
                                         class="text-blue-600 hover:text-blue-900 text-sm">View</a>
-                                    <form action="{{ route('admin.reports.destroy', $report) }}" method="POST"
-                                        onsubmit="return confirm('Are you sure?')" class="inline">
+                                    <form id="form-del-report-{{ $report->id }}" action="{{ route('admin.reports.destroy', $report) }}" method="POST" class="inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:text-red-900 text-sm">Delete</button>
+                                        <button type="button"
+                                                onclick="showConfirmModal({ title: 'Delete Report?', message: '{{ addslashes(Str::limit($report->type ?? 'This report', 60)) }}', formId: 'form-del-report-{{ $report->id }}' })"
+                                                class="text-red-600 hover:text-red-900 text-sm">Delete</button>
                                     </form>
                                 </td>
                             </tr>

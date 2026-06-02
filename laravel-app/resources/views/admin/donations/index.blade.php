@@ -1,9 +1,9 @@
-<x-admin-layout>
-    <div class="px-8 py-6 max-w-7xl mx-auto">
+﻿<x-admin-layout>
+    <div class="max-w-7xl mx-auto">
         <!-- Header -->
-        <div class="flex justify-between items-center mb-8">
+        <div class="flex justify-between items-center mb-5">
             <div>
-                <h2 class="text-3xl font-cabinet font-semibold text-[#7A5320]">Donation & Fund Management</h2>
+                <h2 class="font-jakarta text-3xl font-extrabold text-[#1C1A17] tracking-tight">Donation & Fund Management</h2>
                 <p class="text-sm text-gray-500 mt-1 pl-1">Real-time overview of kitten rescue contributions</p>
             </div>
             <!-- Search placeholder -->

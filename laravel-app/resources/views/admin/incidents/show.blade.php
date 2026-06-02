@@ -1,7 +1,7 @@
-<x-admin-layout>
+﻿<x-admin-layout>
     <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
         <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-900">
+            <h2 class="font-jakarta text-3xl font-extrabold text-[#1C1A17] tracking-tight">
                 Incident Details
             </h2>
             <a href="{{ route('admin.incidents.index') }}"
@@ -90,11 +90,12 @@
                     class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
                     Edit Incident
                 </a>
-                <form action="{{ route('admin.incidents.destroy', $incident) }}" method="POST" class="inline"
-                    onsubmit="return confirm('Are you sure you want to delete this incident?')">
+                <form id="form-del-incident-show" action="{{ route('admin.incidents.destroy', $incident) }}" method="POST" class="inline">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
+                    <button type="button"
+                            onclick="showConfirmModal({ title: 'Delete Incident?', message: 'This action cannot be undone.', formId: 'form-del-incident-show' })"
+                            class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
                         Delete Incident
                     </button>
                 </form>

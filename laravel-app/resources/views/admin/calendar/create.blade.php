@@ -1,7 +1,7 @@
-<x-admin-layout>
+﻿<x-admin-layout>
 <!-- Page Header -->
 <div class="mb-8">
-    <h2 class="text-3xl font-bold text-gray-900">Create New Event</h2>
+    <h2 class="font-jakarta text-3xl font-extrabold text-[#1C1A17] tracking-tight">Create New Event</h2>
     <p class="text-gray-600 mt-1">Add a new event to the calendar</p>
 </div>
 

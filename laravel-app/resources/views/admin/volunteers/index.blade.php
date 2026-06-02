@@ -1,11 +1,11 @@
-<x-admin-layout>
+﻿<x-admin-layout>
 <div x-data="volunteerApp()" class="relative">
-    <div class="px-8 py-6 max-w-7xl mx-auto">
+    <div class="max-w-7xl mx-auto">
 
         <!-- Header Section -->
-        <div class="flex items-start justify-between mb-10 border-b pb-8 border-[#E8E2D8]/50">
+        <div class="flex items-start justify-between mb-5">
             <div>
-                <h2 class="text-[32px] font-bold text-gray-900 tracking-tight">Volunteer Applications</h2>
+                <h2 class="font-jakarta text-3xl font-extrabold text-[#1C1A17] tracking-tight">Volunteer Applications</h2>
                 <p class="text-[15px] font-medium text-gray-500 mt-1 max-w-2xl">
                     Review and coordinate the compassionate individuals joining our rescue mission.
                 </p>

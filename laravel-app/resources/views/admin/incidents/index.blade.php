@@ -1,7 +1,7 @@
-<x-admin-layout>
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-900">
+﻿<x-admin-layout>
+    <div class="max-w-7xl mx-auto">
+        <div class="flex justify-between items-center mb-5">
+            <h2 class="font-jakarta text-3xl font-extrabold text-[#1C1A17] tracking-tight">
                 Manage Incidents
             </h2>
             <a href="{{ route('admin.incidents.create') }}"
@@ -112,11 +112,12 @@
                                     class="text-blue-600 hover:text-blue-900 text-sm">View</a>
                                 <a href="{{ route('admin.incidents.edit', $incident) }}"
                                     class="text-green-600 hover:text-green-900 text-sm">Edit</a>
-                                <form action="{{ route('admin.incidents.destroy', $incident) }}" method="POST"
-                                    onsubmit="return confirm('Are you sure?')" class="inline">
+                                <form id="form-del-incident-{{ $incident->id }}" action="{{ route('admin.incidents.destroy', $incident) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-900 text-sm">Delete</button>
+                                    <button type="button"
+                                            onclick="showConfirmModal({ title: 'Delete Incident?', message: '{{ addslashes(Str::limit($incident->title ?? $incident->type ?? 'This incident', 60)) }}', formId: 'form-del-incident-{{ $incident->id }}' })"
+                                            class="text-red-600 hover:text-red-900 text-sm">Delete</button>
                                 </form>
                             </td>
                         </tr>
