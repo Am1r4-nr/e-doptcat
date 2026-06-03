@@ -1,4 +1,4 @@
-﻿<x-admin-layout>
+<x-admin-layout>
     <div class="max-w-7xl mx-auto">
         <h2 class="font-jakarta text-3xl font-extrabold text-[#1C1A17] tracking-tight mb-5">
             Manage Reports
@@ -58,5 +58,4 @@
                 {{ $reports->links() }}
             </div>
         </div>
-    </div>
 </x-admin-layout>
