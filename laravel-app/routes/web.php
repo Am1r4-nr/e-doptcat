@@ -11,7 +11,6 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\GpsController;
 use App\Http\Controllers\Admin\CatManagementController;
-use App\Http\Controllers\Admin\AdopterController;
 use App\Http\Controllers\Admin\CalendarController;
 use App\Http\Controllers\Admin\EventManagementController;
 use App\Http\Controllers\Admin\AdoptionManagementController;
@@ -75,10 +74,6 @@ Route::middleware('auth')->group(function () {
         // Cat Management
         Route::resource('cats', CatManagementController::class)->except(['edit', 'update']);
         Route::patch('cats/{cat}/fields', [CatManagementController::class, 'updateFields'])->name('cats.updateFields');
-
-        // Adopter Management
-        Route::get('adopters', [AdopterController::class, 'index'])->name('adopters.index');
-        Route::get('adopters/{user}', [AdopterController::class, 'show'])->name('adopters.show');
 
         // Adoption Management
         Route::get('adoptions/pipeline', [AdoptionManagementController::class, 'pipeline'])->name('adoptions.pipeline');

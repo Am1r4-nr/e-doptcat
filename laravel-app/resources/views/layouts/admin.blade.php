@@ -96,7 +96,7 @@
 
 @php
     $initialMenu = match(true) {
-        request()->routeIs('admin.adoptions.*', 'admin.adopters.*')  => 'applications',
+        request()->routeIs('admin.adoptions.*')  => 'applications',
         request()->routeIs('admin.donations.*', 'admin.expenses.*')  => 'fund',
         request()->routeIs('admin.events.*')                         => 'web',
         request()->routeIs('admin.volunteers.*', 'admin.users.*')    => 'staff',
@@ -170,7 +170,7 @@
                         :title="!sidebarOpen ? 'Applications' : ''"
                         :class="sidebarOpen ? 'px-3 gap-3' : 'px-[14px]'"
                         class="nav-item flex items-center py-2.5 rounded-xl text-sm font-medium w-full
-                               {{ request()->routeIs('admin.adoptions.*') || request()->routeIs('admin.adopters.*') ? 'bg-[#C9A84C] text-white font-semibold' : 'text-[#9A9A9A] hover:bg-[#383838] hover:text-white' }}">
+                               {{ request()->routeIs('admin.adoptions.*') ? 'bg-[#C9A84C] text-white font-semibold' : 'text-[#9A9A9A] hover:bg-[#383838] hover:text-white' }}">
                     <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
                     </svg>
@@ -193,14 +193,6 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/>
                         </svg>
                         Adoptions
-                    </a>
-                    <a href="{{ route('admin.adopters.index') }}"
-                       class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition
-                              {{ request()->routeIs('admin.adopters.*') ? 'bg-[#C9A84C] text-white font-semibold' : 'text-[#9A9A9A] hover:bg-[#383838] hover:text-white' }}">
-                        <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-                        </svg>
-                        Adopters
                     </a>
                 </div>
             </div>
