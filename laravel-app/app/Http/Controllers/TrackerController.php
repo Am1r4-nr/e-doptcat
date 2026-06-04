@@ -34,14 +34,15 @@ class TrackerController extends Controller
                 if ($liveLocation && isset($liveLocation['lat'], $liveLocation['lng'])
                     && $liveLocation['lat'] && $liveLocation['lng']) {
 
+                    // Persist only real DB columns
+                    $cat->timestamps    = false;
                     $cat->gps_lat       = $liveLocation['lat'];
                     $cat->gps_lng       = $liveLocation['lng'];
                     $cat->gps_timestamp = $liveLocation['timestamp'] ?? now()->toDateTimeString();
-                    $cat->gps_live      = true;
-
-                    // Persist location to database
-                    $cat->timestamps = false;
                     $cat->save();
+
+                    // View-only flag (not a DB column)
+                    $cat->gps_live = true;
 
                     $gpsDevice->update([
                         'last_known_lat' => $liveLocation['lat'],
