@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Cat;
 use App\Services\GpsTrackerService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class TrackerController extends Controller
@@ -35,9 +34,10 @@ class TrackerController extends Controller
                 if ($liveLocation && isset($liveLocation['lat'], $liveLocation['lng'])
                     && $liveLocation['lat'] && $liveLocation['lng']) {
 
-                    $cat->gps_lat = $liveLocation['lat'];
-                    $cat->gps_lng = $liveLocation['lng'];
-                    $cat->gps_live = true;
+                    $cat->gps_lat       = $liveLocation['lat'];
+                    $cat->gps_lng       = $liveLocation['lng'];
+                    $cat->gps_timestamp = $liveLocation['timestamp'] ?? now()->toDateTimeString();
+                    $cat->gps_live      = true;
 
                     // Persist location to database
                     $cat->timestamps = false;
@@ -60,7 +60,7 @@ class TrackerController extends Controller
         return view('tracker', compact('cats'));
     }
 
-    public function liveGps(Request $request)
+    public function liveGps()
     {
         $imei = config('gps.tracker_imei');
 
