@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cat;
 use App\Services\GpsTrackerService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class TrackerController extends Controller
@@ -17,58 +18,91 @@ class TrackerController extends Controller
 
     public function __invoke()
     {
-        $cats = Cat::all();
-        
-        // Add GPS location data from gps_location_histories or live GPS tracker
+        $cats = Cat::with('gpsDevice')->get();
+
         foreach ($cats as $cat) {
-            // Find the GPS device for this cat
-            $gpsDevice = $cat->gpsDevice ?? $cat->gpsDevices()->first();
-            
-            if ($gpsDevice) {
-                // Check if this cat is Bits - if so, get LIVE data from GPS tracker
-                if (strtolower($cat->name) === 'bits' || strtolower($cat->name) === 'florian') {
-                    try {
-                        // Fetch live location from 365GPS.net
-                        $liveLocation = $this->gpsService->getLocation($gpsDevice->imei);
-                        
-                        if ($liveLocation && isset($liveLocation['lat'], $liveLocation['lng'])) {
-                            $cat->gps_lat = $liveLocation['lat'];
-                            $cat->gps_lng = $liveLocation['lng'];
-                            $cat->gps_accuracy = $liveLocation['accuracy'] ?? null;
-                            $cat->gps_timestamp = $liveLocation['timestamp'] ?? now();
-                            $cat->gps_battery = $liveLocation['battery'] ?? null;
-                            $cat->gps_live = true; // Mark as live data
-                            
-                            Log::info("{$cat->name} GPS location fetched LIVE from 365GPS: [{$cat->gps_lat}, {$cat->gps_lng}]");
-                        }
-                    } catch (\Exception $e) {
-                        Log::error("Failed to get live GPS for {$cat->name}: " . $e->getMessage());
-                        
-                        // Fallback to database if live fetch fails
-                        $latestLocation = $gpsDevice->history()->latest('timestamp')->first();
-                        if ($latestLocation) {
-                            $cat->gps_lat = $latestLocation->latitude;
-                            $cat->gps_lng = $latestLocation->longitude;
-                            $cat->gps_accuracy = $latestLocation->accuracy;
-                            $cat->gps_timestamp = $latestLocation->timestamp;
-                            $cat->gps_live = false;
-                        }
-                    }
+            $gpsDevice = $cat->gpsDevice;
+
+            if ($gpsDevice && $gpsDevice->is_active) {
+                $liveLocation = null;
+
+                try {
+                    $liveLocation = $this->gpsService->getLocation($gpsDevice->imei);
+                } catch (\Exception $e) {
+                    Log::error("Failed to get live GPS for {$cat->name}: " . $e->getMessage());
+                }
+
+                if ($liveLocation && isset($liveLocation['lat'], $liveLocation['lng'])
+                    && $liveLocation['lat'] && $liveLocation['lng']) {
+
+                    $cat->gps_lat = $liveLocation['lat'];
+                    $cat->gps_lng = $liveLocation['lng'];
+                    $cat->gps_live = true;
+
+                    // Persist location to database
+                    $cat->timestamps = false;
+                    $cat->save();
+
+                    $gpsDevice->update([
+                        'last_known_lat' => $liveLocation['lat'],
+                        'last_known_lng' => $liveLocation['lng'],
+                        'last_sync_at'   => now(),
+                    ]);
+
+                    Log::info("Bits GPS synced: [{$liveLocation['lat']}, {$liveLocation['lng']}] bat={$liveLocation['battery']}%");
                 } else {
-                    // For other cats, use synced database locations
-                    $latestLocation = $gpsDevice->history()->latest('timestamp')->first();
-                    
-                    if ($latestLocation) {
-                        $cat->gps_lat = $latestLocation->latitude;
-                        $cat->gps_lng = $latestLocation->longitude;
-                        $cat->gps_accuracy = $latestLocation->accuracy;
-                        $cat->gps_timestamp = $latestLocation->timestamp;
-                        $cat->gps_live = false;
-                    }
+                    // Fall back to last saved location
+                    $cat->gps_live = false;
                 }
             }
         }
-        
+
         return view('tracker', compact('cats'));
+    }
+
+    public function liveGps(Request $request)
+    {
+        $imei = config('gps.tracker_imei');
+
+        if (!$imei) {
+            return response()->json(['error' => 'GPS not configured'], 503);
+        }
+
+        try {
+            $location = $this->gpsService->getLocation($imei);
+
+            if (!$location || !isset($location['lat'], $location['lng'])) {
+                return response()->json(['error' => 'No GPS fix'], 404);
+            }
+
+            // Sync to database
+            $cat = Cat::where('name', 'Bits')->first();
+            if ($cat) {
+                $cat->timestamps = false;
+                $cat->gps_lat = $location['lat'];
+                $cat->gps_lng = $location['lng'];
+                $cat->save();
+
+                $gpsDevice = $cat->gpsDevice;
+                if ($gpsDevice) {
+                    $gpsDevice->update([
+                        'last_known_lat' => $location['lat'],
+                        'last_known_lng' => $location['lng'],
+                        'last_sync_at'   => now(),
+                    ]);
+                }
+            }
+
+            return response()->json([
+                'lat'       => $location['lat'],
+                'lng'       => $location['lng'],
+                'battery'   => $location['battery'],
+                'timestamp' => $location['timestamp'],
+                'speed'     => $location['speed'],
+            ]);
+        } catch (\Exception $e) {
+            Log::error('GPS live endpoint error: ' . $e->getMessage());
+            return response()->json(['error' => 'GPS fetch failed'], 500);
+        }
     }
 }

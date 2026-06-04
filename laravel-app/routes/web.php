@@ -30,6 +30,7 @@ Route::view('/about', 'about')->name('about');
 Route::view('/adoption-guide', 'adoption-guide')->name('adoption.guide');
 Route::view('/scanner', 'scanner')->name('scanner');
 Route::get('/tracker', App\Http\Controllers\TrackerController::class)->name('tracker');
+Route::get('/gps/live', [App\Http\Controllers\TrackerController::class, 'liveGps'])->name('gps.live');
 
 Route::get('/dashboard', function () {
     if (auth()->user()->getAttribute('role') === 'admin') {

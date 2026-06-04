@@ -400,6 +400,25 @@
                 this.$watch('viewMode', (value) => {
                     this.toggleScanner(value);
                 });
+                this.startGpsRefresh();
+            },
+
+            startGpsRefresh() {
+                setInterval(() => {
+                    fetch('{{ route("gps.live") }}')
+                        .then(r => r.ok ? r.json() : null)
+                        .then(data => {
+                            if (!data || !data.lat) return;
+                            const bits = this.cats.find(c => c.name === 'Bits');
+                            if (bits) {
+                                bits.gps_lat = data.lat;
+                                bits.gps_lng = data.lng;
+                                bits.gps_live = true;
+                                this.updateMarkers();
+                            }
+                        })
+                        .catch(() => {});
+                }, 30000); // refresh every 30 seconds
             },
 
             get filteredCats() {
