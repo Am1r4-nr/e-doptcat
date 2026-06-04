@@ -69,8 +69,7 @@
     {{-- Demo creds --}}
     <div class="mt-5 p-4 bg-[#5B6B2E]/08 border border-[#5B6B2E]/15 rounded-2xl text-center">
         <p class="text-[11px] font-bold text-[#2C3317] uppercase tracking-wider mb-2">Demo Credentials</p>
-        <p class="text-[12px] text-[#6B6352]">User: <span class="font-mono text-[#2C3317]">user@demo.com</span> / <span class="font-mono text-[#2C3317]">password123</span></p>
-        <p class="text-[12px] text-[#6B6352]">Admin: <span class="font-mono text-[#2C3317]">admin@demo.com</span> / <span class="font-mono text-[#2C3317]">admin123</span></p>
+        <p class="text-[12px] text-[#6B6352]">Admin: <span class="font-mono text-[#2C3317]">admin@example.com</span> / <span class="font-mono text-[#2C3317]">password</span></p>
     </div>
 </x-guest-layout>
 
